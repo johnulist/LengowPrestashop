@@ -16,14 +16,18 @@
  * under the License.
  */
 
-if (!function_exists('curl_init')) {
-  throw new LengowApiException('Lengow needs the CURL PHP extension.', -1);
-}
-if (!function_exists('json_decode')) {
-  throw new LengowApiException('Lengow needs the JSON PHP extension.', -2);
-}
-if (!function_exists('simplexml_load_string')) {
-  throw new LengowAPIException('Lengow needs the SIMPLE XML PHP extension.', -3);
+try {
+    if (!function_exists('curl_init')) {
+      throw new LengowApiException('Lengow needs the CURL PHP extension.', -1);
+    }
+    if (!function_exists('json_decode')) {
+      throw new LengowApiException('Lengow needs the JSON PHP extension.', -2);
+    }
+    if (!function_exists('simplexml_load_string')) {
+      throw new LengowAPIException('Lengow needs the SIMPLE XML PHP extension.', -3);
+    }
+} catch(LengowAPIException $e) {
+    echo $e->getMessage();
 }
 
 /**
