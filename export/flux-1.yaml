@@ -1,0 +1,1497 @@
+"catalog":
+  "product":
+    "id_product":            1
+    "name_product":          iPod Nano
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       70.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 6.29
+    "quantity":              
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          parent
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            1_31
+    "name_product":          iPod Nano - Capacité - 16Go, Couleur - Noir
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       0.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     is_default
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              16Go
+    "couleur":               Noir
+    "icu":                   
+  "product":
+    "id_product":            1_41
+    "name_product":          iPod Nano - Capacité - 16Go, Couleur - Violet
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       0.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              16Go
+    "couleur":               Violet
+    "icu":                   
+  "product":
+    "id_product":            1_25
+    "name_product":          iPod Nano - Capacité - 16Go, Couleur - Bleu
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       0.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              16Go
+    "couleur":               Bleu
+    "icu":                   
+  "product":
+    "id_product":            1_33
+    "name_product":          iPod Nano - Capacité - 16Go, Couleur - Orange
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       0.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              16Go
+    "couleur":               Orange
+    "icu":                   
+  "product":
+    "id_product":            1_27
+    "name_product":          iPod Nano - Capacité - 16Go, Couleur - Jaune
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       0.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              16Go
+    "couleur":               Jaune
+    "icu":                   
+  "product":
+    "id_product":            1_35
+    "name_product":          iPod Nano - Capacité - 16Go, Couleur - Rose
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       0.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              16Go
+    "couleur":               Rose
+    "icu":                   
+  "product":
+    "id_product":            1_29
+    "name_product":          iPod Nano - Capacité - 16Go, Couleur - Metal
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       0.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              16Go
+    "couleur":               Metal
+    "icu":                   
+  "product":
+    "id_product":            1_39
+    "name_product":          iPod Nano - Capacité - 16Go, Couleur - Vert
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         199
+    "wholesale_price":       0.00
+    "price_ht":              166.39
+    "price_reduction":       189.05
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              16Go
+    "couleur":               Vert
+    "icu":                   
+  "product":
+    "id_product":            1_32
+    "name_product":          iPod Nano - Capacité - 8Go, Couleur - Noir
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       141.55
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              8Go
+    "couleur":               Noir
+    "icu":                   
+  "product":
+    "id_product":            1_42
+    "name_product":          iPod Nano - Capacité - 8Go, Couleur - Violet
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       141.55
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              8Go
+    "couleur":               Violet
+    "icu":                   
+  "product":
+    "id_product":            1_26
+    "name_product":          iPod Nano - Capacité - 8Go, Couleur - Bleu
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       141.55
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              8Go
+    "couleur":               Bleu
+    "icu":                   
+  "product":
+    "id_product":            1_34
+    "name_product":          iPod Nano - Capacité - 8Go, Couleur - Orange
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       141.55
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              8Go
+    "couleur":               Orange
+    "icu":                   
+  "product":
+    "id_product":            1_28
+    "name_product":          iPod Nano - Capacité - 8Go, Couleur - Jaune
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       141.55
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              8Go
+    "couleur":               Jaune
+    "icu":                   
+  "product":
+    "id_product":            1_36
+    "name_product":          iPod Nano - Capacité - 8Go, Couleur - Rose
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       141.55
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              8Go
+    "couleur":               Rose
+    "icu":                   
+  "product":
+    "id_product":            1_30
+    "name_product":          iPod Nano - Capacité - 8Go, Couleur - Metal
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       141.55
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              8Go
+    "couleur":               Metal
+    "icu":                   
+  "product":
+    "id_product":            1_40
+    "name_product":          iPod Nano - Capacité - 8Go, Couleur - Vert
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Des courbes avantageuses. Pour les amateurs de sensations, voici neuf nouveaux coloris. Et ce n'est pas tout ! Faites l'expérience du design elliptique en aluminum et verre. Vous ne voudrez plus le lâcher. Beau et intelligent. La nouvelle fonctionnalité Genius fait d'iPod nano votre DJ personnel. Genius crée des listes de lecture en recherchant dans votre bibliothèque les chansons qui vont bien ensemble. Fait pour bouger avec vous. iPod nano est équipé de l'accéléromètre. Secouez-le pour mélanger votre musique. Basculez-le pour afficher Cover Flow. Et découvrez des jeux adaptés à vos mouvements.
+    "description_short":     Nouveau design. Nouvelles fonctionnalités. Désormais en 8 et 16 Go. iPod nano, plus rock que jamais.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       141.55
+    "pourcentage_reduction": 5.00
+    "quantity":              50
+    "weight":                0.5
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=1
+    "image_product":         http://prestashop147.local/img/p/3/7/37-large.jpg
+    "fdp":                   5.98
+    "id_mere":               1
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/3/8/38-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/3/9/39-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=1
+    "product_type":          child
+    "product_variation":     Capacité, Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               69,8 mm
+    "largeur":               52,3 mm
+    "poids":                 49,2 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            6,5 mm
+    "capacite":              8Go
+    "couleur":               Vert
+    "icu":                   
+  "product":
+    "id_product":            2
+    "name_product":          iPod shuffle
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Un lien immédiat. Portez jusqu'à 500 chansons accrochées à votre manche, à votre ceinture ou à votre short. Arborez votre iPod shuffle comme signe extérieur de votre passion pour la musique. Existe désormais en quatre nouveaux coloris encore plus éclatants. Emplissez votre iPod shuffle. iTunes est un immense magasin dédié au divertissement, une collection musicale parfaitement organisée et un jukebox. Vous pouvez en un seul clic remplir votre iPod shuffle de chansons. La musique en technicolor. iPod shuffle s'affiche désormais dans de nouveaux coloris intenses qui rehaussent le design épuré du boîtier en aluminium anodisé. Choisissez parmi le bleu, le vert, le rose, le rouge et l'argenté d'origine.
+    "description_short":     iPod shuffle, le baladeur le plus portable du monde, se clippe maintenant en bleu, vert, rose et rouge.
+    "price_product":         79
+    "wholesale_price":       33.00
+    "price_ht":              66.05
+    "price_reduction":       79
+    "pourcentage_reduction": 0
+    "quantity":              
+    "weight":                0
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=2
+    "image_product":         http://prestashop147.local/img/p/4/6/46-large.jpg
+    "fdp":                   5.98
+    "id_mere":               
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/4/7/47-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/4/8/48-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=2
+    "product_type":          parent
+    "product_variation":     Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               27,3 mm
+    "largeur":               41,2 mm
+    "poids":                 15,5 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            10,5 mm (clip compris)
+    "capacite":              
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            2_7
+    "name_product":          iPod shuffle - Couleur - Bleu
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Un lien immédiat. Portez jusqu'à 500 chansons accrochées à votre manche, à votre ceinture ou à votre short. Arborez votre iPod shuffle comme signe extérieur de votre passion pour la musique. Existe désormais en quatre nouveaux coloris encore plus éclatants. Emplissez votre iPod shuffle. iTunes est un immense magasin dédié au divertissement, une collection musicale parfaitement organisée et un jukebox. Vous pouvez en un seul clic remplir votre iPod shuffle de chansons. La musique en technicolor. iPod shuffle s'affiche désormais dans de nouveaux coloris intenses qui rehaussent le design épuré du boîtier en aluminium anodisé. Choisissez parmi le bleu, le vert, le rose, le rouge et l'argenté d'origine.
+    "description_short":     iPod shuffle, le baladeur le plus portable du monde, se clippe maintenant en bleu, vert, rose et rouge.
+    "price_product":         79
+    "wholesale_price":       0.00
+    "price_ht":              66.05
+    "price_reduction":       79
+    "pourcentage_reduction": 0
+    "quantity":              10
+    "weight":                0
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=2
+    "image_product":         http://prestashop147.local/img/p/4/6/46-large.jpg
+    "fdp":                   5.98
+    "id_mere":               2
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/4/7/47-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/4/8/48-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=2
+    "product_type":          child
+    "product_variation":     Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               27,3 mm
+    "largeur":               41,2 mm
+    "poids":                 15,5 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            10,5 mm (clip compris)
+    "capacite":              
+    "couleur":               Bleu
+    "icu":                   
+  "product":
+    "id_product":            2_9
+    "name_product":          iPod shuffle - Couleur - Metal
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Un lien immédiat. Portez jusqu'à 500 chansons accrochées à votre manche, à votre ceinture ou à votre short. Arborez votre iPod shuffle comme signe extérieur de votre passion pour la musique. Existe désormais en quatre nouveaux coloris encore plus éclatants. Emplissez votre iPod shuffle. iTunes est un immense magasin dédié au divertissement, une collection musicale parfaitement organisée et un jukebox. Vous pouvez en un seul clic remplir votre iPod shuffle de chansons. La musique en technicolor. iPod shuffle s'affiche désormais dans de nouveaux coloris intenses qui rehaussent le design épuré du boîtier en aluminium anodisé. Choisissez parmi le bleu, le vert, le rose, le rouge et l'argenté d'origine.
+    "description_short":     iPod shuffle, le baladeur le plus portable du monde, se clippe maintenant en bleu, vert, rose et rouge.
+    "price_product":         79
+    "wholesale_price":       0.00
+    "price_ht":              66.05
+    "price_reduction":       79
+    "pourcentage_reduction": 0
+    "quantity":              30
+    "weight":                0
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=2
+    "image_product":         http://prestashop147.local/img/p/4/6/46-large.jpg
+    "fdp":                   5.98
+    "id_mere":               2
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/4/7/47-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/4/8/48-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=2
+    "product_type":          child
+    "product_variation":     Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               27,3 mm
+    "largeur":               41,2 mm
+    "poids":                 15,5 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            10,5 mm (clip compris)
+    "capacite":              
+    "couleur":               Metal
+    "icu":                   
+  "product":
+    "id_product":            2_10
+    "name_product":          iPod shuffle - Couleur - Rose
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Un lien immédiat. Portez jusqu'à 500 chansons accrochées à votre manche, à votre ceinture ou à votre short. Arborez votre iPod shuffle comme signe extérieur de votre passion pour la musique. Existe désormais en quatre nouveaux coloris encore plus éclatants. Emplissez votre iPod shuffle. iTunes est un immense magasin dédié au divertissement, une collection musicale parfaitement organisée et un jukebox. Vous pouvez en un seul clic remplir votre iPod shuffle de chansons. La musique en technicolor. iPod shuffle s'affiche désormais dans de nouveaux coloris intenses qui rehaussent le design épuré du boîtier en aluminium anodisé. Choisissez parmi le bleu, le vert, le rose, le rouge et l'argenté d'origine.
+    "description_short":     iPod shuffle, le baladeur le plus portable du monde, se clippe maintenant en bleu, vert, rose et rouge.
+    "price_product":         79
+    "wholesale_price":       0.00
+    "price_ht":              66.05
+    "price_reduction":       79
+    "pourcentage_reduction": 0
+    "quantity":              40
+    "weight":                0
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=2
+    "image_product":         http://prestashop147.local/img/p/4/6/46-large.jpg
+    "fdp":                   5.98
+    "id_mere":               2
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/4/7/47-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/4/8/48-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=2
+    "product_type":          child
+    "product_variation":     Couleur
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               27,3 mm
+    "largeur":               41,2 mm
+    "poids":                 15,5 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            10,5 mm (clip compris)
+    "capacite":              
+    "couleur":               Rose
+    "icu":                   
+  "product":
+    "id_product":            2_8
+    "name_product":          iPod shuffle - Couleur - Vert
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              iPods
+    "description":           Un lien immédiat. Portez jusqu'à 500 chansons accrochées à votre manche, à votre ceinture ou à votre short. Arborez votre iPod shuffle comme signe extérieur de votre passion pour la musique. Existe désormais en quatre nouveaux coloris encore plus éclatants. Emplissez votre iPod shuffle. iTunes est un immense magasin dédié au divertissement, une collection musicale parfaitement organisée et un jukebox. Vous pouvez en un seul clic remplir votre iPod shuffle de chansons. La musique en technicolor. iPod shuffle s'affiche désormais dans de nouveaux coloris intenses qui rehaussent le design épuré du boîtier en aluminium anodisé. Choisissez parmi le bleu, le vert, le rose, le rouge et l'argenté d'origine.
+    "description_short":     iPod shuffle, le baladeur le plus portable du monde, se clippe maintenant en bleu, vert, rose et rouge.
+    "price_product":         79
+    "wholesale_price":       0.00
+    "price_ht":              66.05
+    "price_reduction":       79
+    "pourcentage_reduction": 0
+    "quantity":              20
+    "weight":                0
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=2
+    "image_product":         http://prestashop147.local/img/p/4/6/46-large.jpg
+    "fdp":                   5.98
+    "id_mere":               2
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/4/7/47-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/4/8/48-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=2
+    "product_type":          child
+    "product_variation":     is_default
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               27,3 mm
+    "largeur":               41,2 mm
+    "poids":                 15,5 g
+    "prise_casque":          Mini-jack stéréo
+    "profondeur":            10,5 mm (clip compris)
+    "capacite":              
+    "couleur":               Vert
+    "icu":                   
+  "product":
+    "id_product":            5
+    "name_product":          MacBook Air
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              Portables
+    "description":           MacBook Air est presque aussi fin que votre index. Pratiquement tout ce qui pouvait être simplifié l'a été. Il n'en dispose pas moins d'un écran panoramique de 13,3 pouces, d'un clavier complet et d'un vaste trackpad multi-touch. Incomparablement portable il vous évite les compromis habituels en matière d'écran et de clavier ultra-portables.L'incroyable finesse de MacBook Air est le résultat d'un grand nombre d'innovations en termes de réduction de la taille et du poids. D'un disque dur plus fin à des ports d'E/S habilement dissimulés en passant par une batterie plus plate, chaque détail a été considéré et reconsidéré avec la finesse à l'esprit.MacBook Air a été conçu et élaboré pour profiter pleinement du monde sans fil. Un monde dans lequel la norme Wi-Fi 802.11n est désormais si rapide et si accessible qu'elle permet véritablement de se libérer de toute attache pour acheter des vidéos en ligne, télécharger des logicééééiels, stocker et partager des fichiers sur le Web.
+    "description_short":     MacBook Air est ultra fin, ultra portable et ultra différent de tout le reste. Mais on ne perd pas des kilos et des centimètres en une nuit. C'est le résultat d'une réinvention des normes. D'une multitude d'innovations sans fil. Et d'une révolution dans le design. Avec MacBook Air, l'informatique mobile prend soudain une nouvelle dimension.
+    "price_product":         1799
+    "wholesale_price":       1000.00
+    "price_ht":              1504.18
+    "price_reduction":       1799
+    "pourcentage_reduction": 0
+    "quantity":              
+    "weight":                1.36
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     
+    "url_product":           http://prestashop147.local/product.php?id_product=5
+    "image_product":         http://prestashop147.local/img/p/1/5/15-large.jpg
+    "fdp":                   5.98
+    "id_mere":               
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/1/6/16-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/1/7/17-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=5
+    "product_type":          parent
+    "product_variation":     Capacité, Couleur, ICU
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               
+    "largeur":               
+    "poids":                 
+    "prise_casque":          
+    "profondeur":            
+    "capacite":              
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            5_14
+    "name_product":          MacBook Air - Capacité - Disque dur PATA de 80 Go à 4 200 tr/min, Couleur - Metal, ICU - Intel Core 2 Duo à 1,8 GHz
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              Portables
+    "description":           MacBook Air est presque aussi fin que votre index. Pratiquement tout ce qui pouvait être simplifié l'a été. Il n'en dispose pas moins d'un écran panoramique de 13,3 pouces, d'un clavier complet et d'un vaste trackpad multi-touch. Incomparablement portable il vous évite les compromis habituels en matière d'écran et de clavier ultra-portables.L'incroyable finesse de MacBook Air est le résultat d'un grand nombre d'innovations en termes de réduction de la taille et du poids. D'un disque dur plus fin à des ports d'E/S habilement dissimulés en passant par une batterie plus plate, chaque détail a été considéré et reconsidéré avec la finesse à l'esprit.MacBook Air a été conçu et élaboré pour profiter pleinement du monde sans fil. Un monde dans lequel la norme Wi-Fi 802.11n est désormais si rapide et si accessible qu'elle permet véritablement de se libérer de toute attache pour acheter des vidéos en ligne, télécharger des logicééééiels, stocker et partager des fichiers sur le Web.
+    "description_short":     MacBook Air est ultra fin, ultra portable et ultra différent de tout le reste. Mais on ne perd pas des kilos et des centimètres en une nuit. C'est le résultat d'une réinvention des normes. D'une multitude d'innovations sans fil. Et d'une révolution dans le design. Avec MacBook Air, l'informatique mobile prend soudain une nouvelle dimension.
+    "price_product":         2069
+    "wholesale_price":       0.00
+    "price_ht":              1729.93
+    "price_reduction":       2069
+    "pourcentage_reduction": 0
+    "quantity":              50
+    "weight":                1.36
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     
+    "url_product":           http://prestashop147.local/product.php?id_product=5
+    "image_product":         http://prestashop147.local/img/p/1/5/15-large.jpg
+    "fdp":                   5.98
+    "id_mere":               5
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/1/6/16-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/1/7/17-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=5
+    "product_type":          child
+    "product_variation":     Capacité, Couleur, ICU
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               
+    "largeur":               
+    "poids":                 
+    "prise_casque":          
+    "profondeur":            
+    "capacite":              Disque dur PATA de 80 Go à 4 200 tr/min
+    "couleur":               Metal
+    "icu":                   Intel Core 2 Duo à 1,8 GHz
+  "product":
+    "id_product":            5_12
+    "name_product":          MacBook Air - Capacité - Disque dur PATA de 80 Go à 4 200 tr/min, Couleur - Metal, ICU - Intel Core 2 Duo à 1,6 GHz
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              Portables
+    "description":           MacBook Air est presque aussi fin que votre index. Pratiquement tout ce qui pouvait être simplifié l'a été. Il n'en dispose pas moins d'un écran panoramique de 13,3 pouces, d'un clavier complet et d'un vaste trackpad multi-touch. Incomparablement portable il vous évite les compromis habituels en matière d'écran et de clavier ultra-portables.L'incroyable finesse de MacBook Air est le résultat d'un grand nombre d'innovations en termes de réduction de la taille et du poids. D'un disque dur plus fin à des ports d'E/S habilement dissimulés en passant par une batterie plus plate, chaque détail a été considéré et reconsidéré avec la finesse à l'esprit.MacBook Air a été conçu et élaboré pour profiter pleinement du monde sans fil. Un monde dans lequel la norme Wi-Fi 802.11n est désormais si rapide et si accessible qu'elle permet véritablement de se libérer de toute attache pour acheter des vidéos en ligne, télécharger des logicééééiels, stocker et partager des fichiers sur le Web.
+    "description_short":     MacBook Air est ultra fin, ultra portable et ultra différent de tout le reste. Mais on ne perd pas des kilos et des centimètres en une nuit. C'est le résultat d'une réinvention des normes. D'une multitude d'innovations sans fil. Et d'une révolution dans le design. Avec MacBook Air, l'informatique mobile prend soudain une nouvelle dimension.
+    "price_product":         2698
+    "wholesale_price":       0.00
+    "price_ht":              2255.85
+    "price_reduction":       2698
+    "pourcentage_reduction": 0
+    "quantity":              100
+    "weight":                1.36
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     
+    "url_product":           http://prestashop147.local/product.php?id_product=5
+    "image_product":         http://prestashop147.local/img/p/1/5/15-large.jpg
+    "fdp":                   5.98
+    "id_mere":               5
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/1/6/16-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/1/7/17-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=5
+    "product_type":          child
+    "product_variation":     Capacité, Couleur, ICU
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               
+    "largeur":               
+    "poids":                 
+    "prise_casque":          
+    "profondeur":            
+    "capacite":              Disque dur PATA de 80 Go à 4 200 tr/min
+    "couleur":               Metal
+    "icu":                   Intel Core 2 Duo à 1,6 GHz
+  "product":
+    "id_product":            5_15
+    "name_product":          MacBook Air - Capacité - Disque dur SSD (solid-state drive) de 64 Go , Couleur - Metal, ICU - Intel Core 2 Duo à 1,8 GHz
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              Portables
+    "description":           MacBook Air est presque aussi fin que votre index. Pratiquement tout ce qui pouvait être simplifié l'a été. Il n'en dispose pas moins d'un écran panoramique de 13,3 pouces, d'un clavier complet et d'un vaste trackpad multi-touch. Incomparablement portable il vous évite les compromis habituels en matière d'écran et de clavier ultra-portables.L'incroyable finesse de MacBook Air est le résultat d'un grand nombre d'innovations en termes de réduction de la taille et du poids. D'un disque dur plus fin à des ports d'E/S habilement dissimulés en passant par une batterie plus plate, chaque détail a été considéré et reconsidéré avec la finesse à l'esprit.MacBook Air a été conçu et élaboré pour profiter pleinement du monde sans fil. Un monde dans lequel la norme Wi-Fi 802.11n est désormais si rapide et si accessible qu'elle permet véritablement de se libérer de toute attache pour acheter des vidéos en ligne, télécharger des logicééééiels, stocker et partager des fichiers sur le Web.
+    "description_short":     MacBook Air est ultra fin, ultra portable et ultra différent de tout le reste. Mais on ne perd pas des kilos et des centimètres en une nuit. C'est le résultat d'une réinvention des normes. D'une multitude d'innovations sans fil. Et d'une révolution dans le design. Avec MacBook Air, l'informatique mobile prend soudain une nouvelle dimension.
+    "price_product":         2968
+    "wholesale_price":       0.00
+    "price_ht":              2481.61
+    "price_reduction":       2968
+    "pourcentage_reduction": 0
+    "quantity":              25
+    "weight":                1.36
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     
+    "url_product":           http://prestashop147.local/product.php?id_product=5
+    "image_product":         http://prestashop147.local/img/p/1/5/15-large.jpg
+    "fdp":                   5.98
+    "id_mere":               5
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/1/6/16-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/1/7/17-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=5
+    "product_type":          child
+    "product_variation":     Capacité, Couleur, ICU
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               
+    "largeur":               
+    "poids":                 
+    "prise_casque":          
+    "profondeur":            
+    "capacite":              Disque dur SSD (solid-state drive) de 64 Go 
+    "couleur":               Metal
+    "icu":                   Intel Core 2 Duo à 1,8 GHz
+  "product":
+    "id_product":            5_13
+    "name_product":          MacBook Air - Capacité - Disque dur SSD (solid-state drive) de 64 Go , Couleur - Metal, ICU - Intel Core 2 Duo à 1,6 GHz
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              Portables
+    "description":           MacBook Air est presque aussi fin que votre index. Pratiquement tout ce qui pouvait être simplifié l'a été. Il n'en dispose pas moins d'un écran panoramique de 13,3 pouces, d'un clavier complet et d'un vaste trackpad multi-touch. Incomparablement portable il vous évite les compromis habituels en matière d'écran et de clavier ultra-portables.L'incroyable finesse de MacBook Air est le résultat d'un grand nombre d'innovations en termes de réduction de la taille et du poids. D'un disque dur plus fin à des ports d'E/S habilement dissimulés en passant par une batterie plus plate, chaque détail a été considéré et reconsidéré avec la finesse à l'esprit.MacBook Air a été conçu et élaboré pour profiter pleinement du monde sans fil. Un monde dans lequel la norme Wi-Fi 802.11n est désormais si rapide et si accessible qu'elle permet véritablement de se libérer de toute attache pour acheter des vidéos en ligne, télécharger des logicééééiels, stocker et partager des fichiers sur le Web.
+    "description_short":     MacBook Air est ultra fin, ultra portable et ultra différent de tout le reste. Mais on ne perd pas des kilos et des centimètres en une nuit. C'est le résultat d'une réinvention des normes. D'une multitude d'innovations sans fil. Et d'une révolution dans le design. Avec MacBook Air, l'informatique mobile prend soudain une nouvelle dimension.
+    "price_product":         1799
+    "wholesale_price":       0.00
+    "price_ht":              1504.18
+    "price_reduction":       1799
+    "pourcentage_reduction": 0
+    "quantity":              99
+    "weight":                1.36
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     
+    "url_product":           http://prestashop147.local/product.php?id_product=5
+    "image_product":         http://prestashop147.local/img/p/1/5/15-large.jpg
+    "fdp":                   5.98
+    "id_mere":               5
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/1/6/16-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/1/7/17-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=5
+    "product_type":          child
+    "product_variation":     is_default
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               
+    "largeur":               
+    "poids":                 
+    "prise_casque":          
+    "profondeur":            
+    "capacite":              Disque dur SSD (solid-state drive) de 64 Go 
+    "couleur":               Metal
+    "icu":                   Intel Core 2 Duo à 1,6 GHz
+  "product":
+    "id_product":            6
+    "name_product":          MacBook
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Apple Computer, Inc
+    "category":              Portables
+    "description":           Chaque MacBook est équipé d'un disque dur plus spacieux, d'une capacité atteignant 250 Go, pour stocker vos collections multimédia en expansion et vos données précieuses.Le modèle MacBook à 2,4 GHz intègre désormais 2 Go de mémoire en standard. L'idéal pour exécuter en souplesse vos applications préférées.
+    "description_short":     MacBook vous offre la liberté de mouvement grâce à son boîtier résistant en polycarbonate, à ses technologies sans fil intégrées et à son adaptateur secteur MagSafe novateur qui se déconnecte automatiquement si quelqu'un se prend les pieds dans le fil.
+    "price_product":         1400
+    "wholesale_price":       0.00
+    "price_ht":              1170.57
+    "price_reduction":       1400
+    "pourcentage_reduction": 0
+    "quantity":              
+    "weight":                0.75
+    "ean":                   0
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     
+    "url_product":           http://prestashop147.local/product.php?id_product=6
+    "image_product":         http://prestashop147.local/img/p/2/0/20-large.jpg
+    "fdp":                   5.98
+    "id_mere":               
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/1/8/18-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/1/9/19-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=6
+    "product_type":          parent
+    "product_variation":     
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               
+    "largeur":               
+    "poids":                 
+    "prise_casque":          
+    "profondeur":            
+    "capacite":              
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            7
+    "name_product":          iPod touch
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          
+    "category":              iPods
+    "description":           Titre 1 Titre 2 Titre 3 Titre 4 Titre 5 Titre 6 UL UL UL UL OL OL OL OL paragraphe... paragraphe... paragraphe... th th th td td td td td td Cinq nouvelles applications sous la main Consultez vos e-mails au format HTML enrichi, avec photos et pieces jointes au format PDF, Word et Excel. Obtenez des cartes, des itinéraires et des informations sur l'état de la circulation en temps réel. Rédigez des notes et consultez les cours de la Bourse et les bulletins météo. Touchez du doigt votre musique et vos vidéos. Entre autres. La technologie multi-touch révolutionnaire intégrée au superbe écran de 3,5 pouces vous permet d'effectuer des zooms avant et arrière, de faire défiler et de feuilleter des pages à l'aide de vos seuls doigts. Internet dans votre poche Avec le navigateur Safari, vous pouvez consulter des sites web dans leur mise en page d'origine et effectuer un zoom avant et arrière d'une simple pression sur l'écran. Contenu du coffret iPod touch Écouteurs Câble USB 2.0 Adaptateur Dock Chiffon de nettoyage Support Guide de démarrage rapide  
+    "description_short":     Interface multi-touch révolutionnaireÉcran panoramique couleur de 3,5 poucesWi-Fi (802.11b/g)8 mm d'épaisseurSafari, YouTube, iTunes Wi-Fi Music Store, Courrier, Cartes, Bourse, Météo, Notes
+    "price_product":         289
+    "wholesale_price":       200.00
+    "price_ht":              241.64
+    "price_reduction":       289
+    "pourcentage_reduction": 0
+    "quantity":              
+    "weight":                0
+    "ean":                   
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=7
+    "image_product":         http://prestashop147.local/img/p/2/4/24-large.jpg
+    "fdp":                   5.98
+    "id_mere":               
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/2/6/26-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/2/7/27-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=7
+    "product_type":          parent
+    "product_variation":     Capacité
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               110 mm
+    "largeur":               70 mm
+    "poids":                 120g
+    "prise_casque":          Jack stéréo
+    "profondeur":            8 mm
+    "capacite":              
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            7_22
+    "name_product":          iPod touch - Capacité - 16Go
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          
+    "category":              iPods
+    "description":           Titre 1 Titre 2 Titre 3 Titre 4 Titre 5 Titre 6 UL UL UL UL OL OL OL OL paragraphe... paragraphe... paragraphe... th th th td td td td td td Cinq nouvelles applications sous la main Consultez vos e-mails au format HTML enrichi, avec photos et pieces jointes au format PDF, Word et Excel. Obtenez des cartes, des itinéraires et des informations sur l'état de la circulation en temps réel. Rédigez des notes et consultez les cours de la Bourse et les bulletins météo. Touchez du doigt votre musique et vos vidéos. Entre autres. La technologie multi-touch révolutionnaire intégrée au superbe écran de 3,5 pouces vous permet d'effectuer des zooms avant et arrière, de faire défiler et de feuilleter des pages à l'aide de vos seuls doigts. Internet dans votre poche Avec le navigateur Safari, vous pouvez consulter des sites web dans leur mise en page d'origine et effectuer un zoom avant et arrière d'une simple pression sur l'écran. Contenu du coffret iPod touch Écouteurs Câble USB 2.0 Adaptateur Dock Chiffon de nettoyage Support Guide de démarrage rapide  
+    "description_short":     Interface multi-touch révolutionnaireÉcran panoramique couleur de 3,5 poucesWi-Fi (802.11b/g)8 mm d'épaisseurSafari, YouTube, iTunes Wi-Fi Music Store, Courrier, Cartes, Bourse, Météo, Notes
+    "price_product":         379
+    "wholesale_price":       0.00
+    "price_ht":              316.89
+    "price_reduction":       379
+    "pourcentage_reduction": 0
+    "quantity":              60
+    "weight":                0
+    "ean":                   
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=7
+    "image_product":         http://prestashop147.local/img/p/2/4/24-large.jpg
+    "fdp":                   5.98
+    "id_mere":               7
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/2/6/26-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/2/7/27-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=7
+    "product_type":          child
+    "product_variation":     Capacité
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               110 mm
+    "largeur":               70 mm
+    "poids":                 120g
+    "prise_casque":          Jack stéréo
+    "profondeur":            8 mm
+    "capacite":              16Go
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            7_23
+    "name_product":          iPod touch - Capacité - 32Go
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          
+    "category":              iPods
+    "description":           Titre 1 Titre 2 Titre 3 Titre 4 Titre 5 Titre 6 UL UL UL UL OL OL OL OL paragraphe... paragraphe... paragraphe... th th th td td td td td td Cinq nouvelles applications sous la main Consultez vos e-mails au format HTML enrichi, avec photos et pieces jointes au format PDF, Word et Excel. Obtenez des cartes, des itinéraires et des informations sur l'état de la circulation en temps réel. Rédigez des notes et consultez les cours de la Bourse et les bulletins météo. Touchez du doigt votre musique et vos vidéos. Entre autres. La technologie multi-touch révolutionnaire intégrée au superbe écran de 3,5 pouces vous permet d'effectuer des zooms avant et arrière, de faire défiler et de feuilleter des pages à l'aide de vos seuls doigts. Internet dans votre poche Avec le navigateur Safari, vous pouvez consulter des sites web dans leur mise en page d'origine et effectuer un zoom avant et arrière d'une simple pression sur l'écran. Contenu du coffret iPod touch Écouteurs Câble USB 2.0 Adaptateur Dock Chiffon de nettoyage Support Guide de démarrage rapide  
+    "description_short":     Interface multi-touch révolutionnaireÉcran panoramique couleur de 3,5 poucesWi-Fi (802.11b/g)8 mm d'épaisseurSafari, YouTube, iTunes Wi-Fi Music Store, Courrier, Cartes, Bourse, Météo, Notes
+    "price_product":         469
+    "wholesale_price":       0.00
+    "price_ht":              392.14
+    "price_reduction":       469
+    "pourcentage_reduction": 0
+    "quantity":              70
+    "weight":                0
+    "ean":                   
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=7
+    "image_product":         http://prestashop147.local/img/p/2/4/24-large.jpg
+    "fdp":                   5.98
+    "id_mere":               7
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/2/6/26-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/2/7/27-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=7
+    "product_type":          child
+    "product_variation":     Capacité
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               110 mm
+    "largeur":               70 mm
+    "poids":                 120g
+    "prise_casque":          Jack stéréo
+    "profondeur":            8 mm
+    "capacite":              32Go
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            7_19
+    "name_product":          iPod touch - Capacité - 8Go
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          
+    "category":              iPods
+    "description":           Titre 1 Titre 2 Titre 3 Titre 4 Titre 5 Titre 6 UL UL UL UL OL OL OL OL paragraphe... paragraphe... paragraphe... th th th td td td td td td Cinq nouvelles applications sous la main Consultez vos e-mails au format HTML enrichi, avec photos et pieces jointes au format PDF, Word et Excel. Obtenez des cartes, des itinéraires et des informations sur l'état de la circulation en temps réel. Rédigez des notes et consultez les cours de la Bourse et les bulletins météo. Touchez du doigt votre musique et vos vidéos. Entre autres. La technologie multi-touch révolutionnaire intégrée au superbe écran de 3,5 pouces vous permet d'effectuer des zooms avant et arrière, de faire défiler et de feuilleter des pages à l'aide de vos seuls doigts. Internet dans votre poche Avec le navigateur Safari, vous pouvez consulter des sites web dans leur mise en page d'origine et effectuer un zoom avant et arrière d'une simple pression sur l'écran. Contenu du coffret iPod touch Écouteurs Câble USB 2.0 Adaptateur Dock Chiffon de nettoyage Support Guide de démarrage rapide  
+    "description_short":     Interface multi-touch révolutionnaireÉcran panoramique couleur de 3,5 poucesWi-Fi (802.11b/g)8 mm d'épaisseurSafari, YouTube, iTunes Wi-Fi Music Store, Courrier, Cartes, Bourse, Météo, Notes
+    "price_product":         289
+    "wholesale_price":       0.00
+    "price_ht":              241.64
+    "price_reduction":       289
+    "pourcentage_reduction": 0
+    "quantity":              50
+    "weight":                0
+    "ean":                   
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     En stock
+    "url_product":           http://prestashop147.local/product.php?id_product=7
+    "image_product":         http://prestashop147.local/img/p/2/4/24-large.jpg
+    "fdp":                   5.98
+    "id_mere":               7
+    "delais_livraison":      
+    "image_product_2":       http://prestashop147.local/img/p/2/6/26-large.jpg
+    "image_product_3":       http://prestashop147.local/img/p/2/7/27-large.jpg
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=7
+    "product_type":          child
+    "product_variation":     is_default
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               110 mm
+    "largeur":               70 mm
+    "poids":                 120g
+    "prise_casque":          Jack stéréo
+    "profondeur":            8 mm
+    "capacite":              8Go
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            8
+    "name_product":          Housse portefeuille en cuir (iPod nano) - Noir/Chocolat
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          
+    "category":              Accessoires
+    "description":           Caractéristiques Cuir doux résistant Accès au bouton Hold Fermeture magnétique Accès au Dock Connector Protège-écran
+    "description_short":     Cet étui en cuir tendance assure une protection complète contre les éraflures et les petits aléas de la vie quotidienne. Sa conception élégante et compacte vous permet de glisser votre iPod directement dans votre poche ou votre sac à main.
+    "price_product":         29.95
+    "wholesale_price":       0.00
+    "price_ht":              25.04
+    "price_reduction":       29.95
+    "pourcentage_reduction": 0
+    "quantity":              
+    "weight":                0
+    "ean":                   
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     
+    "url_product":           http://prestashop147.local/product.php?id_product=8
+    "image_product":         http://prestashop147.local/img/p/3/3/33-large.jpg
+    "fdp":                   5.98
+    "id_mere":               
+    "delais_livraison":      
+    "image_product_2":       
+    "image_product_3":       
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=8
+    "product_type":          parent
+    "product_variation":     
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               
+    "largeur":               
+    "poids":                 
+    "prise_casque":          
+    "profondeur":            
+    "capacite":              
+    "couleur":               
+    "icu":                   
+  "product":
+    "id_product":            9
+    "name_product":          Écouteurs à isolation sonore Shure SE210
+    "reference_product":     
+    "supplier_reference":    
+    "manufacturer":          Shure Incorporated
+    "category":              Accessoires
+    "description":           Basés sur la technologie des moniteurs personnels testée sur la route par des musiciens professionnels et perfectionnée par les ingénieurs Shure, les écouteurs SE210, légers et élégants, fournissent une sortie audio à gamme étendue exempte de tout bruit externe.Conception à isolation sonore Les embouts à isolation sonore fournis bloquent plus de 90 % du bruit ambiant. Combinés à un design ergonomique séduisant et un câble modulaire, ils minimisent les intrusions du monde extérieur, vous permettant de vous concentrer sur votre musique. Conçus pour les amoureux de la musique qui souhaitent faire évoluer leur appareil audio portable, les écouteurs SE210 vous permettent d'emmener la performance avec vous. Micro-transducteur haute définition Développés pour une écoute de qualité supérieure en déplacement, les écouteurs SE210 utilisent un seul transducteur à armature équilibrée pour bénéficier d'une gamme audio étendue. Le résultat ? Un confort d'écoute époustouflant qui restitue tous les détails d'un spectacle live. Le kit universel Deluxe comprend les éléments suivants : - Embouts à isolation sonore Les embouts à isolation sonore inclus ont un double rôle : bloquer les bruits ambiants et garantir un maintien et un confort personnalisés. Comme chaque oreille est différente, le kit universel Deluxe comprend trois tailles (S, M, L) d'embouts mousse et flexibles. Choisissez la taille et le style d'embout qui vous conviennent le mieux : une bonne étanchéité est un facteur clé pour optimiser l'isolation sonore et la réponse des basses, ainsi que pour accroître le confort en écoute prolongée.- Câble modulaire En se basant sur les commentaires de nombreux utilisateurs, les ingénieurs de Shure ont développé une solution de câble détachable pour permettre un degré de personnalisation sans précédent. Le câble de 1 mètre fourni vous permet d'adapter votre confort en fonction de l'activité et de l'application. - Étui de transport Outre les embouts à isolation sonore et le câble modulaire, un étui de transport compact et résistant est fourni avec les écouteurs SE210 pour vous permettre de ranger vos écouteurs de manière pratique et sans encombres. - Garantie limitée de deux ans Chaque solution SE210 achetée est couverte par une garantie pièces et main-d'œuvre de deux ans.Caractéristiques techniques Type de transducteur : micro-transducteur haute définition Sensibilité (1 mW) : pression acoustique de 114 dB/mW Impédance (à 1 kHz) : 26 W Gamme de fréquences : 25 Hz – 18,5 kHz Longueur de câble / avec rallonge : 45 cm / 136 cm Contenu du coffret Écouteurs Shure SE210 Kit universel Deluxe (embouts à isolation sonore, câble modulaire, étui de transport)
+    "description_short":     Les écouteurs à isolation sonore ergonomiques et légers offrent la reproduction audio la plus fidèle en provenance de sources audio stéréo portables ou de salon.
+    "price_product":         149
+    "wholesale_price":       0.00
+    "price_ht":              124.58
+    "price_reduction":       149
+    "pourcentage_reduction": 0
+    "quantity":              
+    "weight":                0
+    "ean":                   
+    "upc":                   
+    "ecotax":                0.00
+    "available_product":     
+    "url_product":           http://prestashop147.local/product.php?id_product=9
+    "image_product":         http://prestashop147.local/img/p/3/6/36-large.jpg
+    "fdp":                   5.98
+    "id_mere":               
+    "delais_livraison":      
+    "image_product_2":       
+    "image_product_3":       
+    "reduction_form":        
+    "reduction_tp":          
+    "meta_keywords":         
+    "meta_description":      
+    "url_rewrite":           http://prestashop147.local/product.php?id_product=9
+    "product_type":          parent
+    "product_variation":     
+    "currency":              EUR
+    "condition":             new
+    "hauteur":               
+    "largeur":               
+    "poids":                 
+    "prise_casque":          
+    "profondeur":            
+    "capacite":              
+    "couleur":               
+    "icu":                   

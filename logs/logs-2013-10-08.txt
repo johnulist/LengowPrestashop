@@ -1,0 +1,5 @@
+2013-10-08 : 15:52:55 - export : init
+2013-10-08 : 15:52:59 - export : find 13 products
+2013-10-08 : 15:53:05 - export : 0 products
+2013-10-08 : 15:53:06 - export : 10 products
+2013-10-08 : 15:53:06 - export : end
