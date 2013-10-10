@@ -44,7 +44,7 @@ class LengowOrderDetail extends OrderDetail {
         $this->product_price = LengowCore::formatNumber($new_price / $tax);
         if (_PS_VERSION_ >= '1.5') {
             $this->unit_price_tax_incl = LengowCore::formatNumber($new_price);
-            $this->unit_price_tax_incl = LengowCore::formatNumber($new_price / $tax);
+            $this->unit_price_tax_excl = LengowCore::formatNumber($new_price / $tax);
             $this->total_price_tax_incl = LengowCore::formatNumber($new_price * $this->product_quantity);
             $this->total_price_tax_excl = LengowCore::formatNumber(($new_price * $this->product_quantity) / $tax);
         }

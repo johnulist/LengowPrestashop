@@ -162,6 +162,7 @@ class LengowImport {
                 // Import only process order or shipped order and not imported with previous module
                 $lengow_order_state = (string) $lengow_order->order_status->marketplace;
                 $id_order_presta = (string) $lengow_order->order_external_id;
+
                 if(($marketplace->getStateLengow($lengow_order_state) == 'processing'
                     || $marketplace->getStateLengow($lengow_order_state) == 'shipped') && !$id_order_presta) {
                     // Currency
