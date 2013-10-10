@@ -431,7 +431,20 @@ class LengowCore {
 		$string = str_replace('<br />', '', nl2br($html));
 		$string = trim(strip_tags(htmlspecialchars_decode($string)));
 		$string = preg_replace('`[\s]+`sim', ' ', $string); 
-		$string = preg_replace('`"`sim', '', $string); 
+		$string = preg_replace('`"`sim', '', $string); $string = nl2br($string);
+		$pattern = '@<[\/\!]*?[^<>]*?>@si'; //nettoyage du code HTML
+		$string = preg_replace($pattern, ' ', $string); 
+		$string = preg_replace('/[\s]+/', ' ', $string); //nettoyage des espaces multiples		
+		$string = trim ($string);
+		$string = str_replace('&nbsp;', ' ', $string);
+		$string = str_replace('|', ' ', $string);
+		$string = str_replace('"', '\'',$string);
+		$string = str_replace('’', '\'', $string);
+		$string = str_replace('&#39;', '\' ', $string);
+		$string = str_replace('&#150;', '-', $string);
+		$string = str_replace(chr(9), ' ', $string);
+		$string = str_replace(chr(10), ' ', $string);
+		$string = str_replace(chr(13), ' ', $string);
 		return $string;
 	}
 
