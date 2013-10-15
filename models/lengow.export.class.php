@@ -38,7 +38,8 @@ class LengowExport {
     /**
      * Default fields.
      */
-    public static $DEFAULT_FIELDS = array('id_product' => 'id',
+    public static $DEFAULT_FIELDS = array(
+        'id_product' => 'id',
         'name_product' => 'name',
         'reference_product' => 'reference',
         'supplier_reference' => 'supplier_reference',
@@ -416,9 +417,13 @@ class LengowExport {
     public function _make($product, $id_product_attribute = null) {
         $array_product = array();
         // Default fields
-        foreach (self::$DEFAULT_FIELDS as $field => $value) {
+        /*foreach (self::$DEFAULT_FIELDS as $field => $value) {
             $array_product[$field] = $product->getData($value, $id_product_attribute);
+        }*/
+        foreach(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
+            $array_product[$field] = $product->getData(self::$DEFAULT_FIELDS[$field], $id_product_attribute);
         }
+        
         // Features
         if ($this->features) {
             foreach ($this->features as $feature) {
@@ -572,7 +577,7 @@ class LengowExport {
      * @return string The formated fieldname.
      */
     private function _toFieldname($str) {
-        return strtolower(Tools::replaceAccentedChars(str_replace(' ', '_', $str)));
+        return strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str))));
     }
 
     /**
