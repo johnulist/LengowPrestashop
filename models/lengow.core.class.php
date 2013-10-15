@@ -655,5 +655,19 @@ class LengowCore {
             closedir($handle);
         }
     }
+    
+    /**
+     * Clean phone number
+     * 
+     * @param string $phone Phone to clean
+     */
+    public static function cleanPhone($phone) {
+        if(!$phone)
+            return null;
+        if(Validate::isPhoneNumber($phone))
+            return $phone;
+        else
+            return preg_replace('/^[+0-9. ()-]*$/', '', $phone);
+    }
 
 }

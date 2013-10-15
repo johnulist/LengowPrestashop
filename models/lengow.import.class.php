@@ -255,11 +255,11 @@ class LengowImport {
                         }
                         $billing_address->city = (string) $lengow_order->billing_address->billing_city;
                         $billing_address->postcode = (string) $lengow_order->billing_address->billing_zipcode;
-                        $billing_address->phone = (string) $lengow_order->billing_address->billing_phone_home;
+                        $billing_address->phone = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_home);
                         if((string) $lengow_order->billing_address->billing_phone_office != '')
-                            $billing_address->phone_mobile = (string) $lengow_order->billing_address->billing_phone_office;
+                            $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_office);
                         else if((string) $lengow_order->billing_address->billing_phone_mobile != '')
-                            $billing_address->phone_mobile = (string) $lengow_order->billing_address->billing_phone_mobile;
+                            $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_mobile);
                         $billing_address->alias = LengowAddress::hash((string) $lengow_order->billing_address->billing_full_address);
                         if (!$billing_address->add()) {
                             LengowCore::log('Order ' . $lengow_order_id . ' : saving error billing address');
@@ -296,11 +296,11 @@ class LengowImport {
                             }
                             $shipping_address->city = (string) $lengow_order->delivery_address->delivery_country;
                             $shipping_address->postcode = (string) $lengow_order->delivery_address->delivery_zipcode;
-                            $shipping_address->phone = (string) $lengow_order->delivery_address->delivery_phone_home;
+                            $shipping_address->phone = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_home);
                             if((string) $lengow_order->delivery_address->delivery_phone_home != '')
-                                $shipping_address->phone_mobile = (string) $lengow_order->delivery_address->delivery_phone_home;
+                                $shipping_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_home);
                             else if((string) $lengow_order->delivery_address->delivery_phone_office != '')
-                                $shipping_address->phone_mobile = (string) $lengow_order->delivery_address->delivery_phone_office;
+                                $shipping_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_office);
                             $shipping_address->alias = LengowAddress::hash((string) $lengow_order->delivery_address->delivery_full_address);
                             if (!$shipping_address->add()) {
                                 LengowCore::log('Order ' . $lengow_order_id . ' : saving error billing address');
