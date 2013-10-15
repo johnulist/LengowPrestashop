@@ -80,6 +80,7 @@ class Lengow extends Module {
         LengowCore::updateMarketPlaceConfiguration();
         LengowCore::setModule($this);
         LengowCore::cleanLog();
+        $this->update();
         if (!defined('_PS_CURRENCY_DEFAULT_'))
             define('_PS_CURRENCY_DEFAULT_', Configuration::get('PS_CURRENCY_DEFAULT'));
     }
@@ -186,6 +187,14 @@ class Lengow extends Module {
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayAdminHomeStatistics') : true) &&
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayBackOfficeHeader') : true) &&
                 $this->registerHook('orderConfirmation'); // displayOrderConfirmation
+    }
+    
+    /**
+     * Update process
+     */
+    public function update() {
+        if(Configuration::get('LENGOW_EXPORT_FIELDS') == '')
+            Configuration::updateValue('LENGOW_EXPORT_FIELDS', json_encode(LengowCore::$DEFAULT_FIELDS));
     }
 
     /**

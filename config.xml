@@ -2,8 +2,8 @@
         <module>
             <name>lengow</name>
             <displayName><![CDATA[Lengow]]></displayName>
-            <version><![CDATA[2.0.1]]></version>
-            <description><![CDATA[Nouveau module Lengow]]></description>
+            <version><![CDATA[2.0.2]]></version>
+            <description><![CDATA[Nouveau module de Lengow]]></description>
             <author><![CDATA[Lengow]]></author>
             <tab><![CDATA[export]]></tab>
 	<confirmUninstall>Etes-vous de vouloir désinstaller le module Lengow ?</confirmUninstall>
