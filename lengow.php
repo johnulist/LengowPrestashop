@@ -663,7 +663,7 @@ class Lengow extends Module {
                         'type' => 'free',
                         'label' => $this->l('Module Crontab'),
                         'name' => 'lengow_cron',
-                        'desc' => $this->l('Hold "ctrl" and click to select fields.'),
+                        'desc' => $this->l('Hold "control or command" and click to select fields.'),
                     ),
                 ),
             );

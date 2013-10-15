@@ -219,7 +219,7 @@ class LengowProduct extends Product {
             case 'url' :
                 return LengowCore::getContext()->link->getProductLink($this);
             case 'image_1' : 
-                return isset($this->cover) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->cover['id_image'], LengowCore::getImageFormat()) : '';
+                return isset($this->cover) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id.'-'.$this->cover['id_image'], LengowCore::getImageFormat()) : '';
             case 'price_shipping' :  
                 if($id_product_attribute) {
                     $price = $this->getData('price', $id_product_attribute);
@@ -268,9 +268,9 @@ class LengowProduct extends Product {
             case 'delivery_time' : 
                 return '';
             case 'image_2' :
-                return isset($this->images[0]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->images[0]['id_image'], LengowCore::getImageFormat()) : '';
+                return isset($this->images[0]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id.'-'.$this->images[0]['id_image'], LengowCore::getImageFormat()) : '';
             case 'image_3' : 
-                return isset($this->images[1]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->images[1]['id_image'], LengowCore::getImageFormat()) : '';
+                return isset($this->images[1]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id.'-'.$this->images[1]['id_image'], LengowCore::getImageFormat()) : '';
             case 'sale_from' : 
                 return $this->is_sale ? $this->specificPrice['from'] : '';
             case 'sale_to' :  
@@ -298,7 +298,7 @@ class LengowProduct extends Product {
                 return $this->supplier_name;
         }
         if(preg_match('`image_([0-3])+`', $name, $out)) {
-            return isset($this->images[$out[1]]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->images[$out[1]]['id_image'], LengowCore::getImageFormat()) : '';
+            return isset($this->images[$out[1]]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id.'-'.$this->images[$out[1]]['id_image'], LengowCore::getImageFormat()) : '';
         }
     }
 
