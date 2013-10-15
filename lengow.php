@@ -977,8 +977,8 @@ class Lengow extends Module {
             $feed_import_url = (defined('_PS_SHOP_DOMAIN_') ? 'http' . $is_https . '://' . _PS_SHOP_DOMAIN_ : _PS_BASE_URL_) . __PS_BASE_URI__ . 'modules/lengow/webservice/import.php';
         } else {
             $shop_url = new ShopUrl($this->context->shop->id);
-            $feed_export_url = 'http' . $is_https . '://' . $shop_url->domain . '/modules/lengow/webservice/export.php';
-            $feed_import_url = 'http' . $is_https . '://' . $shop_url->domain . '/modules/lengow/webservice/import.php';
+            $feed_export_url = 'http' . $is_https . '://' . $shop_url->domain . $shop_url->physical_uri . 'modules/lengow/webservice/export.php';
+            $feed_import_url = 'http' . $is_https . '://' . $shop_url->domain . $shop_url->physical_uri . 'modules/lengow/webservice/import.php';
         }
         return array('link_feed_export' => '<div class="lengow-margin"><a href="' . $feed_export_url . '" target="_blank">' . $feed_export_url . '</a></div>',
             'link_feed_import' => '<div class="lengow-margin"><a href="' . $feed_import_url . '" target="_blank">' . $feed_import_url . '</a></div>',
