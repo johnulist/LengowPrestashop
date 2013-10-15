@@ -64,8 +64,8 @@ class LengowExport {
         'delais_livraison' => 'delivery_time',
         'image_product_2' => 'image_2',
         'image_product_3' => 'image_3',
-        'reduction_form' => 'sale_from',
-        'reduction_tp' => 'sale_to',
+        'reduction_from' => 'sale_from',
+        'reduction_to' => 'sale_to',
         'meta_keywords' => 'meta_keywords',
         'meta_description' => 'meta_description',
         'url_rewrite' => 'url_rewrite',
@@ -151,18 +151,30 @@ class LengowExport {
     private $data = array();
 
     /**
+     * Product data.
+     */
+    static $full_title = true;
+
+    /**
+     * Export active product.
+     */
+    private $all_product = false;
+
+    /**
      * Construc new Lengow export.
      *
      * @param string $format The format used to export
      *
      * @return Exception Error
      */
-    public function __construct($format = null, $fullmode = null, $all = null, $stream = null) {
+    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null) {
         try {
             $this->setFormat($format);
             $this->setFullmode($fullmode);
             $this->setProducts($all);
-            $this->setStream($all);
+            $this->setStream($stream);
+            $this->setTitle($full_title);
+            $this->setAllProduct($all_product);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -172,9 +184,12 @@ class LengowExport {
      * Make fields to export.
      */
     private function _makeFields() {
-        foreach (self::$DEFAULT_FIELDS as $field => $value) {
+        foreach(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
             $this->fields[] = $field;
         }
+        /*foreach (self::$DEFAULT_FIELDS as $field => $value) {
+            $this->fields[] = $field;
+        }*/
         //Features
         if ($this->features) {
             foreach ($this->features as $feature) {
@@ -304,6 +319,38 @@ class LengowExport {
     }
 
     /**
+     * Set title param export.
+     *
+     * @param boolean $title False for only title, True for title + attribute
+     *
+     * @return boolean.
+     */
+    public function setTitle($title) {
+        if ($title !== null)
+            self::$full_title = $title;
+        else
+            self::$full_title = LengowCore::exportTitle() ? false : true;
+    }
+
+    /**
+     * Set active param export.
+     *
+     * @param boolean $active True for all product, False for only enabled product
+     *
+     * @return boolean.
+     */
+    public function setAllProduct($all_product) {
+        if ($all_product !== null)
+            $this->all_product = $all_product;
+        else
+            $this->all_product = LengowCore::exportAllProduct() ? false : true;
+    }
+
+    static function isFullName() {
+        return self::$full_title ? true : false;
+    }
+
+    /**
      * Execute the export.
      *
      * @return mixed.
@@ -323,7 +370,7 @@ class LengowExport {
             $this->_makeFields();
             // Init fields to export
             $this->_write('header');
-            $products = LengowProduct::exportIds($this->all);
+            $products = LengowProduct::exportIds($this->all, $this->all_product);
             if (!$products) {
                 // Force export all products if no have selected product
                 $products = LengowProduct::exportIds(true);
@@ -514,7 +561,7 @@ class LengowExport {
      * @return string The formated header.
      */
     private function _toUpperCase($str) {
-        return strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(' ', '_', Tools::replaceAccentedChars($str))));
+        return strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str))));
     }
 
     /**
@@ -543,6 +590,19 @@ class LengowExport {
             $spaces .= ' ';
         }
         return $spaces;
+    }
+
+    /**
+     * The export format aivalable.
+     *
+     * @return array Formats
+     */
+    public static function getDefaultFields() {
+        $array_fields = array();
+        foreach (self::$DEFAULT_FIELDS as $fields => $value) {
+            $array_fields[] = new LengowOption($fields, $value);
+        }
+        return $array_fields;
     }
 
 }

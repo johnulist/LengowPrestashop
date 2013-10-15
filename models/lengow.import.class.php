@@ -100,7 +100,7 @@ class LengowImport {
         $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
         $orders = $lengow_connector->api('commands', array('dateFrom' => $args['dateFrom'],
                                                            'dateTo' => $args['dateTo'],
-                                                           'id_group' => (integer) LengowCore::getGroupCustomer(),
+                                                           'id_group' => LengowCore::getGroupCustomer(),
                                                            'state' => 'plugin'));
         if(!is_object($orders)) {
             LengowCore::log('Error on lengow webservice', $this->force_log_output);

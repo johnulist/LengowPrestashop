@@ -138,6 +138,8 @@ class LengowProduct extends Product {
             case 'name' :
                 if($id_product_attribute && LengowCore::isFullName())
                     return $this->name.' - '.$this->combinations[$id_product_attribute]['attribute_name'];
+                if(LengowExport::isFullName())
+                    return $this->name.' - '.$this->combinations[$id_product_attribute]['attribute_name'];
                 return $this->name;
             case 'reference' :
                 if($id_product_attribute > 1 && $this->combinations[$id_product_attribute]['reference'])
@@ -345,7 +347,7 @@ class LengowProduct extends Product {
      *
      * @return varchar IDs product. 
      */
-    public static function exportIds($all = true) {
+    public static function exportIds($all = true, $all_product = false) {
         $context = LengowCore::getContext();
         $id_lang = $context->language->id;
         $id_shop = $context->shop->id;
@@ -358,8 +360,13 @@ class LengowProduct extends Product {
         }
         if(LengowCore::compareVersion() < 0) {
             $query = 'SELECT p.`id_product` '
-                   . 'FROM `' . _DB_PREFIX_ . 'product` p '
-                   . 'WHERE pl.`id_lang` = ' . pSQL($id_lang) . ' AND p.`active` = 1 '
+                   . 'FROM `' . _DB_PREFIX_ . 'product` p ';
+            if($all_product == false)
+                $query .= 'WHERE pl.`id_lang` = ' . pSQL($id_lang) . ' ';
+            else
+                $query .= 'WHERE pl.`id_lang` = ' . pSQL($id_lang) . ' AND p.`active` = 1 ';
+            
+            $query .= 'WHERE pl.`id_lang` = ' . pSQL($id_lang) . ' AND p.`active` = 1 '
                    // Add Lengow selected products
                    . $selected_products_sql;
         } else { // 1.4.X & 1.5.X
@@ -369,10 +376,15 @@ class LengowProduct extends Product {
                 $query .='LEFT JOIN ' . _DB_PREFIX_ . 'product_shop ps ON p.id_product=ps.id_product ';
             }
             // Add Lengow selected products
-            if(LengowCore::compareVersion()  == 1 && $id_shop != '') //version 1.5.X
-                $query .= ' WHERE ps.id_shop = ' . pSQL($id_shop) . ' AND ps.active=1 '; //AND psupp.id_product_attribute=0 ';
-            else
-                $query .=' WHERE p.active=1 ';
+            if(LengowCore::compareVersion()  == 1 && $id_shop != '') { //version 1.5.X
+                if($all_product == false)
+                    $query .= ' WHERE ps.id_shop = ' . pSQL($id_shop) . ' AND ps.active=1 '; //AND psupp.id_product_attribute=0 ';
+                else
+                    $query .= ' WHERE ps.id_shop = ' . pSQL($id_shop) . ' '; //AND psupp.id_product_attribute=0 ';
+            } else {
+                if($all_product == false)
+                    $query .=' WHERE p.active=1 ';
+            }
             // Add Lengow selected products
             $query .= $selected_products_sql;
         }
