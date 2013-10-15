@@ -159,6 +159,16 @@
             <p class="preference_description">{l s='You should use this option if you have more than 10,000 products' mod='lengow'}{$link_file_export}</p>		
         </div>
         <div class="clear"></div>
+        <label>{l s='Fields to export' mod='lengow'}</label>
+        <div class="margin-form">
+            <select name="lengow_export_fields[]" class="lengow-select" size="15" multiple="multiple">
+                {foreach $options.export_fields in item=field}
+                    <option value="{$field->id}"{if $field->id|in_array:$lengow_export_fields} selected="selected"{/if}>{$field->name}</option>
+                {/foreach}
+            </select>
+            <p class="preference_description">{l s='Hold "control or command" and click to select fields' mod='lengow'}{$link_file_export}</p>
+        </div>
+        <div class="clear"></div>
         <label>{l s='Your export script' mod='lengow'}</label>
         <div class="margin-form">
             {$url_feed_export}
