@@ -1019,6 +1019,11 @@ class Lengow extends Module {
      */
     public function hookFooter() {
         $tracking_mode = LengowCore::getTrackingMode();
+        
+        // SSL
+        if (isset($_SERVER['HTTPS']) && $_SERVER['https'] == 'on')
+            self::$_USE_SSL = true;
+        
         if (empty($tracking_mode))
             return '';
         $current_controller = $this->context->controller;
