@@ -539,7 +539,7 @@ class Lengow extends Module {
                         'size' => 20,
                         'class' => 'lengow-select',
                         'label' => $this->l('Export fields'),
-                        'desc' => $this->l('You should use this option if you have more than 10,000 products') . $this->getFileLink(),
+                        'desc' => $this->l('Hold "control or command" and click to select fields.') . $this->getFileLink(),
                         'name' => 'lengow_export_fields[]',
                         'options' => array(
                             'query' => LengowExport::getDefaultFields(),

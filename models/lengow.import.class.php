@@ -123,7 +123,8 @@ class LengowImport {
             if((string) $lengow_order->order_status->marketplace == '') {
                 LengowCore::log('Order ' . $lengow_order_id . ' : no order\'s status');
                 continue;
-            }if((string) $lengow_order->tracking_informations->tracking_deliveringByMarketPlace == '') {
+            }
+            if((string) $lengow_order->tracking_informations->tracking_deliveringByMarketPlace == '') {
                 LengowCore::log('Order ' . $lengow_order_id . ' : delivry by the marketplace (' . $lengow_order->marketplace . ')');
                 continue;
             }
