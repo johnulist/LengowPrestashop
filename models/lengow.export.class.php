@@ -566,7 +566,7 @@ class LengowExport {
      * @return string The formated header.
      */
     private function _toUpperCase($str) {
-        return strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str))));
+        return substr(strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str)))), 0, 58);
     }
 
     /**
