@@ -406,7 +406,7 @@ class Lengow extends Module {
                     array(
                         'type' => 'radio',
                         'label' => $this->l('Export disabled products'),
-                        'desc' => $this->l('If you want to export disabled product, click "yes".'),
+                        'desc' => $this->l('If you want to export disabled products, click "yes".'),
                         'name' => 'lengow_export_disabled',
                         'is_bool' => true,
                         'class' => 't',
@@ -539,7 +539,7 @@ class Lengow extends Module {
                         'size' => 20,
                         'class' => 'lengow-select',
                         'label' => $this->l('Export fields'),
-                        'desc' => $this->l('Hold "control or command" and click to select fields.') . $this->getFileLink(),
+                        'desc' => $this->l('Maintain "control key or command key" to select fields.') . $this->getFileLink(),
                         'name' => 'lengow_export_fields[]',
                         'options' => array(
                             'query' => LengowExport::getDefaultFields(),

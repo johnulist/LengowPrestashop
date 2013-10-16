@@ -166,7 +166,7 @@
                     <option value="{$field->id}"{if $field->id|in_array:$lengow_export_fields} selected="selected"{/if}>{$field->name}</option>
                 {/foreach}
             </select>
-            <p class="preference_description">{l s='Hold "control or command" and click to select fields' mod='lengow'}{$link_file_export}</p>
+            <p class="preference_description">{l s='Maintain "control key or command key" to select fields.' mod='lengow'}{$link_file_export}</p>
         </div>
         <div class="clear"></div>
         <label>{l s='Your export script' mod='lengow'}</label>
