@@ -1216,7 +1216,7 @@ class Lengow extends Module {
      * @param array $args Arguments of hook
      */
     public function hookDisplayBackOfficeHeader($args) {
-        if (Tools::getValue('controller') == 'AdminHome' || Tools::getValue('controller') == 'AdminLengow') {
+        if (Tools::getValue('controller') == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
             $this->context->controller->addJs($this->_path . 'views/js/chart.min.js');
         }
