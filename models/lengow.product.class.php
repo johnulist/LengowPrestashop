@@ -613,6 +613,35 @@ class LengowProduct extends Product {
             $count = Db::getInstance()->getRow($sql);
             return $count['total'];
         }
-    }
+    }    
+
+    /**
+     * For a given reference, returns the corresponding id
+     *
+     * @param string $reference
+     * @return int id
+     */
+     public static function getIdByReference($reference) {
+           if (empty($reference))
+                   return 0;
+
+           if(!Validate::isReference($reference))
+               return 0;
+
+           if(_PS_VERSION_ >= '1.5') {
+               $query = new DbQuery();
+               $query->select('p.id_product');
+               $query->from('product', 'p');
+               $query->where('p.reference = \''.pSQL($reference).'\'');
+               return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+           } else {
+               $sql = 'SELECT p.`id_product`
+                    FROM `'._DB_PREFIX_.'product` p
+                    WHERE p.`reference` = \''. pSQL($reference).'\'';
+               return Db::getInstance()->getValue($sql);
+           }
+           
+     }
+
 
 }   

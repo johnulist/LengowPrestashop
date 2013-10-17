@@ -373,7 +373,35 @@ class LengowImport {
                                             );
                         }
                         $product = new LengowProduct($id_product, $id_lang);
-                        if(!$product || !$product->id) {
+                        if(!$product || !$product->id) {                            
+                            // Find the product by reference or ean13
+                            $id_by_reference = LengowProduct::getIdByReference($lengow_product->sku);
+                            $id_by_ean = Product::getIdByEan13($lengow_product->sku);
+
+                            if(!$id_by_ean && !$id_by_reference) {
+                                LengowCore::log('Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku. ' doesn\' exist');
+                                unset($lengow_products[$product_sku]);
+                                $cart->delete();
+                                continue 2;
+                            } else {
+                                if($id_by_reference != 0) {
+                                    $product = new LengowProduct((int)$id_by_reference, $id_lang);
+                                }
+                                if($id_by_ean != 0) {
+                                    $product = new LengowProduct((int)$id_by_ean, $id_lang);
+                                }                                
+                                // Test if we have product
+                                if(!$product || !$product->id) {
+                                    LengowCore::log('Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku. ' doesn\' exist');
+                                    unset($lengow_products[$product_sku]);
+                                    $cart->delete();
+                                    continue 2;
+                                } else {
+                                    // Reasign $id_product
+                                    $id_product = $product->id;
+                                }
+                            }
+
                             LengowCore::log('Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku. ' doesn\' exist');
                             unset($lengow_products[$product_sku]);
                             $cart->delete();
