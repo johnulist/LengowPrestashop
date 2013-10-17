@@ -643,5 +643,34 @@ class LengowProduct extends Product {
            
      }
 
+    /**
+     * Search ID product with ref/ean/upc attributes
+     *
+     * @param string $ref
+     * @return int id
+     */
+     public static function searchAttributeId($ref) {
+           if (empty($ref))
+                   return 0;
+           if(_PS_VERSION_ >= '1.5') {
+               $query = new DbQuery();
+               $query->select('pa.id_product, pa.id_product_attribute');
+               $query->from('product_attribute', 'pa');
+               $query->where('pa.reference = \''.pSQL($reference).'\' 
+                              OR pa.supplier_reference = \''.pSQL($reference).'\' 
+                              OR pa.ean13 = \''.pSQL($reference).'\'
+                              OR pa.upc = \''.pSQL($reference).'\'');
+               return Db::getInstance(_PS_USE_SQL_SLAVE_);
+           } else {
+               $sql = 'SELECT `pa`.`id_product`, `pa`.`id_product_attribute`
+                    FROM `'._DB_PREFIX_.'product_attribute` `pa`
+                    WHERE pa.`reference` = \''. pSQL($reference).'\'
+                    OR pa.supplier_reference = \''.pSQL($reference).'\' 
+                    OR pa.ean13 = \''.pSQL($reference).'\'
+                    OR pa.upc = \''.pSQL($reference).'\'';
+               return Db::getInstance();
+           }
+           
+     }
 
 }   

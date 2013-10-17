@@ -377,6 +377,7 @@ class LengowImport {
                             // Find the product by reference or ean13
                             $id_by_reference = LengowProduct::getIdByReference($lengow_product->sku);
                             $id_by_ean = Product::getIdByEan13($lengow_product->sku);
+                            $product_by_attributes = LengowProduct::searchAttributeId($lengow_product->sku);
 
                             if(!$id_by_ean && !$id_by_reference) {
                                 LengowCore::log('Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku. ' doesn\' exist');
@@ -389,7 +390,11 @@ class LengowImport {
                                 }
                                 if($id_by_ean != 0) {
                                     $product = new LengowProduct((int)$id_by_ean, $id_lang);
-                                }                                
+                                } else if($id_by_attributes) { //// Checker le retour de la méthode //// Ludo
+                                    $id_product = $product_by_attributes['id_product'];
+                                    $id_product_attribute = $product_by_attributes['id_product_attribute'];
+                                    $product = new LengowProduct((int)$id_product, $id_lang);
+                                }                         
                                 // Test if we have product
                                 if(!$product || !$product->id) {
                                     LengowCore::log('Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku. ' doesn\' exist');
