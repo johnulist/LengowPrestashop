@@ -125,6 +125,16 @@ class LengowExport {
      * File ressource
      */
     private $handle;
+    
+    /**
+     * File name
+     */
+    private $filename;
+    
+    /**
+     * File name temp
+     */
+    private $filename_temp;
 
     /**
      * File ressource
@@ -541,7 +551,9 @@ class LengowExport {
             $sep = DIRECTORY_SEPARATOR;
             $context = LengowCore::getContext();
             $id_shop = $context->shop->id;
-            $this->handle = fopen(_PS_MODULE_DIR_ . 'lengow' . $sep . 'export' . $sep . 'flux-' . $id_shop . '.' . $this->format, 'w+');
+            $this->filename = _PS_MODULE_DIR_ . 'lengow' . $sep . 'export' . $sep . 'flux-' . $id_shop . '.' . $this->format;
+            $this->filename_temp = _PS_MODULE_DIR_ . 'lengow' . $sep . 'export' . $sep . 'flux-temp-' . $id_shop . '.' . $this->format;
+            $this->handle = fopen($this->filename_temp, 'w+');
         }
         fwrite($this->handle, $data);
     }
@@ -554,8 +566,11 @@ class LengowExport {
      * @return string The formated header.
      */
     private function _closeFile() {
-        if ($this->handle)
+        if ($this->handle) {
             fclose($this->handle);
+            rename($this->filename_temp, $this->filename);
+        }
+        
     }
 
     /**
