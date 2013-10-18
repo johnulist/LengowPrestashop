@@ -649,28 +649,55 @@ class LengowProduct extends Product {
      * @param string $ref
      * @return int id
      */
-     public static function searchAttributeId($ref) {
-           if (empty($ref))
-                   return 0;
-           if(_PS_VERSION_ >= '1.5') {
-               $query = new DbQuery();
-               $query->select('pa.id_product, pa.id_product_attribute');
-               $query->from('product_attribute', 'pa');
-               $query->where('pa.reference = \''.pSQL($reference).'\' 
-                              OR pa.supplier_reference = \''.pSQL($reference).'\' 
-                              OR pa.ean13 = \''.pSQL($reference).'\'
-                              OR pa.upc = \''.pSQL($reference).'\'');
-               return Db::getInstance(_PS_USE_SQL_SLAVE_);
-           } else {
-               $sql = 'SELECT `pa`.`id_product`, `pa`.`id_product_attribute`
-                    FROM `'._DB_PREFIX_.'product_attribute` `pa`
-                    WHERE pa.`reference` = \''. pSQL($reference).'\'
-                    OR pa.supplier_reference = \''.pSQL($reference).'\' 
-                    OR pa.ean13 = \''.pSQL($reference).'\'
-                    OR pa.upc = \''.pSQL($reference).'\'';
-               return Db::getInstance();
-           }
-           
-     }
+    public static function searchAttributeId($ref) {
+        if (empty($ref))
+            return 0;
+        if (_PS_VERSION_ >= '1.5') {
+            $query = new DbQuery();
+            $query->select('pa.id_product, pa.id_product_attribute');
+            $query->from('product_attribute', 'pa');
+            $query->where('pa.reference = \'' . pSQL($ref) . '\' 
+                              OR pa.supplier_reference = \'' . pSQL($ref) . '\' 
+                              OR pa.ean13 = \'' . pSQL($ref) . '\'
+                              OR pa.upc = \'' . pSQL($ref) . '\'');
+            return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+        } else {
+            $sql = 'SELECT `pa`.`id_product`, `pa`.`id_product_attribute`
+                    FROM `' . _DB_PREFIX_ . 'product_attribute` `pa`
+                    WHERE pa.`reference` = \'' . pSQL($ref) . '\'
+                    OR pa.supplier_reference = \'' . pSQL($ref) . '\' 
+                    OR pa.ean13 = \'' . pSQL($ref) . '\'
+                    OR pa.upc = \'' . pSQL($ref) . '\'';
+            return Db::getInstance()->executeS($sql);
+        }
+    }
+
+    /**
+     * For a given ean13 reference, returns the corresponding id
+     *
+     * @param string $ean13
+     * @return int id
+     */
+    public static function getIdByEan13($ean13) {
+        if (empty($ean13))
+            return 0;
+
+        if (!Validate::isEan13($ean13))
+            return 0;
+
+        if (_PS_VERSION_ >= '1.5') {
+            $query = new DbQuery();
+            $query->select('p.id_product');
+            $query->from('product', 'p');
+            $query->where('p.ean13 = \'' . pSQL($ean13) . '\'');
+
+            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        } else {
+            $sql = 'SELECT p.`id_product`
+                FROM `' . _DB_PREFIX_ . 'product` p
+                WHERE p.`ean13` = \'' . pSQL($ean13) . '\'';
+            return Db::getInstance()->getValue($sql);
+        }
+    }
 
 }   

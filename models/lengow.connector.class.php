@@ -15,18 +15,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
 try {
     if (!function_exists('curl_init')) {
-      throw new LengowApiException('Lengow needs the CURL PHP extension.', -1);
+        throw new LengowApiException('Lengow needs the CURL PHP extension.', -1);
     }
     if (!function_exists('json_decode')) {
-      throw new LengowApiException('Lengow needs the JSON PHP extension.', -2);
+        throw new LengowApiException('Lengow needs the JSON PHP extension.', -2);
     }
     if (!function_exists('simplexml_load_string')) {
-      throw new LengowAPIException('Lengow needs the SIMPLE XML PHP extension.', -3);
+        throw new LengowAPIException('Lengow needs the SIMPLE XML PHP extension.', -3);
     }
-} catch(LengowAPIException $e) {
+} catch (LengowAPIException $e) {
     echo $e->getMessage();
 }
 
@@ -37,267 +36,267 @@ try {
  * @copyright 2013 Lengow SAS
  */
 class LengowConnector {
-	
-	/**
-	 * Version.
-	 */
-	const VERSION = '1.0.1';
-	
-	/**
-	 * Error.
-	 */
-	public $error;
+    /**
+     * Version.
+     */
 
-	/**
-	 * Default options for curl.
-	 */
-	public static $CURL_OPTS = array(
-		CURLOPT_CONNECTTIMEOUT => 10,
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_TIMEOUT        => 60,
-		CURLOPT_USERAGENT      => 'lengow-api-1.0',
-	);
+    const VERSION = '1.0.1';
 
-	/**
-	 * Lengow webservices domains.
-	 */
-	public static $DOMAIN_LENGOW = array(
-		'solution'    => array('protocol' => 'https',
-							   'url' => 'solution.lengow.com',
-							   'format' => 'json'),
-		'api'   	  => array('protocol' => 'http',
-							   'url' => 'api.lengow.com',
-							   'format' => 'xml'),
-		'statistics'  => array('protocol' => 'http',
-							   'url' => 'statistics.lengow.com',
-							   'format' => 'xml'),
-	);
+    /**
+     * Error.
+     */
+    public $error;
 
-	/**
-	 * Lengow methods API.
-	 */
-	public static $API_METHODS_LENGOW = array(
-		'getListingFeeds'    			=> array('service' => 'solution'),
-		'updateFeed'   		 			=> array('service' => 'solution'),
-		'getHistoryFeed'	 			=> array('service' => 'solution'),
-		'updateInformationsClient'  	=> array('service' => 'solution'),
-		'getListingGroups'    			=> array('service' => 'solution'),
-		'createGroup'    		    	=> array('service' => 'solution'),
-		'updateGroup'    				=> array('service' => 'solution'),
-		'getListingVip'    				=> array('service' => 'solution'),
-		'createVip'   					=> array('service' => 'solution'),
-		'updateVip'    			    	=> array('service' => 'solution'),
-		'getLeads'    			    	=> array('service' => 'solution'),
-		'statusLead'    				=> array('service' => 'solution'),
-		'updatePrestaInternalOrderId'   => array('service' => 'solution'),
-		'updateTrackingMagento'     	=> array('service' => 'solution'),
-		'updateRootFeed'     			=> array('service' => 'solution'),
-		'getRootFeed'   	  			=> array('service' => 'solution'),
-		'updateEcommerceSolution' 		=> array('service' => 'solution'),
-		'statistics'    				=> array('service' => 'statistics'),
-		'commands'    					=> array('service' => 'api'),
-	);
+    /**
+     * Default options for curl.
+     */
+    public static $CURL_OPTS = array(
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 60,
+        CURLOPT_USERAGENT => 'lengow-api-1.0',
+    );
 
-	/**
-	 * Lengow token.
-	 */
-	public $token;
+    /**
+     * Lengow webservices domains.
+     */
+    public static $DOMAIN_LENGOW = array(
+        'solution' => array('protocol' => 'https',
+            'url' => 'solution.lengow.com',
+            'format' => 'json'),
+        'api' => array('protocol' => 'http',
+            'url' => 'api.lengow.com',
+            'format' => 'xml'),
+        'statistics' => array('protocol' => 'http',
+            'url' => 'statistics.lengow.com',
+            'format' => 'xml'),
+    );
 
-	/**
-	 * Lengow ID customer.
-	 */
-	public $id_customer;
+    /**
+     * Lengow methods API.
+     */
+    public static $API_METHODS_LENGOW = array(
+        'getListingFeeds' => array('service' => 'solution'),
+        'updateFeed' => array('service' => 'solution'),
+        'getHistoryFeed' => array('service' => 'solution'),
+        'updateInformationsClient' => array('service' => 'solution'),
+        'getListingGroups' => array('service' => 'solution'),
+        'createGroup' => array('service' => 'solution'),
+        'updateGroup' => array('service' => 'solution'),
+        'getListingVip' => array('service' => 'solution'),
+        'createVip' => array('service' => 'solution'),
+        'updateVip' => array('service' => 'solution'),
+        'getLeads' => array('service' => 'solution'),
+        'statusLead' => array('service' => 'solution'),
+        'updatePrestaInternalOrderId' => array('service' => 'solution'),
+        'updateTrackingMagento' => array('service' => 'solution'),
+        'updateRootFeed' => array('service' => 'solution'),
+        'getRootFeed' => array('service' => 'solution'),
+        'updateEcommerceSolution' => array('service' => 'solution'),
+        'statistics' => array('service' => 'statistics'),
+        'commands' => array('service' => 'api'),
+    );
 
-	/**
+    /**
+     * Lengow token.
+     */
+    public $token;
+
+    /**
+     * Lengow ID customer.
+     */
+    public $id_customer;
+
+    /**
      * Make a new Lengow API Connector.
-	 *
+     *
      * @param integer $id_customer Your customer ID.
      * @param varchar $token Your token Lengow API.
-	 */
-	public function __construct($id_customer, $token) {
-		try {
-			if (is_integer($id_customer))
-				$this->id_customer = $id_customer;
-			else
-				throw new LengowAPIException('Error Lengow Customer ID', 1);
-			if (strlen($token) > 10)
-				$this->token = $token;
-			else
-				throw new LengowAPIException('Error Lengow Token API', 2);
-		} catch (LengowApiException $e) {
-			$this->error = $e;
-			return false;
-		}
-		return true;
-	}
- 
-	/**
+     */
+    public function __construct($id_customer, $token) {
+        try {
+            if (is_integer($id_customer))
+                $this->id_customer = $id_customer;
+            else
+                throw new LengowAPIException('Error Lengow Customer ID', 1);
+            if (strlen($token) > 10)
+                $this->token = $token;
+            else
+                throw new LengowAPIException('Error Lengow Token API', 2);
+        } catch (LengowApiException $e) {
+            $this->error = $e;
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * The API method.
-	 *
+     *
      * @param varchar $method Lengow method API call.
      * @param varchar $array Lengow method API parameters
      *
      * @return array The formated data response
-	 */
- 	public function api($method, $array) {
-		try {
-			if(!$api = $this->_getMethod($method))
-				throw new LengowAPIException('Error unknow method API', 3);
-			else
-				$data = $this->_callAction($api['service'], $method, $array);
-		} catch (LengowAPIException $e) {
-			return $e->getMessage();
-		}
-		return $data;
- 	}
- 
-	/**
+     */
+    public function api($method, $array) {
+        try {
+            if (!$api = $this->_getMethod($method))
+                throw new LengowAPIException('Error unknow method API', 3);
+            else
+                $data = $this->_callAction($api['service'], $method, $array);
+        } catch (LengowAPIException $e) {
+            return $e->getMessage();
+        }
+        return $data;
+    }
+
+    /**
      * Call the Lengow service with accepted method.
-	 *
+     *
      * @param varchar $service Lengow service name
      * @param varchar $method Lengow method API call.
      * @param varchar $array Lengow method API parameters
      *
      * @return array The formated data response
-	 */
-	private function _callAction($service, $method, $array) {
-		switch ($service) {
-			case 'solution' :
-				$url = $this->_getUrlService($service, $method, $array);
-				break;
-			case 'api' :
-				$url = $this->_getUrlOrders($service, $array);
-				break;
-			case 'statistics' :
-				$url = $this->_getUrlStatistics($service, $array);
-				break;
-		}
-		$result = $this->_makeRequest($url);
-		return $this->_format($result, self::$DOMAIN_LENGOW[$service]['format']);
-	}
-	
-	/**
-	  * Makes the Service API Url.
-	  *
-	  * @param string $service The URL to make the request to
-	  * @param string $array The array of query parameters
-	  *
-	  * @return string The url
-	  */
-	private function _getUrlService($service, $method, $array) {
-		$url = self::$DOMAIN_LENGOW[$service]['protocol']
-		     . '://'
-		     . self::$DOMAIN_LENGOW[$service]['url']
-		     . '/wsdl/connector/call.json?'
-		     . 'token=' . $this->token
-		     . '&idClient=' . $this->id_customer
-		     . '&method=' . $method
-		     . '&array=' . urlencode(serialize($array));
-		return $url;
-	}
+     */
+    private function _callAction($service, $method, $array) {
+        switch ($service) {
+            case 'solution' :
+                $url = $this->_getUrlService($service, $method, $array);
+                break;
+            case 'api' :
+                $url = $this->_getUrlOrders($service, $array);
+                break;
+            case 'statistics' :
+                $url = $this->_getUrlStatistics($service, $array);
+                break;
+        }
+        $result = $this->_makeRequest($url);
+        return $this->_format($result, self::$DOMAIN_LENGOW[$service]['format']);
+    }
 
-	/**
-	  * Makes the Orders API Url.
-	  *
-	  * @param string $service The URL to make the request to
-	  * @param string $array The array of query parameters
-	  *
-	  * @return string The url
-	  */
-	private function _getUrlOrders($service, $array) { 
-		$url = self::$DOMAIN_LENGOW[$service]['protocol']
-		     . '://'
-		     . self::$DOMAIN_LENGOW[$service]['url'] . '/'
-		     . 'v2/'
-		     . $array['dateFrom'] . '/'
-		     . $array['dateTo'] . '/'
-		     . $this->id_customer .'/'
-		     . $array['id_group'] .'/'
-		     . (isset($array['id']) && !empty($array['id']) ? $array['id'] : 'orders')
-		     . '/commands/';
-		return $url;
-	}
- 
-	/**
-	  * Makes the Statisctics API Url.
-	  *
-	  * @param string $service The URL to make the request to
-	  * @param string $array The array of query parameters
-	  *
-	  * @return string The url
-	  */
-	private function _getUrlStatistics($service, $array) {
-		$url = self::$DOMAIN_LENGOW[$service]['protocol']
-		     . '://'
-		     . self::$DOMAIN_LENGOW[$service]['url']
-		     . $array['dateFrom'] . '/'
-		     . $array['dateTo'] . '/'
-		     . $this->id_customer .'/'
-		     . $array['id'] 
-		     . '/total-All/';
-		return $url;
-	}
+    /**
+     * Makes the Service API Url.
+     *
+     * @param string $service The URL to make the request to
+     * @param string $array The array of query parameters
+     *
+     * @return string The url
+     */
+    private function _getUrlService($service, $method, $array) {
+        $url = self::$DOMAIN_LENGOW[$service]['protocol']
+                . '://'
+                . self::$DOMAIN_LENGOW[$service]['url']
+                . '/wsdl/connector/call.json?'
+                . 'token=' . $this->token
+                . '&idClient=' . $this->id_customer
+                . '&method=' . $method
+                . '&array=' . urlencode(serialize($array));
+        return $url;
+    }
 
-	/**
-	  * Get the method of Lengow API if exist.
-	  *
-	  * @param string $method The method's name
-	  *
-	  * @return string The method with service
-	  */
-	private function _getMethod($method) {
-		if(self::$API_METHODS_LENGOW[$method])
-			return self::$API_METHODS_LENGOW[$method];
-		else
-			return false;
-	}
+    /**
+     * Makes the Orders API Url.
+     *
+     * @param string $service The URL to make the request to
+     * @param string $array The array of query parameters
+     *
+     * @return string The url
+     */
+    private function _getUrlOrders($service, $array) {
+        $url = self::$DOMAIN_LENGOW[$service]['protocol']
+                . '://'
+                . self::$DOMAIN_LENGOW[$service]['url'] . '/'
+                . 'v2/'
+                . $array['dateFrom'] . '/'
+                . $array['dateTo'] . '/'
+                . $this->id_customer . '/'
+                . $array['id_group'] . '/'
+                . (isset($array['id']) && !empty($array['id']) ? $array['id'] : 'orders')
+                . '/commands/';
+        return $url;
+    }
 
-	/**
-	  * Format data with good format.
-	  *
-	  * @param string $data the data's response of method request
-	  * @param string $format the return format
-	  *
-	  * @return string Data formated
-	  */
-	private function _format($data, $format) {
-		switch($format) {
-			case 'xml' :
-				return simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
-			case 'json' :
-				return json_decode($data, true);
-		}
-		return null;
-	}
- 
-	/**
-	  * Makes an HTTP request.
-	  *
-	  * @param string $url The URL to make the request to
-	  *
-	  * @return string The response text
-	  */
-	protected function _makeRequest($url) {
-		LengowCore::log('Connector ' . $url, -1);
-	    $ch = curl_init();
-	    // Options
-	    $opts = self::$CURL_OPTS;
- 		$opts[CURLOPT_URL] = $url;
- 		// Exectute url request
-	    curl_setopt_array($ch, $opts);
-	    $result = curl_exec($ch);
-	    if ($result === false) {
-			LengowCore::log('Connector Error (' . curl_error($ch) . ')' . $result, -1);
-	      	throw new LengowApiException(
-		      	array('message' => curl_error($ch),
-				      'type' => 'CurlException',
-			    ),
-			    curl_errno($ch)
-			);
-	    }
-	    curl_close($ch);
-	    return $result;
-	}
+    /**
+     * Makes the Statisctics API Url.
+     *
+     * @param string $service The URL to make the request to
+     * @param string $array The array of query parameters
+     *
+     * @return string The url
+     */
+    private function _getUrlStatistics($service, $array) {
+        $url = self::$DOMAIN_LENGOW[$service]['protocol']
+                . '://'
+                . self::$DOMAIN_LENGOW[$service]['url']
+                . $array['dateFrom'] . '/'
+                . $array['dateTo'] . '/'
+                . $this->id_customer . '/'
+                . $array['id']
+                . '/total-All/';
+        return $url;
+    }
+
+    /**
+     * Get the method of Lengow API if exist.
+     *
+     * @param string $method The method's name
+     *
+     * @return string The method with service
+     */
+    private function _getMethod($method) {
+        if (self::$API_METHODS_LENGOW[$method])
+            return self::$API_METHODS_LENGOW[$method];
+        else
+            return false;
+    }
+
+    /**
+     * Format data with good format.
+     *
+     * @param string $data the data's response of method request
+     * @param string $format the return format
+     *
+     * @return string Data formated
+     */
+    private function _format($data, $format) {
+        switch ($format) {
+            case 'xml' :
+                return simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
+            case 'json' :
+                return json_decode($data, true);
+        }
+        return null;
+    }
+
+    /**
+     * Makes an HTTP request.
+     *
+     * @param string $url The URL to make the request to
+     *
+     * @return string The response text
+     */
+    protected function _makeRequest($url) {
+        LengowCore::log('Connector ' . $url, -1);
+        $ch = curl_init();
+        // Options
+        $opts = self::$CURL_OPTS;
+        $opts[CURLOPT_URL] = $url;
+        // Exectute url request
+        curl_setopt_array($ch, $opts);
+        $result = curl_exec($ch);
+        if ($result === false) {
+            LengowCore::log('Connector Error (' . curl_error($ch) . ')' . $result, -1);
+            throw new LengowApiException(
+            array('message' => curl_error($ch),
+        'type' => 'CurlException',
+            ), curl_errno($ch)
+            );
+        }
+        curl_close($ch);
+        return $result;
+    }
+
 }
 
 /**
@@ -307,53 +306,55 @@ class LengowConnector {
  */
 class LengowApiException extends Exception {
 
-	/**
-	 * The result from the API server that represents the exception information.
-	 */
-	protected $result;
+    /**
+     * The result from the API server that represents the exception information.
+     */
+    protected $result;
 
-	/**
-	 * Make a new API Exception with the given result.
-	 *
-	 * @param array $result The error result
-	 */
-	public function __construct($result, $noerror) {
-		$this->result = $result;
-		if(is_array($result))
-			$msg = $result['message'];
-		else
-			$msg = $result;
-		parent::__construct($msg, $noerror);
-	}
+    /**
+     * Make a new API Exception with the given result.
+     *
+     * @param array $result The error result
+     */
+    public function __construct($result, $noerror) {
+        $this->result = $result;
+        if (is_array($result))
+            $msg = $result['message'];
+        else
+            $msg = $result;
+        parent::__construct($msg, $noerror);
+    }
 
-	/**
-	 * Return the associated result object returned by the API server.
-	 *
-	 * @return array The result from the API server
-	 */
-	public function getResult() {
-		return $this->result;
-	}
+    /**
+     * Return the associated result object returned by the API server.
+     *
+     * @return array The result from the API server
+     */
+    public function getResult() {
+        return $this->result;
+    }
 
-	/**
-	 * Returns the associated type for the error. 
-	 *
-	 * @return string
-	 */
-	public function getType() {
-		if(isset($this->result['type']))
-			return $this->result['type'];
-		return 'LengowApiException';
-	}
+    /**
+     * Returns the associated type for the error. 
+     *
+     * @return string
+     */
+    public function getType() {
+        if (isset($this->result['type']))
+            return $this->result['type'];
+        return 'LengowApiException';
+    }
 
-	/**
-	 * To make debugging easier.
-	 *
-	 * @return string The string representation of the error
-	 */
-	public function __toString() {
-		if(isset($this->result['message']))
-			return $this->result['message'];
-		return $this->message;
-	}
-}	
+    /**
+     * To make debugging easier.
+     *
+     * @return string The string representation of the error
+     */
+    public function __toString() {
+        if (isset($this->result['message']))
+            return $this->result['message'];
+        return $this->message;
+    }
+
+}
+

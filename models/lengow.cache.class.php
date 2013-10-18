@@ -22,19 +22,34 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-eval('class LengowCache extends ' . _PS_CACHING_SYSTEM_ . ' {
+if(_PS_CACHE_ENABLED_ == false) {
+    eval('class LengowCache {
 
-    public static function clear() {			
-		if (_PS_VERSION_ >= \'1.5\')
-        	self::$local = array();
-        if(_PS_CACHE_ENABLED_)
-            Cache::getInstance()->delete(\'*\');
-        LengowProduct::clear();
-       	if (_PS_VERSION_ >= \'1.5\')
-        	LengowProduct::flushPriceCache();
-        Link::$cache = array(\'page\' => array());
-       	if (_PS_VERSION_ >= \'1.5\')
-        	LengowSpecificPrice::clear();
-    }
+        public static function clear() {            
+            LengowProduct::clear();
+            if (_PS_VERSION_ >= \'1.5\')
+                LengowProduct::flushPriceCache();
+            Link::$cache = array(\'page\' => array());
+            if (_PS_VERSION_ >= \'1.5\')
+                LengowSpecificPrice::clear();
+        }
 
-}');
+    }');
+} else {
+    eval('class LengowCache extends ' . _PS_CACHING_SYSTEM_ . ' {
+
+        public static function clear() {            
+            if (_PS_VERSION_ >= \'1.5\')
+                self::$local = array();
+            if(_PS_CACHE_ENABLED_)
+                Cache::getInstance()->delete(\'*\');
+            LengowProduct::clear();
+            if (_PS_VERSION_ >= \'1.5\')
+                LengowProduct::flushPriceCache();
+            Link::$cache = array(\'page\' => array());
+            if (_PS_VERSION_ >= \'1.5\')
+                LengowSpecificPrice::clear();
+        }
+
+    }');
+}

@@ -373,9 +373,34 @@ class LengowImport {
                                             );
                         }
                         $product = new LengowProduct($id_product, $id_lang);
-                        if(!$product || !$product->id) {                            
+                        if(!$product || !$product->id) {
+                            
+                            $array_ref = array('sku', 'idMP', 'idLengow');
+                            $id_product = 0;
+                            $id_product_attribute = 0;
+                            $i = 0;
+                            
+                            while ($id_product == 0 && $i < count($array_ref)) {
+                                $result = $this->_findProduct($lengow_product->{$array_ref[$i]});
+                                if ($result->id_product != 0)
+                                    $id_product = $result->id_product;
+                                if ($result->id_product_attribute)
+                                    $id_product_attribute = $result->id_product_attribute;
+                                $i++;
+                            }
+                            
+                            if ($id_product == 0) {
+                                LengowCore::log('Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku . ' doesn\'t exist');
+                                unset($lengow_products[$product_sku]);
+                                $cart->delete();
+                                continue 2;
+                            }
+
+                            $product = new LengowProduct((int) $id_product, $this->id_lang);
+                            
+                            
                             // Find the product by reference or ean13
-                            $id_by_reference = LengowProduct::getIdByReference($lengow_product->sku);
+                            /*$id_by_reference = LengowProduct::getIdByReference($lengow_product->sku);
                             $id_by_ean = Product::getIdByEan13($lengow_product->sku);
                             $product_by_attributes = LengowProduct::searchAttributeId($lengow_product->sku);
 
@@ -410,7 +435,7 @@ class LengowImport {
                             LengowCore::log('Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku. ' doesn\' exist');
                             unset($lengow_products[$product_sku]);
                             $cart->delete();
-                            continue 2;
+                            continue 2;*/
                         }
                         if (_PS_VERSION_ < '1.5')
                             $product_taxes = Tax::getProductTaxRate($product->id, $shipping_address->id);
@@ -560,6 +585,55 @@ class LengowImport {
         foreach ((array) $xml_object as $index => $node)
             $out[$index] = (is_object($node)) ? $this->toArray($node) : $node;
         return $out;
+    }
+    
+    /**
+     * Try to find product by passing a SKU, EAN or Attribute ID
+     *
+     * @param $value SKU, EAN or Attribute ID
+     *
+     * @return Object
+     */
+    private function _findProduct($value) {
+        $return = new stdClass();
+        $return->id_product = 0;
+        $return->id_product_attribute = 0;
+        
+        if (!$value)
+            return $return;
+
+        // Find the product by reference or ean13
+        $id_by_reference = LengowProduct::getIdByReference($value);
+        $id_by_ean = LengowProduct::getIdByEan13($value);
+        $product_by_attributes = LengowProduct::searchAttributeId($value);
+
+        if (!$id_by_ean && !$id_by_reference && !isset($product_by_attributes[0])) {
+            return $return;
+        } else {
+            if ($id_by_reference != 0) {
+                $product = new LengowProduct((int) $id_by_reference, $this->id_lang);
+            }
+            if ($id_by_ean != 0) {
+                $product = new LengowProduct((int) $id_by_ean, $this->id_lang);
+            } else if (isset($product_by_attributes[0]) && $product_by_attributes[0]) {
+                $id_product = $product_by_attributes[0]['id_product'];
+                $id_product_attribute = $product_by_attributes[0]['id_product_attribute'];
+                $return->id_product_attribute = $id_product_attribute;
+                $product = new LengowProduct((int) $id_product, $this->id_lang);
+            }
+            // Test if we have product
+            if (!$product || !$product->id) {
+                return $return;
+                /* LengowCore::log('Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku . ' doesn\'t exist');
+                  unset($lengow_products[$product_sku]);
+                  $cart->delete();
+                  continue 2; */
+            } else {
+                $return->id_product = $product->id;
+            }
+        }
+
+        return $return;
     }
 
 }
