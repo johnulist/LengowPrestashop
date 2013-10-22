@@ -220,9 +220,13 @@ class LengowProduct extends Product {
             case 'url' :
                 return LengowCore::getContext()->link->getProductLink($this);
             case 'image_1' :
+                if($id_product_attribute) {
+                    $images = $this->getCombinationImages($this->id_lang);
+                    return  LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $images[$id_product_attribute][0]['id_image'], LengowCore::getImageFormat());
+                }
                 return isset($this->cover) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->cover['id_image'], LengowCore::getImageFormat()) : '';
             case 'price_shipping' :
-                if ($id_product_attribute) {
+                if ($id_product_attribute && $id_product_attribute != null) {
                     $price = $this->getData('price', $id_product_attribute);
                     $weight = $this->getData('weight', $id_product_attribute);
                 } else {
