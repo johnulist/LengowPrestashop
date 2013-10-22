@@ -354,7 +354,7 @@ class LengowExport {
         if ($all_product !== null)
             $this->all_product = $all_product;
         else
-            $this->all_product = LengowCore::exportAllProduct() ? false : true;
+            $this->all_product = LengowCore::exportAllProduct() ? true : false;
     }
 
     static function isFullName() {
