@@ -100,8 +100,12 @@ class LengowProduct extends Product {
         $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
         if (LengowCore::compareVersion())
             $this->loadStockData();
-        if ($this->id_category_default) {
+        if ($this->id_category_default && $this->id_category_default > 1) {
             $this->category_default = new Category((int) $this->id_category_default, $id_lang);
+            $this->category_name = $this->category_default->name;
+        } else {
+            $categories = self::getProductCategories($this->id);
+            $this->category_default = new Category($categories[0], $id_lang);
             $this->category_name = $this->category_default->name;
         }
         $images = $this->getImages($id_lang);
@@ -137,7 +141,7 @@ class LengowProduct extends Product {
                 return $this->id;
             case 'name' :
                 if ($id_product_attribute && LengowExport::isFullName())
-                    return $this->name . ' - ' . $this->combinations[$id_product_attribute]['attribute_name'];
+                     return $this->combinations[$id_product_attribute]['attribute_name'] ? $this->name . ' - ' . $this->combinations[$id_product_attribute]['attribute_name'] : $this->name;
                 return $this->name;
             case 'reference' :
                 if ($id_product_attribute > 1 && $this->combinations[$id_product_attribute]['reference'])
