@@ -164,7 +164,7 @@ class LengowExport {
     /**
      * Product data.
      */
-    static $full_title = true;
+    public static $full_title = true;
 
     /**
      * Export active product.
@@ -340,7 +340,7 @@ class LengowExport {
         if ($title !== null)
             self::$full_title = $title;
         else
-            self::$full_title = LengowCore::exportTitle() ? false : true;
+            self::$full_title = Configuration::get('LENGOW_EXPORT_FULLNAME');
     }
 
     /**

@@ -312,7 +312,6 @@ class LengowImport {
                         $shipping_address = $billing_address;
                     }
                     $id_carrier = LengowCore::getDefaultCarrier();
-                    // TODO - Pomm Poire
                     // Order
                     $order_created_at_time = strtotime((string) $lengow_order->order_purchase_date . ' ' . (string) $lengow_order->order_purchase_heure);
                     //$date_add = date('Y-m-d H:i:s', strtotime($order->PurchaseDate));

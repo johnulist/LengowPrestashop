@@ -306,7 +306,7 @@ class LengowCore {
      * @return boolean
      */
     public static function exportTitle() {
-        return Configuration::get('LENGOW_EXPORT_FULLNAME') ? true : false;
+        return LengowExport::$full_title;
     }
 
     /**

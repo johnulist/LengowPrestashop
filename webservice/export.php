@@ -64,13 +64,13 @@ if (LengowCore::checkIP()) {
     // > Title
     if (Tools::getValue('title') && Tools::getValue('title') == 'full')
         $title = true;
-    else if (Tools::getValue('title') && Tools::getValue('title') == 'simple')
+    elseif (Tools::getValue('title') && Tools::getValue('title') == 'simple')
         $title = false;
 
     // > Active
     if (Tools::getValue('active') && Tools::getValue('active') == 'enabled')
         $all_product = false;
-    else if (Tools::getValue('active') && Tools::getValue('active') == 'all')
+    elseif (Tools::getValue('active') && Tools::getValue('active') == 'all')
         $all_product = true;
 
     $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product);
