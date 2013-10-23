@@ -21,13 +21,17 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  */
 $sep = DIRECTORY_SEPARATOR;
-require_once 'models' . $sep . 'lengow.core.class.php';
-require_once 'models' . $sep . 'lengow.order.class.php';
-require_once 'models' . $sep . 'lengow.marketplace.class.php';
-require_once 'models' . $sep . 'lengow.product.class.php';
-require_once 'models' . $sep . 'lengow.import.class.php';
-require_once 'models' . $sep . 'lengow.taxrule.class.php';
-require_once 'models' . $sep . 'lengow.export.class.php';
+$path = '';
+if (_PS_VERSION_ < '1.4.2')
+    $path = '../modules/lengow/';
+
+require_once $path . 'models' . $sep . 'lengow.core.class.php';
+require_once $path . 'models' . $sep . 'lengow.order.class.php';
+require_once $path . 'models' . $sep . 'lengow.marketplace.class.php';
+require_once $path . 'models' . $sep . 'lengow.product.class.php';
+require_once $path . 'models' . $sep . 'lengow.import.class.php';
+require_once $path . 'models' . $sep . 'lengow.taxrule.class.php';
+require_once $path . 'models' . $sep . 'lengow.export.class.php';
 
 class Lengow extends Module {
 
@@ -55,7 +59,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.2.1';
+        $this->version = '2.0.2.2';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
