@@ -140,10 +140,8 @@ class LengowProduct extends Product {
                     return $this->id . '_' . $id_product_attribute;
                 return $this->id;
             case 'name' :
-                if ($id_product_attribute && LengowCore::isFullName())
-                    return $this->name . ' - ' . $this->combinations[$id_product_attribute]['attribute_name'];
-                if (LengowExport::isFullName())
-                    return $this->name . ' - ' . $this->combinations[$id_product_attribute]['attribute_name'];
+                if (($id_product_attribute && LengowCore::isFullName()) || LengowCore::isFullName())
+                    return $this->combinations[$id_product_attribute]['attribute_name'] ? $this->name . ' - ' . $this->combinations[$id_product_attribute]['attribute_name'] : $this->name;
                 return $this->name;
             case 'reference' :
                 if ($id_product_attribute > 1 && $this->combinations[$id_product_attribute]['reference'])
