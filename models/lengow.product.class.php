@@ -467,10 +467,10 @@ class LengowProduct extends Product {
                 asort($product_attribute['attributes']);
                 foreach ($product_attribute['attributes'] as $attribute) {
                     $list .= $attribute[0] . ' - ' . $attribute[1] . ', ';
-                    $name .= $attribute[0] . ', ';
+                    $name .= $attribute[0] . ',';
                 }
                 $list = rtrim($list, ', ');
-                $name = rtrim($name, ', ');
+               // $name = rtrim($name, ', ');
                 $comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
                 if (LengowCore::compareVersion())
                     $comb_array[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
