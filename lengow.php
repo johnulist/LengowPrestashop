@@ -26,6 +26,7 @@ if (_PS_VERSION_ < '1.4.2')
     $path = '..' . $sep . 'modules' . $sep . 'lengow' . $sep;
 
 require_once $path . 'models' . $sep . 'lengow.core.class.php';
+require_once $path . 'models' . $sep . 'lengow.check.class.php';
 require_once $path . 'models' . $sep . 'lengow.order.class.php';
 require_once $path . 'models' . $sep . 'lengow.marketplace.class.php';
 require_once $path . 'models' . $sep . 'lengow.product.class.php';
@@ -83,10 +84,12 @@ class Lengow extends Module {
                 $this->context->controller->addCss($this->_path . 'views/css/admin.css');
             }
         }
+        
         LengowCore::updateMarketPlaceConfiguration();
         LengowCore::setModule($this);
         LengowCore::cleanLog();
         $this->update();
+        
         if (!defined('_PS_CURRENCY_DEFAULT_'))
             define('_PS_CURRENCY_DEFAULT_', Configuration::get('PS_CURRENCY_DEFAULT'));
     
@@ -328,7 +331,23 @@ class Lengow extends Module {
             // Get default language
             $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
             // Init Fields form array
+
             $fields_form[0]['form'] = array(
+                'legend' => array(
+                    'title' => $this->l('Check configuration'),
+                ),
+                'input' => array(
+                    array(
+                        'type' => 'free',
+                        'label' => $this->l('Checklist'),
+                        'name' => 'lengow_check_configuration',
+                        'desc' => '',
+                        'required' => false,
+                    ),
+                ),
+            );
+            
+            $fields_form[1]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Account'),
                 ),
@@ -360,7 +379,7 @@ class Lengow extends Module {
                     'class' => 'button'
                 ),
             );
-            $fields_form[1]['form'] = array(
+            $fields_form[2]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Security'),
                 ),
@@ -373,7 +392,7 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[2]['form'] = array(
+            $fields_form[3]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Tracking'),
                 ),
@@ -390,7 +409,7 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[3]['form'] = array(
+            $fields_form[4]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Export parameters'),
                 ),
@@ -567,7 +586,7 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[4]['form'] = array(
+            $fields_form[5]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Feed'),
                 ),
@@ -582,7 +601,7 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[5]['form'] = array(
+            $fields_form[6]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Import parameters'),
                 ),
@@ -675,7 +694,7 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[6]['form'] = array(
+            $fields_form[7]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Import cron'),
                 ),
@@ -688,7 +707,7 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[7]['form'] = array(
+            $fields_form[8]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Developer'),
                 ),
@@ -745,6 +764,7 @@ class Lengow extends Module {
                     'desc' => $this->l('Back to list')
                 )
             );
+            
             // Load currents values
             $helper->fields_value['lengow_customer_id'] = Configuration::get('LENGOW_ID_CUSTOMER');
             $helper->fields_value['lengow_group_id'] = Configuration::get('LENGOW_ID_GROUP');
@@ -773,6 +793,8 @@ class Lengow extends Module {
             $links = $this->_getWebservicesLinks();
             $helper->fields_value['url_feed_export'] = $links['link_feed_export'];
             $helper->fields_value['url_feed_import'] = $links['link_feed_import'];
+            
+            $helper->fields_value['lengow_check_configuration'] = $this->_getCheckList();
 
             $helper->fields_value['lengow_flow'] = $this->_getFormFeeds();
 
@@ -844,6 +866,9 @@ class Lengow extends Module {
      */
     private function _getFormFeeds() {
         $display = '';
+        if(!LengowCheck::isCurlActivated())
+            return '<p>'.$this->l('Function unavailable with your configuration, please install PHP CURL extension.') . '</p>';
+
         $flows = LengowCore::getFlows();
         if (!$flows || $flows['return'] == 'KO') {
             return '<div clas="lengow-margin">' . $this->l('Please provide your Customer ID, Group ID and API Token ') . '</div>';
@@ -1563,6 +1588,14 @@ class Lengow extends Module {
         LengowCore::log('Cron import');
         /* $result = $import->exec('commands', array('dateFrom' => $date_from,
           'dateTo' => $date_to)); */
+    }
+    
+    /**
+     * 
+     * @retun string HTML Content of checklist
+     */
+    private function _getCheckList() {
+        return LengowCheck::getHtmlCheckList();
     }
 
 }
