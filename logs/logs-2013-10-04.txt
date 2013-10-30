@@ -1,1 +1,0 @@
-2013-10-04 : 10:37:34 - Connector https://solution.lengow.com/wsdl/connector/call.json?token=30354p8x6925hml0l043035&idClient=3035&method=getRootFeed&array=a%3A2%3A%7Bs%3A8%3A%22idClient%22%3Bi%3A3035%3Bs%3A7%3A%22idGroup%22%3Bs%3A9%3A%225535%2C6229%22%3B%7D
