@@ -1,9 +1,9 @@
 =============================================================
 Version 2.0.2
 =============================================================
-	- Allow to export disabled products
-	- Add manual export get parameters
-	- Add attribute list selection to export
+    - Allow to export disabled products
+    - Add manual export get parameters
+    - Add attribute list selection to export
     - Fix - Import product with ID, EAN and SKU
     - Fix - SSL mode on tracker
     - Fix - Url export and import where multishop is active
@@ -12,6 +12,6 @@ Version 2.0.2
 =============================================================
 Version 2.0.1
 =============================================================
-	- Add cron to import
+    - Add cron to import
     - Fix - Tracker
     - Fix other minors bug

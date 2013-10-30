@@ -23,7 +23,7 @@
 $sep = DIRECTORY_SEPARATOR;
 $path = '';
 if (_PS_VERSION_ < '1.4.2')
-    $path = '../modules/lengow/';
+    $path = '..' . $sep . 'modules' . $sep . 'lengow' . $sep;
 
 require_once $path . 'models' . $sep . 'lengow.core.class.php';
 require_once $path . 'models' . $sep . 'lengow.order.class.php';
@@ -51,6 +51,8 @@ class Lengow extends Module {
     static private $_IDS_PRODUCTS_CART = '';
     static private $_ID_CATEGORY = '';
     static private $_CRON_SELECT = array(5, 10, 15, 30);
+    static private $_BUFFER_STATE = '';
+    static private $_LENGOW_ORDER_STATE = array();
     protected $context;
 
     /**
@@ -59,7 +61,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.2.2';
+        $this->version = '2.0.2.4';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
@@ -87,6 +89,12 @@ class Lengow extends Module {
         $this->update();
         if (!defined('_PS_CURRENCY_DEFAULT_'))
             define('_PS_CURRENCY_DEFAULT_', Configuration::get('PS_CURRENCY_DEFAULT'));
+    
+        self::$_LENGOW_ORDER_STATE = array(
+            LengowCore::getOrderState('process'),
+            LengowCore::getOrderState('shipped'),
+            LengowCore::getOrderState('cancel')
+        );
     }
 
     /**
@@ -1123,13 +1131,25 @@ class Lengow extends Module {
      *
      * @param array $args Arguments of hook
      */
-    public function updateOrderStatus($args) {
+    public function hookUpdateOrderStatus($args) {
         // Not send state if we are on lengow import module
         if (LengowCore::isSendState()) {
             $id_order = $args['id_order'];
             $lengow_order = new LengowOrder($id_order);
             if ($lengow_order->module == 'LengowPayment' && $lengow_order->lengow_id_order != '') {
-                LengowCore::disableMail();
+                if (_PS_VERSION_ < '1.5') {
+                    // Prestashop 1.4 - Update status
+                    $new_order_state = $args['newOrderStatus'];
+                    $id_order_state = $new_order_state->id;
+                    if (in_array($id_order_state, self::$_LENGOW_ORDER_STATE)) {
+                        $order_state = new OrderState($id_order_state);
+                        self::$_BUFFER_STATE = $order_state->send_email;
+                        $order_state->send_email = false;
+                        $order_state->update();
+                    }
+                } else {
+                    LengowCore::disableMail();
+                }
             }
         }
     }
@@ -1157,7 +1177,18 @@ class Lengow extends Module {
                     if ($id_order_state == LengowCore::getOrderState('cancel')) {
                         $marketplace->wsdl('refuse', $lengow_order->lengow_id_flux, $lengow_order->lengow_id_order);
                     }
-                    LengowCore::enableMail();
+                    if (_PS_VERSION_ < '1.5') {
+                        // Prestashop 1.4 - Update status
+                        $new_order_state = $args['newOrderStatus'];
+                        $id_order_state = $new_order_state->id;
+                        if (in_array($id_order_state, self::$_LENGOW_ORDER_STATE)) {
+                            $order_state = new OrderState($id_order_state);
+                            $order_state->send_email = self::$_BUFFER_STATE;
+                            $order_state->update();
+                        }
+                    } else {
+                        LengowCore::enableMail();
+                    }
                 }
             }
         }

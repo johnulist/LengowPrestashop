@@ -218,17 +218,17 @@ class LengowOrder extends Order {
      * @param float $wrapping_price Total wrapping price
      */
     public function rebuildOrder($lengow_products, $total_paid, $shipping_price, $wrapping_price) {
-        if($products = $this->getProducts()) {
+        if ($products = $this->getProducts()) {
             $total_order = 0;
             $total_order_tax_excl = 0;
-            foreach($products as $product_line) {
+            foreach ($products as $product_line) {
                 $order_detail = new LengowOrderDetail($product_line['id_order_detail']);
-                if($order_detail->product_attribute_id > 0)
+                if ($order_detail->product_attribute_id > 0)
                     $product_sku = $order_detail->product_id . '_' . $order_detail->product_attribute_id;
                 else
                     $product_sku = $order_detail->product_id;
                 $order_detail->changePrice($lengow_products[$product_sku]['price'], $lengow_products[$product_sku]['tax_rate']);
-                $tax_product = 1 + (0.01 * $lengow_products[$product_sku]['tax_rate']); 
+                $tax_product = 1 + (0.01 * $lengow_products[$product_sku]['tax_rate']);
                 $total_order += $lengow_products[$product_sku]['price'] * $lengow_products[$product_sku]['qty'];
                 $total_order_tax_excl += ($lengow_products[$product_sku]['price'] / $tax_product) * $lengow_products[$product_sku]['qty'];
             }
@@ -236,30 +236,36 @@ class LengowOrder extends Order {
             $this->total_products = LengowCore::formatNumber($total_order_tax_excl);
             $this->total_products_wt = $total_order;
             // Discount
-            $this->total_discounts_tax_excl = 0;
-            $this->total_discounts_tax_incl = 0;
+            if (_PS_VERSION_ >= '1.5') {
+                $this->total_discounts_tax_excl = 0;
+                $this->total_discounts_tax_incl = 0;
+            }
             $this->total_discounts = 0;
             // Shipping
-            $carrier_tax = 1 + (0.01 * $this->carrier_tax_rate); 
+            $carrier_tax = 1 + (0.01 * $this->carrier_tax_rate);
             $this->total_shipping_tax_excl = LengowCore::formatNumber($shipping_price / $carrier_tax);
             $this->total_shipping_tax_incl = (float) $shipping_price;
             $this->total_shipping = (float) $shipping_price;
             // Wrapping
-            $id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
-            $address = Address::initialize($id_address);
-            $tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
-            $tax_calculator = $tax_manager->getTaxCalculator();
-            $this->total_wrapping_tax_excl = $tax_calculator->addTaxes($wrapping_price);
-            $this->total_wrapping_tax_incl = (float) $wrapping_price;
+            if (_PS_VERSION_ >= '1.5') {
+                $id_address = (int) $this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+                $address = LengowAddress::initialize($id_address);
+                $tax_manager = TaxManagerFactory::getManager($address, (int) Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+                $tax_calculator = $tax_manager->getTaxCalculator();
+                $this->total_wrapping_tax_excl = $tax_calculator->addTaxes($wrapping_price);
+                $this->total_wrapping_tax_incl = (float) $wrapping_price;
+            }
             $this->total_wrapping = (float) $wrapping_price;
             // Pay
-            $this->total_paid_tax_excl = LengowCore::formatNumber($total_order_tax_excl + $this->total_shipping_tax_excl + $this->total_wrapping_tax_excl);
-            $this->total_paid_tax_incl = $total_paid;
+            if (_PS_VERSION_ >= '1.5') {
+                $this->total_paid_tax_excl = LengowCore::formatNumber($total_order_tax_excl + $this->total_shipping_tax_excl + $this->total_wrapping_tax_excl);
+                $this->total_paid_tax_incl = $total_paid;
+            }
             $this->total_paid = $total_paid;
             $this->total_paid_real = $total_paid;
             $this->update();
-            $this->rebuildOrderPayment();
             if (_PS_VERSION_ >= '1.5') {
+                $this->rebuildOrderPayment();
                 $this->rebuildOrderInvoice();
                 $this->rebuildOrderCarrier();
             }

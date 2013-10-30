@@ -34,9 +34,9 @@ class LengowAddress extends Address {
     static public function getByAlias($alias) {
         $row = Db::getInstance()->getRow('
                  SELECT `id_address`
-                 FROM '._DB_PREFIX_.'address a
-                 WHERE a.`alias` = "'. strval($alias) . '"');
-        if($row['id_address'] > 0)
+                 FROM ' . _DB_PREFIX_ . 'address a
+                 WHERE a.`alias` = "' . strval($alias) . '"');
+        if ($row['id_address'] > 0)
             return new LengowAddress($row['id_address']);
         return false;
     }
@@ -71,13 +71,13 @@ class LengowAddress extends Address {
      * @return string
      */
     public static function extractName($fullname) {
-        $array_name =  explode(' ', $fullname);
+        $array_name = explode(' ', $fullname);
         $firstname = $array_name[0];
         $lastname = str_replace($firstname . ' ', '', $fullname);
         $firstname = empty($firstname) ? 'unknown' : self::cleanName($firstname);
         $lastname = empty($lastname) ? 'unknown' : self::cleanName($lastname);
         return array('firstname' => ucfirst(strtolower($firstname)),
-                     'lastname'  => ucfirst(strtolower($lastname)));
+            'lastname' => ucfirst(strtolower($lastname)));
     }
 
     /**
@@ -102,4 +102,34 @@ class LengowAddress extends Address {
         return md5($address);
     }
 
-}                         
+    /**
+     * Initiliaze an address corresponding to the specified id address or if empty to the
+     * default shop configuration
+     *
+     * @param int $id_address
+     * @return Address address
+     */
+    public static function initialize($id_address = null) {
+        if (version_compare(_PS_VERSION_, '1.5', '<')) {
+            // if an id_address has been specified retrieve the address
+            if ($id_address) {
+                $address = new Address((int) $id_address);
+
+                if (!Validate::isLoadedObject($address))
+                    throw new PrestaShopException('Invalid address');
+            }
+            else {
+                // set the default address
+                $address = new Address();
+                $address->id_country = (int) Context::getContext()->country->id;
+                $address->id_state = 0;
+                $address->postcode = 0;
+            }
+
+            return $address;
+        } else {
+            return AddressCore::initialize($id_address);
+        }
+    }
+
+}
