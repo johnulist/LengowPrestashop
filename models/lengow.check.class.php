@@ -26,6 +26,8 @@ require_once 'lengow.connector.class.php';
  */
 class LengowCheck {
 
+    static private $_module = '';
+    
     /**
      * Get header table
      * 
@@ -83,13 +85,13 @@ class LengowCheck {
     public static function getMailConfiguration() {
         $mail_method = Configuration::get('PS_MAIL_METHOD');
         if ($mail_method == 2)
-            return 'Email are enabled with custom settings.';
+            return self::$_module->l('Email are enabled with custom settings.');
         elseif ($mail_method == 3 && _PS_VERSION_ >= '1.5.0')
-            return 'Email are desactived.';
+            return self::$_module->l('Email are desactived.');
         elseif ($mail_method == 3)
-            return 'Error mail settings, PS_MAIL_METHOD is 3 but this value is not allowed in Prestashop 1.4';
+            return self::$_module->l('Error mail settings, PS_MAIL_METHOD is 3 but this value is not allowed in Prestashop 1.4');
         else
-            return 'Email using php mail function.';
+            return self::$_module->l('Email using php mail function.');
     }
 
     /**
@@ -148,33 +150,37 @@ class LengowCheck {
      */
     private static function _getCheckListArray() {
         $checklist = array();
-
+        
+        self::$_module = new Lengow();
+        
         $checklist[] = array(
-            'message' => 'Lengow needs the CURL PHP extension',
-            'help' => 'The CURL extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/en/curl.setup.php">manual</a> for information on how to install or enable CURL on your system.',
+            'message' => self::$_module->l('Lengow needs the CURL PHP extension'),
+            'help' => self::$_module->l('The CURL extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/en/curl.setup.php">manual</a> for information on how to install or enable CURL on your system.'),
             'state' => (int) self::isCurlActivated()
         );
         $checklist[] = array(
-            'message' => 'Lengow needs the SimpleXML PHP extension',
-            'help' => 'The SimpleXML extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/en/book.simplexml.php">manual</a> for information on how to install or enable SimpleXML on your system.',
+            'message' => self::$_module->l('Lengow needs the SimpleXML PHP extension'),
+            'help' => self::$_module->l('The SimpleXML extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/en/book.simplexml.php">manual</a> for information on how to install or enable SimpleXML on your system.'),
             'state' => (int) self::isSimpleXMLActivated()
         );
         $checklist[] = array(
-            'message' => 'Lengow needs the JSON PHP extension',
-            'help' => 'The JSON extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/fr/book.json.php">manual</a> for information on how to install or enable JSON on your system.',
+            'message' => self::$_module->l('Lengow needs the JSON PHP extension'),
+            'help' => self::$_module->l('The JSON extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/fr/book.json.php">manual</a> for information on how to install or enable JSON on your system.'),
             'state' => (int) self::isJsonActivated()
         );
         $checklist[] = array(
-            'message' => 'Lengow authentification',
-            'help' => 'Please check your Client ID, Group ID and Token API. Make sure your website IP address is filled in your Lengow Dashboard.',
+            'message' => self::$_module->l('Lengow authentification'),
+            'help' => self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP address is filled in your Lengow Dashboard.'),
             'state' => (int) self::isValidAuth()
         );
 
-        $checklist[] = array(
-            'message' => 'Mail configuration',
-            'help' => self::getMailConfiguration(),
-            'state' => 2
-        );
+        if(Configuration::get('LENGOW_DEBUG')) {
+            $checklist[] = array(
+                'message' => self::$_module->l('Mail configuration'),
+                'help' => self::getMailConfiguration(),
+                'state' => 2
+            );
+        }
 
         return $checklist;
     }
@@ -198,7 +204,7 @@ class LengowCheck {
      * @return string Json
      */
     public static function getJsonCheckList() {
-        return json_encode(self::_getCheckListArray());
+        return Tools::jsonEncode(self::_getCheckListArray());
     }
 
 }
