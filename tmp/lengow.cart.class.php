@@ -17,14 +17,32 @@
  */
 
 /**
- * The Lengow Payment Class.
+ * The Lengow Cart Class.
  *
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowPaymentModuleAbstract extends PaymentModule {
+class LengowCart extends Cart {
 
-    public $name = 'LengowPayment';
+    public static $TOTAL_CART_GET = array(
+        'products' ,
+        'discounts' , 
+        'total' , 
+        'total_without_shipping' , 
+        'shipping' , 
+        'wrapping' , 
+        'products_without_shipping' , 
+    );
+
+    public $lengow_products = array();
+    public $lengow_shipping = 0 ;
+    public $lengow_channel = null ;
+    public $lengow_fees = 0 ;
+    public $tax_calculation_method = PS_TAX_EXC;
     
-}
+    /**
+     * Current lengow order.
+     */
+    public static $current_order;
 
+}

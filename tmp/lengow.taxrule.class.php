@@ -22,7 +22,7 @@
  * @author Romain Le Polh <romain@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowTaxRuleAbstract extends TaxRule {
+class LengowTaxRule extends TaxRule {
     
     /**
      * Get all tax rules for specific group id

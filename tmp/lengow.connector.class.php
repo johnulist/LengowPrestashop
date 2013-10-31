@@ -35,7 +35,7 @@ try {
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowConnectorAbstract {
+class LengowConnector {
 
     /**
      * Version.
@@ -139,7 +139,7 @@ class LengowConnectorAbstract {
      *
      * @return array The formated data response
      */
-    public function api($method, $array = array()) {
+    public function api($method, $array) {
         try {
             if (!$api = $this->_getMethod($method))
                 throw new LengowAPIException('Error unknow method API', 3);

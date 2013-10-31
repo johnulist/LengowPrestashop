@@ -22,7 +22,7 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowSpecificPrice extends SpecificPrice {
+class LengowSpecificPriceAbstract extends SpecificPrice {
 
     public static function clear() {
 		self::$_specificPriceCache = array();

@@ -17,14 +17,12 @@
  */
 
 /**
- * The Lengow Payment Class.
+ * The Lengow Order History Class.
  *
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowPaymentModuleAbstract extends PaymentModule {
+class LengowOrderHistory extends OrderHistory {
 
-    public $name = 'LengowPayment';
-    
+
 }
-

@@ -22,7 +22,7 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowAddressAbstract extends Address {
+class LengowAddress extends Address {
 
     /**
      * Specify if an address is already in base

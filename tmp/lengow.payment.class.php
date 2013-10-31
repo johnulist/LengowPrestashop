@@ -22,7 +22,7 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowPaymentModuleAbstract extends PaymentModule {
+class LengowPaymentModule extends PaymentModule {
 
     public $name = 'LengowPayment';
     

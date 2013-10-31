@@ -37,7 +37,7 @@ if (_PS_VERSION_ < '1.5')
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowImportAbstract {
+class LengowImport {
 
     /**
      * Version.

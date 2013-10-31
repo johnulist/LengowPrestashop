@@ -25,7 +25,7 @@ include_once 'lengow.order.class.php';
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowMarketplaceAbstract {
+class LengowMarketplace {
 
     public static $XML_MARKETPLACES = 'marketplaces.xml';
     public static $DOM;
@@ -259,7 +259,7 @@ class LengowMarketplaceAbstract {
  *
  * @author Ludovic Drin <ludovic@lengow.com>
  */
-class LengowWsdlExceptionAbstract extends Exception {
+class LengowWsdlException extends Exception {
 
     /**
      * The result from the WSDL server that represents the exception information.

@@ -17,14 +17,33 @@
  */
 
 /**
- * The Lengow Payment Class.
+ * The Lengow Option Class.
+ * User to generate option list on configuration.
  *
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowPaymentModuleAbstract extends PaymentModule {
+class LengowOption {
 
-    public $name = 'LengowPayment';
-    
+	/**
+	 * tracker ID.
+	 */
+	public $id;
+
+	/**
+	 * tracker name.
+	 */
+	public $name;
+
+	/**
+     * Make a new tracker option.
+	 *
+     * @param integer $id The tracker type unique ID.
+     * @param varchar $token The tracker type name.
+	 */
+	public function __construct($id, $name) {
+		$this->id = $id;
+		$this->name = $name;
+	}
+ 
 }
-

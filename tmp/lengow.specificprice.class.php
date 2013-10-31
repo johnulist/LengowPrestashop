@@ -17,14 +17,16 @@
  */
 
 /**
- * The Lengow Payment Class.
+ * The Lengow SpecificPrice Class.
  *
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowPaymentModuleAbstract extends PaymentModule {
+class LengowSpecificPrice extends SpecificPrice {
 
-    public $name = 'LengowPayment';
-    
+    public static function clear() {
+		self::$_specificPriceCache = array();
+		self::$_cache_priorities = array();
+    }
+
 }
-

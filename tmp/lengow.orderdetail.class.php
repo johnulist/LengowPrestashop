@@ -22,7 +22,7 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowOrderDetailAbstract extends OrderDetail {
+class LengowOrderDetail extends OrderDetail {
 
 	/**
 	 * Version.
