@@ -186,7 +186,7 @@ class LengowCheck {
         );
         $checklist[] = array(
             'message' => self::$_module->l('Shop functionality'),
-            'help' => self::$_module->l('Shop functionality are disabled, order import will be impossible, please enable them in your Prestashop settings.'),
+            'help' => self::$_module->l('Shop functionality are disabled, order import will be impossible, please enable them in your products settings.'),
             'state' => (int) self::isShopActivated()
         );
 
