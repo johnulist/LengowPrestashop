@@ -120,6 +120,17 @@ class LengowCheck {
     public static function isJsonActivated() {
         return function_exists('json_decode');
     }
+    
+    /**
+     * Check if shop functionality are enabled
+     * 
+     * @return boolean
+     */
+    public static function isShopActivated() {
+        if(Configuration::get('PS_CATALOG_MODE'))
+            return false;
+        return true;
+    }
 
     /**
      * Check API Authentification
@@ -172,6 +183,11 @@ class LengowCheck {
             'message' => self::$_module->l('Lengow authentification'),
             'help' => self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP address is filled in your Lengow Dashboard.'),
             'state' => (int) self::isValidAuth()
+        );
+        $checklist[] = array(
+            'message' => self::$_module->l('Shop functionality'),
+            'help' => self::$_module->l('Shop functionality are disabled, order import will be impossible, please enable them in your Prestashop settings.'),
+            'state' => (int) self::isShopActivated()
         );
 
         if(Configuration::get('LENGOW_DEBUG')) {

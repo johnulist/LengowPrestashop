@@ -258,7 +258,7 @@ class LengowProduct extends Product {
                     }
                 }
 
-                if ($tr) {
+                if (isset($tr)) {
                     $t = new Tax($tr->id_tax);
                     $tax_calculator = new TaxCalculator(array($t));
                     $taxes = $tax_calculator->getTaxesAmount($shipping_cost);
