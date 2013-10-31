@@ -453,7 +453,7 @@ class LengowExport {
         if (LengowCore::countExportAllImages() > 3 || LengowCore::countExportAllImages() == 'all') {
             // Export x or all images
             for ($i = 3; $i <= $this->max_images; $i++)
-                $array_product['image_' . $i] = $product->getData('image_' . $i);
+                $array_product['image_' . $i] = $product->getData('image_' . $i, $id_product_attribute);
         }
         return $array_product;
     }

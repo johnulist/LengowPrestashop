@@ -23,10 +23,10 @@
  * @copyright 2013 Lengow SAS
  */
 class LengowProduct extends Product {
+
     /**
      * Version.
      */
-
     const VERSION = '1.0.1';
 
     /**
@@ -141,7 +141,7 @@ class LengowProduct extends Product {
                 return $this->id;
             case 'name' :
                 if ($id_product_attribute && LengowExport::isFullName())
-                     return $this->combinations[$id_product_attribute]['attribute_name'] ? $this->name . ' - ' . $this->combinations[$id_product_attribute]['attribute_name'] : $this->name;
+                    return $this->combinations[$id_product_attribute]['attribute_name'] ? $this->name . ' - ' . $this->combinations[$id_product_attribute]['attribute_name'] : $this->name;
                 return $this->name;
             case 'reference' :
                 if ($id_product_attribute > 1 && $this->combinations[$id_product_attribute]['reference'])
@@ -222,9 +222,10 @@ class LengowProduct extends Product {
             case 'url' :
                 return LengowCore::getContext()->link->getProductLink($this);
             case 'image_1' :
-                if($id_product_attribute) {
+                if ($id_product_attribute) {
                     $images = $this->getCombinationImages($this->id_lang);
-                    return  LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $images[$id_product_attribute][0]['id_image'], LengowCore::getImageFormat());
+                    if (array_key_exists($id_product_attribute, $images))
+                        return LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $images[$id_product_attribute][0]['id_image'], LengowCore::getImageFormat());
                 }
                 return isset($this->cover) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->cover['id_image'], LengowCore::getImageFormat()) : '';
             case 'price_shipping' :
@@ -275,8 +276,24 @@ class LengowProduct extends Product {
             case 'delivery_time' :
                 return '';
             case 'image_2' :
+                if ($id_product_attribute) {
+                    $images = $this->getCombinationImages($this->id_lang);
+                    if (array_key_exists($id_product_attribute, $images))
+                        if (isset($images[$id_product_attribute][1]['id_image']))
+                            return LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $images[$id_product_attribute][1]['id_image'], LengowCore::getImageFormat());
+                        else
+                            return '';
+                }
                 return isset($this->images[0]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->images[0]['id_image'], LengowCore::getImageFormat()) : '';
             case 'image_3' :
+                if ($id_product_attribute) {
+                    $images = $this->getCombinationImages($this->id_lang);
+                    if (array_key_exists($id_product_attribute, $images))
+                        if (isset($images[$id_product_attribute][2]['id_image']))
+                            return LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $images[$id_product_attribute][2]['id_image'], LengowCore::getImageFormat());
+                        else
+                            return '';
+                }
                 return isset($this->images[1]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->images[1]['id_image'], LengowCore::getImageFormat()) : '';
             case 'sale_from' :
                 return $this->is_sale ? $this->specificPrice['from'] : '';
@@ -304,7 +321,16 @@ class LengowProduct extends Product {
             case 'supplier' :
                 return $this->supplier_name;
         }
-        if (preg_match('`image_([0-3])+`', $name, $out)) {
+        if (preg_match('`image_([0-9]+)`', $name, $out)) {
+            if ($id_product_attribute) {
+                $id_image = $out[1] - 1;
+                $attribute_images = $this->getCombinationImages($this->id_lang);
+                if (array_key_exists($id_product_attribute, $attribute_images))
+                    if (isset($attribute_images[$id_product_attribute][$id_image]['id_image']))
+                        return LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $attribute_images[$id_product_attribute][$id_image]['id_image'], LengowCore::getImageFormat());
+                    else
+                        return '';
+            }
             return isset($this->images[$out[1]]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->images[$out[1]]['id_image'], LengowCore::getImageFormat()) : '';
         }
     }
@@ -470,7 +496,7 @@ class LengowProduct extends Product {
                     $name .= $attribute[0] . ',';
                 }
                 $list = rtrim($list, ', ');
-               // $name = rtrim($name, ', ');
+                // $name = rtrim($name, ', ');
                 $comb_array[$id_product_attribute]['image'] = $product_attribute['id_image'] ? new Image($product_attribute['id_image']) : false;
                 if (LengowCore::compareVersion())
                     $comb_array[$id_product_attribute]['available_date'] = $product_attribute['available_date'] != 0 ? date('Y-m-d', strtotime($product_attribute['available_date'])) : '0000-00-00';
@@ -710,4 +736,3 @@ class LengowProduct extends Product {
     }
 
 }
-
