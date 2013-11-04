@@ -307,6 +307,8 @@ class LengowProductAbstract extends Product {
         if (preg_match('`image_([0-3])+`', $name, $out)) {
             return isset($this->images[$out[1]]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->images[$out[1]]['id_image'], LengowCore::getImageFormat()) : '';
         }
+        if($this->{$name})
+            return $this->{$name};
     }
 
     /**

@@ -74,7 +74,18 @@ class LengowExportAbstract {
         'product_variation' => 'variation',
         'currency' => 'currency',
         'condition' => 'condition',
-        'supplier' => 'supplier');
+        'supplier' => 'supplier',
+        'minimal_quantity' => 'minimal_quantity',
+        'is_virtual' => 'is_virtual',
+        '' => '',
+        'available_for_order' => 'available_for_order',
+        'available_date' => 'available_date',
+        'show_price' => 'show_price',
+        'visibility' => 'visibility',
+        'available_now' => 'available_now',
+        'available_later' => 'available_later',
+        'stock_availables' => 'stock_availables',
+        );
 
     /**
      * CSV separator.
