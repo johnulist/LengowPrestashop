@@ -16,34 +16,8 @@
  * under the License.
  */
 
-/**
- * The Lengow Option Class.
- * User to generate option list on configuration.
- *
- * @author Ludovic Drin <ludovic@lengow.com>
- * @copyright 2013 Lengow SAS
- */
-class LengowOption {
+require_once dirname(__FILE__) . $sep . '..' . $sep . 'models' . $sep . 'lengow.option.class.php';
 
-	/**
-	 * tracker ID.
-	 */
-	public $id;
-
-	/**
-	 * tracker name.
-	 */
-	public $name;
-
-	/**
-     * Make a new tracker option.
-	 *
-     * @param integer $id The tracker type unique ID.
-     * @param varchar $token The tracker type name.
-	 */
-	public function __construct($id, $name) {
-		$this->id = $id;
-		$this->name = $name;
-	}
+class LengowOption extends LengowOptionAbstract {
  
 }

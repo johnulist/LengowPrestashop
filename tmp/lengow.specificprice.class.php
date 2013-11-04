@@ -16,17 +16,8 @@
  * under the License.
  */
 
-/**
- * The Lengow SpecificPrice Class.
- *
- * @author Ludovic Drin <ludovic@lengow.com>
- * @copyright 2013 Lengow SAS
- */
-class LengowSpecificPrice extends SpecificPrice {
+require_once dirname(__FILE__) . $sep . '..' . $sep . 'models' . $sep . 'lengow.specificprice.class.php';
 
-    public static function clear() {
-		self::$_specificPriceCache = array();
-		self::$_cache_priorities = array();
-    }
+class LengowSpecificPrice extends SpecificPrice {
 
 }

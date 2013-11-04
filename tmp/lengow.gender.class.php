@@ -16,73 +16,8 @@
  * under the License.
  */
 
-/**
- * The Lengow Gender Class.
- *
- * @author Ludovic Drin <ludovic@lengow.com>
- * @copyright 2013 Lengow SAS
- */
-class LengowGender extends Gender {
-    
-    /**
-     * Current alias of mister.
-     */
-    public static $CURRENT_MALE = array('M' ,
-                                        'M.' ,
-                                        'Mr' ,
-                                        'Mr.' ,
-                                        'Mister' ,
-                                        'Monsieur' ,
-                                        'monsieur' ,
-                                        'mister' ,
-                                        'm.' , 
-                                        'mr ' , 
-                                       );
+require_once dirname(__FILE__) . $sep . '..' . $sep . 'models' . $sep . 'lengow.gender.class.php';
 
-    /**
-     * Current alias of miss.
-     */
-    public static $CURRENT_FEMALE = array('Mme' ,
-                                          'mme' ,
-                                          'Mm' ,
-                                          'mm' ,
-                                          'Mlle' ,
-                                          'mlle' ,
-                                          'Madame' ,
-                                          'madame' ,
-                                          'Mademoiselle' , 
-                                          'madamoiselle' ,
-                                          'Mrs' ,
-                                          'mrs' ,
-                                          'Mrs.' ,
-                                          'mrs.' ,
-                                          'Miss' ,
-                                          'miss' , 
-                                          'Ms' ,
-                                          'ms' ,
-                                        );
-
-    /**
-     * Get the real gender
-     *
-     * @param $name The gender text
-     *
-     * @return id_gender
-     */
-    public static function getGender($name) {
-        if(empty($name))
-            return '';
-        if(in_array($name, self::$CURRENT_MALE)) {
-            return 1;
-        } else if(in_array($name, self::$CURRENT_FEMALE)) {
-            return 2;
-        } else {
-            $query = 'SELECT `id_gender` FROM `' . _DB_PREFIX_ . 'gender_lang` WHERE `name` = \'' . pSQL($name) . '\' LIMIT 1;';
-            if($result = Db::getInstance()->Execute($query)) {
-                return $result['id_gender'];
-            }
-            return '';
-        }
-    }
+class LengowGender extends LengowGenderAbstract {
 
 }                         

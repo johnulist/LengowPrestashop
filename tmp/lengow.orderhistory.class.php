@@ -16,13 +16,8 @@
  * under the License.
  */
 
-/**
- * The Lengow Order History Class.
- *
- * @author Ludovic Drin <ludovic@lengow.com>
- * @copyright 2013 Lengow SAS
- */
-class LengowOrderHistory extends OrderHistory {
+require_once dirname(__FILE__) . $sep . '..' . $sep . 'models' . $sep . 'lengow.orderhistory.class.php';
 
+class LengowOrderHistory extends LengowOrderHistoryAbstract {
 
 }
