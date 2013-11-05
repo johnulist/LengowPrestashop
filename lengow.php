@@ -867,6 +867,7 @@ class Lengow extends Module {
                     'lengow_export_new' => Configuration::get('LENGOW_EXPORT_NEW'),
                     'lengow_export_all_attributes' => Configuration::get('LENGOW_EXPORT_ALL_ATTRIBUTES'),
                     'lengow_export_fullname' => Configuration::get('LENGOW_EXPORT_FULLNAME'),
+                    'lengow_export_features' => Configuration::get('LENGOW_EXPORT_FEATURES'),
                     'lengow_export_file' => Configuration::get('LENGOW_EXPORT_FILE'),
                     'lengow_export_fields' => json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')),
                     'lengow_tracking' => Configuration::get('LENGOW_TRACKING'),

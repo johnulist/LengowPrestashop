@@ -115,6 +115,19 @@
             <p class="preference_description">{l s='If don\'t want to export all your products\' variations, click "no"'}</p>		
         </div>
         <div class="clear"></div>
+        <label>{l s='Export product features' mod='lengow'}</label>
+        <div class="margin-form">
+            <input type="radio"	name="lengow_export_features" id="active_on" value="1" {if $lengow_export_features == 1} checked="checked"{/if} />
+            <label class="t" for="active_on">
+                <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
+            </label>
+            <input type="radio"	name="lengow_export_features" id="active_off" value="0" {if $lengow_export_features == 0} checked="checked"{/if}/>
+            <label class="t" for="active_off">
+                <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
+            </label>
+            <p class="preference_description">{l s='If you click "yes", your product(s) will be exported with features.'}</p>		
+        </div>
+        <div class="clear"></div>
         <label>{l s='Title + attributes + features' mod='lengow'}</label>
         <div class="margin-form">
             <input type="radio"	name="lengow_export_fullname" id="active_on" value="1" {if $lengow_export_fullname == 1} checked="checked"{/if} />
