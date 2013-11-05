@@ -484,7 +484,7 @@ class LengowExportAbstract {
         if (LengowCore::countExportAllImages() > 3 || LengowCore::countExportAllImages() == 'all') {
             // Export x or all images
             for ($i = 3; $i <= $this->max_images; $i++)
-                $array_product['image_' . $i] = $product->getData('image_' . $i);
+                $array_product['image_' . $i] = $product->getData('image_' . $i, $id_product_attribute);
         }
         return $array_product;
     }
@@ -612,7 +612,10 @@ class LengowExportAbstract {
      * @return string The formated header.
      */
     private function _toUpperCase($str) {
-        return substr(strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str)))), 0, 58);
+        if(_PS_VERSION_ <= '1.4.5')
+            return substr(strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', LengowCore::replaceAccentedChars($str)))), 0, 58);
+        else
+            return substr(strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str)))), 0, 58);
     }
 
     /**
@@ -623,7 +626,10 @@ class LengowExportAbstract {
      * @return string The formated fieldname.
      */
     private function _toFieldname($str) {
-        return strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str))));
+        if(_PS_VERSION_ <= '1.4.5')
+            return strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', LengowCore::replaceAccentedChars($str))));
+        else
+            return strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str))));
     }
 
     /**

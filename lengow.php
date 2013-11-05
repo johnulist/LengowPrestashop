@@ -28,8 +28,9 @@ if (file_exists(dirname(__FILE__) . $sep . 'override'))
 else
     define('_LENGOW_CLASS_FOLDER_', 'tmp');
 
-if (_PS_VERSION_ < '1.4.2')
-    $path = '..' . $sep . 'modules' . $sep . 'lengow' . $sep;
+if (_PS_VERSION_ <= '1.4.4')
+    $path = $_SERVER['DOCUMENT_ROOT'] . $sep . 'modules' . $sep . 'lengow' . $sep;
+
 
 require_once $path . _LENGOW_CLASS_FOLDER_ . $sep . 'lengow.core.class.php';
 require_once $path . 'models' . $sep . 'lengow.check.class.php';
