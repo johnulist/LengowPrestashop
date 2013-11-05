@@ -227,6 +227,15 @@ class LengowCoreAbstract {
     public static function isExportFullmode() {
         return Configuration::get('LENGOW_EXPORT_ALL_ATTRIBUTES');
     }
+    
+    /**
+     * Export all products, attributes & features or single products.
+     *
+     * @return boolean
+     */
+    public static function isExportFeatures() {
+        return Configuration::get('LENGOW_EXPORT_FEATURES');
+    }
 
     /**
      * Export full name of product or parent's name of product.

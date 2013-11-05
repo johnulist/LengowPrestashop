@@ -296,7 +296,7 @@ class LengowConnectorAbstract {
         }
         curl_close($ch);
         if(strtolower(json_decode($result)->return) == "ko") {
-            LengowCore::log('API Error : ' . json_decode($result)->error);
+            LengowCore::log('API Error : ' . json_decode($result)->error, -1);
         }
         return $result;
     }

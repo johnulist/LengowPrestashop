@@ -25,8 +25,8 @@
 class LengowSpecificPriceAbstract extends SpecificPrice {
 
     public static function clear() {
-		self::$_specificPriceCache = array();
-		self::$_cache_priorities = array();
+	self::$_specificPriceCache = array();
+	self::$_cache_priorities = array();
     }
 
 }

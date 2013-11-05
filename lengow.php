@@ -23,7 +23,7 @@
 $sep = DIRECTORY_SEPARATOR;
 $path = '';
 
-if(file_exists(dirname(__FILE__) . $sep . 'override'))
+if (file_exists(dirname(__FILE__) . $sep . 'override'))
     define('_LENGOW_CLASS_FOLDER_', 'override');
 else
     define('_LENGOW_CLASS_FOLDER_', 'tmp');
@@ -68,7 +68,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.2.4';
+        $this->version = '2.0.3';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
@@ -94,7 +94,7 @@ class Lengow extends Module {
         LengowCore::updateMarketPlaceConfiguration();
         LengowCore::setModule($this);
         LengowCore::cleanLog();
-        
+
         $this->update();
         $this->_installOverride();
 
@@ -144,6 +144,7 @@ class Lengow extends Module {
                 Configuration::updateValue('LENGOW_EXPORT_NEW', false) &&
                 Configuration::updateValue('LENGOW_EXPORT_ALL_ATTRIBUTES', true) &&
                 Configuration::updateValue('LENGOW_EXPORT_FULLNAME', true) &&
+                Configuration::updateValue('LENGOW_EXPORT_FEATURES', false) &&
                 Configuration::updateValue('LENGOW_EXPORT_FORMAT', 'csv') &&
                 Configuration::updateValue('LENGOW_EXPORT_FIELDS', json_encode(LengowCore::$DEFAULT_FIELDS)) &&
                 Configuration::updateValue('LENGOW_IMAGE_TYPE', 3) &&
@@ -227,7 +228,34 @@ class Lengow extends Module {
      */
     public function uninstall() {
         if (!parent::uninstall() ||
-                !Db::getInstance()->Execute('DROP TABLE `' . _DB_PREFIX_ . 'lengow_orders` , ' . '`' . _DB_PREFIX_ . 'lengow_product`;') || !Configuration::deleteByName('LENGOW_LOGO_URL') || !Configuration::deleteByName('LENGOW_AUTHORIZED_IP') || !Configuration::deleteByName('LENGOW_TRACKING') || !Configuration::deleteByName('LENGOW_ID_CUSTOMER') || !Configuration::deleteByName('LENGOW_ID_GROUP') || !Configuration::deleteByName('LENGOW_TOKEN') || !Configuration::deleteByName('LENGOW_EXPORT_ALL') || !Configuration::deleteByName('LENGOW_EXPORT_NEW') || !Configuration::deleteByName('LENGOW_EXPORT_ALL_ATTRIBUTES') || !Configuration::deleteByName('LENGOW_EXPORT_FULLNAME') || !Configuration::deleteByName('LENGOW_EXPORT_FIELDS') || !Configuration::deleteByName('LENGOW_ORDER_ID_PROCESS') || !Configuration::deleteByName('LENGOW_ORDER_ID_SHIPPED') || !Configuration::deleteByName('LENGOW_ORDER_ID_CANCEL') || !Configuration::deleteByName('LENGOW_IMAGE_TYPE') || !Configuration::deleteByName('LENGOW_IMAGES_COUNT') || !Configuration::deleteByName('LENGOW_IMPORT_METHOD_NAME') || !Configuration::deleteByName('LENGOW_IMPORT_DAYS') || !Configuration::deleteByName('LENGOW_EXPORT_FORMAT') || !Configuration::deleteByName('LENGOW_EXPORT_FILE') || !Configuration::deleteByName('LENGOW_CARRIER_DEFAULT') || !Configuration::deleteByName('LENGOW_FLOW_DATA') || !Configuration::deleteByName('LENGOW_MIGRATE') || !Configuration::deleteByName('LENGOW_CRON') || !Configuration::deleteByName('LENGOW_DEBUG') || !$this->_uninstallTab())
+                !Db::getInstance()->Execute('DROP TABLE `' . _DB_PREFIX_ . 'lengow_orders` , ' . '`' . _DB_PREFIX_ . 'lengow_product`;') ||
+                !Configuration::deleteByName('LENGOW_LOGO_URL') ||
+                !Configuration::deleteByName('LENGOW_AUTHORIZED_IP') ||
+                !Configuration::deleteByName('LENGOW_TRACKING') ||
+                !Configuration::deleteByName('LENGOW_ID_CUSTOMER') ||
+                !Configuration::deleteByName('LENGOW_ID_GROUP') ||
+                !Configuration::deleteByName('LENGOW_TOKEN') ||
+                !Configuration::deleteByName('LENGOW_EXPORT_ALL') ||
+                !Configuration::deleteByName('LENGOW_EXPORT_NEW') ||
+                !Configuration::deleteByName('LENGOW_EXPORT_ALL_ATTRIBUTES') ||
+                !Configuration::deleteByName('LENGOW_EXPORT_FULLNAME') ||
+                !Configuration::deleteByName('LENGOW_EXPORT_FIELDS') ||
+                !Configuration::deleteByName('LENGOW_ORDER_ID_PROCESS') ||
+                !Configuration::deleteByName('LENGOW_ORDER_ID_SHIPPED') ||
+                !Configuration::deleteByName('LENGOW_ORDER_ID_CANCEL') ||
+                !Configuration::deleteByName('LENGOW_IMAGE_TYPE') ||
+                !Configuration::deleteByName('LENGOW_IMAGES_COUNT') ||
+                !Configuration::deleteByName('LENGOW_IMPORT_METHOD_NAME') ||
+                !Configuration::deleteByName('LENGOW_IMPORT_DAYS') ||
+                !Configuration::deleteByName('LENGOW_EXPORT_FEATURES') ||
+                !Configuration::deleteByName('LENGOW_EXPORT_FORMAT') ||
+                !Configuration::deleteByName('LENGOW_EXPORT_FILE') ||
+                !Configuration::deleteByName('LENGOW_CARRIER_DEFAULT') ||
+                !Configuration::deleteByName('LENGOW_FLOW_DATA') ||
+                !Configuration::deleteByName('LENGOW_MIGRATE') ||
+                !Configuration::deleteByName('LENGOW_CRON') ||
+                !Configuration::deleteByName('LENGOW_DEBUG') ||
+                !$this->_uninstallTab())
             return false;
         return true;
     }
@@ -270,6 +298,7 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_EXPORT_ALL', Tools::getValue('lengow_export_all'));
             Configuration::updateValue('LENGOW_EXPORT_NEW', Tools::getValue('lengow_export_new'));
             Configuration::updateValue('LENGOW_EXPORT_ALL_ATTRIBUTES', Tools::getValue('lengow_export_all_attributes'));
+            Configuration::updateValue('LENGOW_EXPORT_FEATURES', Tools::getValue('lengow_export_features'));
             Configuration::updateValue('LENGOW_EXPORT_FULLNAME', Tools::getValue('lengow_export_fullname'));
             Configuration::updateValue('LENGOW_EXPORT_FIELDS', json_encode(Tools::getValue('lengow_export_fields')));
             Configuration::updateValue('LENGOW_ORDER_ID_PROCESS', Tools::getValue('lengow_order_process'));
@@ -461,6 +490,26 @@ class Lengow extends Module {
                         'label' => $this->l('Export product variations'),
                         'desc' => $this->l('If don\'t want to export all your products\' variations, click "no"'),
                         'name' => 'lengow_export_all_attributes',
+                        'is_bool' => true,
+                        'class' => 't',
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'radio',
+                        'label' => $this->l('Export product features'),
+                        'desc' => $this->l('If you click "yes",  your product(s) will be exported with features.'),
+                        'name' => 'lengow_export_features',
                         'is_bool' => true,
                         'class' => 't',
                         'values' => array(
@@ -756,6 +805,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_export_disabled'] = Configuration::get('LENGOW_EXPORT_DISABLED');
             $helper->fields_value['lengow_export_new'] = Configuration::get('LENGOW_EXPORT_NEW');
             $helper->fields_value['lengow_export_all_attributes'] = Configuration::get('LENGOW_EXPORT_ALL_ATTRIBUTES');
+            $helper->fields_value['lengow_export_features'] = Configuration::get('LENGOW_EXPORT_FEATURES');
             $helper->fields_value['lengow_export_fullname'] = Configuration::get('LENGOW_EXPORT_FULLNAME');
             $helper->fields_value['lengow_export_file'] = Configuration::get('LENGOW_EXPORT_FILE');
             $helper->fields_value['lengow_export_fields[]'] = json_decode(Configuration::get('LENGOW_EXPORT_FIELDS'));

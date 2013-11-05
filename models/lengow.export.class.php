@@ -181,6 +181,11 @@ class LengowExportAbstract {
      * Export active product.
      */
     private $all_product = false;
+    
+    /**
+     * Export active product.
+     */
+    private $export_features = false;
 
     /**
      * Construc new Lengow export.
@@ -189,10 +194,11 @@ class LengowExportAbstract {
      *
      * @return Exception Error
      */
-    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null) {
+    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null, $export_features = null) {
         try {
             $this->setFormat($format);
             $this->setFullmode($fullmode);
+            $this->setExportFeatures($export_features);
             $this->setProducts($all);
             $this->setStream($stream);
             $this->setTitle($full_title);
@@ -311,6 +317,20 @@ class LengowExportAbstract {
         else
             $this->full = LengowCore::isExportFullmode();
     }
+    
+    /**
+     * Set export features.
+     *
+     * @param string $format The format to export
+     *
+     * @return boolean.
+     */
+    public function setExportFeatures($export_features) {
+        if ($export_features !== null)
+            $this->export_features = $export_features;
+        else
+            $this->export_features = LengowCore::isExportFeatures();
+    }
 
     /**
      * Set format to export.
@@ -385,7 +405,7 @@ class LengowExportAbstract {
             else
                 $this->max_images = LengowCore::countExportAllImages();
             // Is full export
-            if ($this->full) {
+            if ($this->full || $this->export_features) {
                 $this->attributes = AttributeGroup::getAttributesGroups(LengowCore::getContext()->language->id);
                 $this->features = Feature::getFeatures(LengowCore::getContext()->language->id);
             }
