@@ -224,7 +224,7 @@ class LengowProduct extends Product {
             case 'image_1' :
                 if ($id_product_attribute) {
                     $images = $this->getCombinationImages($this->id_lang);
-                    if (array_key_exists($id_product_attribute, $images))
+                    if (is_array($images) && array_key_exists($id_product_attribute, $images))
                         return LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $images[$id_product_attribute][0]['id_image'], LengowCore::getImageFormat());
                 }
                 return isset($this->cover) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->cover['id_image'], LengowCore::getImageFormat()) : '';
@@ -242,7 +242,7 @@ class LengowProduct extends Product {
                 $id_currency = $context->cart->id_currency;
                 $shipping_method = $carrier->getShippingMethod();
                 $shipping_cost = 0;
-                if ($shipping_method != Carrier::SHIPPING_METHOD_FREE) {
+                if (!defined('Carrier::SHIPPING_METHOD_FREE') || $shipping_method != Carrier::SHIPPING_METHOD_FREE) {
                     if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT) {
                         $shipping_cost = LengowCore::formatNumber($carrier->getDeliveryPriceByWeight($weight, (int) $id_zone));
                     } else {
@@ -278,7 +278,7 @@ class LengowProduct extends Product {
             case 'image_2' :
                 if ($id_product_attribute) {
                     $images = $this->getCombinationImages($this->id_lang);
-                    if (array_key_exists($id_product_attribute, $images))
+                    if (is_array($images) && array_key_exists($id_product_attribute, $images))
                         if (isset($images[$id_product_attribute][1]['id_image']))
                             return LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $images[$id_product_attribute][1]['id_image'], LengowCore::getImageFormat());
                         else
@@ -288,7 +288,7 @@ class LengowProduct extends Product {
             case 'image_3' :
                 if ($id_product_attribute) {
                     $images = $this->getCombinationImages($this->id_lang);
-                    if (array_key_exists($id_product_attribute, $images))
+                    if (is_array($images) && array_key_exists($id_product_attribute, $images))
                         if (isset($images[$id_product_attribute][2]['id_image']))
                             return LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $images[$id_product_attribute][2]['id_image'], LengowCore::getImageFormat());
                         else
@@ -325,7 +325,7 @@ class LengowProduct extends Product {
             if ($id_product_attribute) {
                 $id_image = $out[1] - 1;
                 $attribute_images = $this->getCombinationImages($this->id_lang);
-                if (array_key_exists($id_product_attribute, $attribute_images))
+                if (is_array($attribute_images) && array_key_exists($id_product_attribute, $attribute_images))
                     if (isset($attribute_images[$id_product_attribute][$id_image]['id_image']))
                         return LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $attribute_images[$id_product_attribute][$id_image]['id_image'], LengowCore::getImageFormat());
                     else

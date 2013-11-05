@@ -22,8 +22,8 @@
  */
 $sep = DIRECTORY_SEPARATOR;
 $path = '';
-if (_PS_VERSION_ < '1.4.2')
-    $path = '..' . $sep . 'modules' . $sep . 'lengow' . $sep;
+if (_PS_VERSION_ <= '1.4.4')
+    $path = $_SERVER['DOCUMENT_ROOT'] . $sep . 'modules' . $sep . 'lengow' . $sep;
 
 require_once $path . 'models' . $sep . 'lengow.core.class.php';
 require_once $path . 'models' . $sep . 'lengow.order.class.php';
@@ -61,7 +61,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.2.4';
+        $this->version = '2.0.2.5';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
