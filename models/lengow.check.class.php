@@ -61,7 +61,11 @@ class LengowCheck {
             $out .= '</tr>';
 
             if ($check['state'] === 0 || $check['state'] === 2) {
-                $out .= '<tr><td colspan="2"><p>' . $check['help'] . '</p></td></tr>';
+                $out .= '<tr><td colspan="2"><p>' . $check['help'];
+                if($check['help_link'] != '') {
+                    $out .= '<br /><a href="' . $check['help_link'] . '">' . $check['help_label'] . '</a>';
+                }
+                $out .= '</p></td></tr>';
             }
         }
 
@@ -166,22 +170,30 @@ class LengowCheck {
         
         $checklist[] = array(
             'message' => self::$_module->l('Lengow needs the CURL PHP extension'),
-            'help' => self::$_module->l('The CURL extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/en/curl.setup.php">manual</a> for information on how to install or enable CURL on your system.'),
+            'help' => self::$_module->l('The CURL extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable CURL on your system.'),
+            'help_link' => 'http://www.php.net/manual/en/curl.setup.php',
+            'help_label' => self::$_module->l('Go to Curl PHP extension manual'),
             'state' => (int) self::isCurlActivated()
         );
         $checklist[] = array(
             'message' => self::$_module->l('Lengow needs the SimpleXML PHP extension'),
-            'help' => self::$_module->l('The SimpleXML extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/en/book.simplexml.php">manual</a> for information on how to install or enable SimpleXML on your system.'),
+            'help' => self::$_module->l('The SimpleXML extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable SimpleXML on your system.'),
+            'help_link' => 'http://www.php.net/manual/en/book.simplexml.php',
+            'help_label' => self::$_module->l('Go to SimpleXML PHP extension manual'),
             'state' => (int) self::isSimpleXMLActivated()
         );
         $checklist[] = array(
             'message' => self::$_module->l('Lengow needs the JSON PHP extension'),
-            'help' => self::$_module->l('The JSON extension is not installed or enabled in your PHP installation. Check the <a target="_blank" href="http://www.php.net/manual/fr/book.json.php">manual</a> for information on how to install or enable JSON on your system.'),
+            'help' => self::$_module->l('The JSON extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable JSON on your system.'),
+            'help_link' => 'http://www.php.net/manual/fr/book.json.php',
+            'help_label' => self::$_module->l('Go to JSON PHP extension manual'),
             'state' => (int) self::isJsonActivated()
         );
         $checklist[] = array(
             'message' => self::$_module->l('Lengow authentification'),
-            'help' => self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP address is filled in your <a href="https://solution.lengow.com/" target="_blank">Lengow Dashboard</a>.'),
+            'help' => self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP address is filled in your Lengow Dashboard.'),
+            'help_link' => 'https://solution.lengow.com/',
+            'help_label' => self::$_module->l('Go to Lengow dashboard'),
             'state' => (int) self::isValidAuth()
         );
         $checklist[] = array(

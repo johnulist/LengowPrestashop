@@ -763,6 +763,11 @@ class Lengow extends Module {
                             ),
                         ),
                     ),
+                    array(
+                        'type' => 'free',
+                        'label' => $this->l('Logs'),
+                        'name' => 'lengow_logs',
+                    ),
                 ),
             );
             // +Status commandes
@@ -828,6 +833,7 @@ class Lengow extends Module {
             $helper->fields_value['url_feed_import'] = $links['link_feed_import'];
 
             $helper->fields_value['lengow_check_configuration'] = $this->_getCheckList();
+            $helper->fields_value['lengow_logs'] = $this->_getLogFiles();
 
             $helper->fields_value['lengow_flow'] = $this->_getFormFeeds();
 
@@ -1633,6 +1639,25 @@ class Lengow extends Module {
         return LengowCheck::getHtmlCheckList();
     }
 
+    private function _getLogFiles() {
+        $out = '';
+        if($handle = opendir(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'logs')) {
+            /* Ceci est la façon correcte de traverser un dossier. */
+            while (false !== ($filename = readdir($handle))) {
+                if ($filename != "." && $filename != "..") {
+                    $files[] = '<a href="' . _PS_BASE_URL_ . DS . 'modules' . DS . 'lengow' . DS . 'logs' . DS . $filename . '">' .$filename . '</a>';
+                }
+            }
+            sort($files);
+            $files = array_reverse($files);
+            $out .= join('<br />', array_slice($files, 0, 10));
+            closedir($handle);
+        } else {
+            $out .= "Dossier introuvable";
+        }
+        return $out;
+    }
+
     /**
      * Check if override exists, install it if no
      * 
@@ -1650,14 +1675,25 @@ class Lengow extends Module {
                     if ($ext === 'php') {
                         $temp_file = $folder_temp . DIRECTORY_SEPARATOR . $entry;
                         $override_file = $folder_override . DIRECTORY_SEPARATOR . $entry;
-                        if (!file_exists($folder_override . DIRECTORY_SEPARATOR . $entry))
+                        if (!file_exists($override_file))
                             rename($temp_file, $override_file);
+                        unlink($temp_file);
                     }
                 }
-                rmdir($folder_temp);
             }
+            closedir($handle);
         } else {
             return rename($folder_temp, $folder_override);
+        }
+
+        // Delete all from install folder
+        if (file_exists($folder_temp) && $handle = opendir($folder_temp)) {
+            while (false !== ($entry = readdir($handle))) {
+                $temp_file = $folder_temp . DIRECTORY_SEPARATOR . $entry;
+                unlink($temp_file);
+            }
+            closedir($handle);
+            rmdir($folder_temp);
         }
         return true;
     }
