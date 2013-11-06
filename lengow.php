@@ -894,7 +894,8 @@ class Lengow extends Module {
                     'lengow_cron' => $this->_getFormCron(),
                     'link_file_export' => $this->getFileLink(),
                     'options' => $options,
-                    'checklist' => $this->_getCheckList()
+                    'checklist' => $this->_getCheckList(),
+                    'log_files' => $this->_getLogFiles()
                 )
         );
         return $this->display(__FILE__, 'views/templates/admin/form.tpl');
