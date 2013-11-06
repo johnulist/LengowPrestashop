@@ -1,8 +1,11 @@
 =============================================================
-Version 2.0.3
+Version 2.0.3 - 2013-11-06
 =============================================================
     - Allow override
     - Add check configuration
+    - Allow export feature without product variations
+    - Add log api
+    - Add log files list in admin modules
     - Fix - Possible warning during export
     - Fix - Disable mail during import (1.4)
 
