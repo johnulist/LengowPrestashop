@@ -1686,16 +1686,7 @@ class Lengow extends Module {
         } else {
             return rename($folder_temp, $folder_override);
         }
-
-        // Delete all from install folder
-        if (file_exists($folder_temp) && $handle = opendir($folder_temp)) {
-            while (false !== ($entry = readdir($handle))) {
-                $temp_file = $folder_temp . DIRECTORY_SEPARATOR . $entry;
-                unlink($temp_file);
-            }
-            closedir($handle);
-            rmdir($folder_temp);
-        }
+        
         return true;
     }
 
