@@ -296,6 +296,11 @@
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label> 
         </div>
+        <div class="clear"></div>
+        <label>{l s='Logs' mod='lengow'}</label>
+        <div class="margin-form">
+            {$log_files}
+        </div>
         <div class="margin-form">
             <input type="submit" id="_form_submit_btn" value="{l s='Save' mod='lengow'}" name="submitlengow" class="button" />
         </div>
