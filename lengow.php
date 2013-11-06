@@ -26,7 +26,7 @@ $path = '';
 if (file_exists(dirname(__FILE__) . $sep . 'override'))
     define('_LENGOW_CLASS_FOLDER_', 'override');
 else
-    define('_LENGOW_CLASS_FOLDER_', 'tmp');
+    define('_LENGOW_CLASS_FOLDER_', 'install');
 
 if (_PS_VERSION_ <= '1.4.4')
     $path = $_SERVER['DOCUMENT_ROOT'] . $sep . 'modules' . $sep . 'lengow' . $sep;
@@ -1640,7 +1640,7 @@ class Lengow extends Module {
      */
     private function _installOverride() {
         $folder_override = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'override';
-        $folder_temp = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'tmp';
+        $folder_temp = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'install';
 
         if (file_exists($folder_override)) {
             // Copy file
