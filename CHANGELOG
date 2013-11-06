@@ -2,8 +2,9 @@
 Version 2.0.3
 =============================================================
     - Allow override
-    - Add configuration check
+    - Add check configuration
     - Fix - Possible warning during export
+    - Fix - Disable mail during import (1.4)
 
 =============================================================
 Version 2.0.2
