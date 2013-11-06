@@ -77,7 +77,6 @@ class LengowExportAbstract {
         'supplier' => 'supplier',
         'minimal_quantity' => 'minimal_quantity',
         'is_virtual' => 'is_virtual',
-        '' => '',
         'available_for_order' => 'available_for_order',
         'available_date' => 'available_date',
         'show_price' => 'show_price',
