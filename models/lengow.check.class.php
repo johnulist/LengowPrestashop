@@ -191,8 +191,8 @@ class LengowCheck {
         );
         $checklist[] = array(
             'message' => self::$_module->l('Lengow authentification'),
-            'help' => self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP address is filled in your Lengow Dashboard.'),
-            'help_link' => 'https://solution.lengow.com/',
+            'help' => sprintf(self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP (%s) address is filled in your Lengow Dashboard.'), gethostbyname($_SERVER['HTTP_HOST'])),
+            'help_link' => 'https://solution.lengow.com/api/',
             'help_label' => self::$_module->l('Go to Lengow dashboard'),
             'state' => (int) self::isValidAuth()
         );
