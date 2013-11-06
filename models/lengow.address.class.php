@@ -36,8 +36,9 @@ class LengowAddressAbstract extends Address {
                  SELECT `id_address`
                  FROM ' . _DB_PREFIX_ . 'address a
                  WHERE a.`alias` = "' . strval($alias) . '"');
-        if ($row['id_address'] > 0)
+        if ($row['id_address'] > 0) {
             return new LengowAddress($row['id_address']);
+        }
         return false;
     }
 

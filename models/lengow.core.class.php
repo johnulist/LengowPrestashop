@@ -50,6 +50,12 @@ class LengowCoreAbstract {
      * Buffer mail value.
      */
     public static $buffer_mail_value;
+    public static $buffer_mail_domain;
+    public static $buffer_mail_server;
+    public static $buffer_mail_user;
+    public static $buffer_mail_passwd;
+    public static $buffer_mail_smtp_encryption;
+    public static $buffer_mail_smtp_port;
 
     /**
      * Registers.
@@ -360,14 +366,47 @@ class LengowCoreAbstract {
      */
     public static function disableMail() {
         self::$buffer_mail_value = Configuration::get('PS_MAIL_METHOD');
-        Configuration::updateValue('PS_MAIL_METHOD', 3);
+        self::$buffer_mail_domain = Configuration::get('PS_MAIL_DOMAIN');
+        self::$buffer_mail_server = Configuration::get('PS_MAIL_SERVER');
+        self::$buffer_mail_user = Configuration::get('PS_MAIL_USER');
+        self::$buffer_mail_passwd = Configuration::get('PS_MAIL_PASSWD');
+        self::$buffer_mail_smtp_encryption = Configuration::get('PS_MAIL_SMTP_ENCRYPTION');
+        self::$buffer_mail_smtp_port = Configuration::get('PS_MAIL_SMTP_PORT');
+        if(_PS_VERSION_ < '1.5')
+            self::_changeMailConfiguration();
+        else
+            Configuration::updateValue('PS_MAIL_METHOD', 3);
     }
-
+    
+    /**
+     * Change mail settings with temp value
+     * 
+     * @return boolean
+     */
+    private function _changeMailConfiguration() {
+        if(Configuration::updateValue('PS_MAIL_DOMAIN', 'temp.lengow') &&
+           Configuration::updateValue('PS_MAIL_SERVER', 'temp.lengow') &&
+           Configuration::updateValue('PS_MAIL_USER', 'temp@lengow.temp') &&
+           Configuration::updateValue('PS_MAIL_PASSWD', 'temp') &&
+           Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', 'off') &&
+           Configuration::updateValue('PS_MAIL_SMTP_PORT', '25') &&
+           Configuration::updateValue('PS_MAIL_METHOD', 2))
+            return true;
+        else
+            return false;
+    }
+    
     /**
      * Enable mail.
      */
     public static function enableMail() {
         Configuration::updateValue('PS_MAIL_METHOD', self::$buffer_mail_value);
+        Configuration::updateValue('PS_MAIL_DOMAIN', self::$buffer_mail_domain);
+        Configuration::updateValue('PS_MAIL_SERVER', self::$buffer_mail_server);
+        Configuration::updateValue('PS_MAIL_USER', self::$buffer_mail_user);
+        Configuration::updateValue('PS_MAIL_PASSWD', self::$buffer_mail_passwd);
+        Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', self::$buffer_mail_smtp_encryption);
+        Configuration::updateValue('PS_MAIL_SMTP_PORT', self::$buffer_mail_smtp_port);
     }
 
     /**
@@ -627,6 +666,7 @@ class LengowCoreAbstract {
      *
      * @param mixed $var object or text for debugger
      */
+    
     public static function debug($var) {
         $debug = Configuration::get('LENGOW_DEBUG');
         if ($debug) {

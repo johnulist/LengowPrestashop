@@ -10,5 +10,5 @@
 		<li>{l s='Carrier from marketplace'} : <strong>{$carrier}</strong></li>
 		<li>{l s='Message'} : <strong>{$message}</strong></li>
 	</ul>
-	<a href="{$action_reimport}">{l s='Cancel and re-import order'}</a>
+	<!--<a href="{$action_reimport}">{l s='Cancel and re-import order'}</a>-->
 </fieldset>
