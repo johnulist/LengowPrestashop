@@ -29,10 +29,10 @@ if (_PS_VERSION_ >= '1.5') {
  * @copyright 2013 Lengow SAS
  */
 class LengowExportAbstract {
+
     /**
      * Version.
      */
-
     const VERSION = '1.0.1';
 
     /**
@@ -84,7 +84,7 @@ class LengowExportAbstract {
         'available_now' => 'available_now',
         'available_later' => 'available_later',
         'stock_availables' => 'stock_availables',
-        );
+    );
 
     /**
      * CSV separator.
@@ -135,12 +135,12 @@ class LengowExportAbstract {
      * File ressource
      */
     private $handle;
-    
+
     /**
      * File name
      */
     private $filename;
-    
+
     /**
      * File name temp
      */
@@ -180,7 +180,7 @@ class LengowExportAbstract {
      * Export active product.
      */
     private $all_product = false;
-    
+
     /**
      * Export active product.
      */
@@ -211,12 +211,16 @@ class LengowExportAbstract {
      * Make fields to export.
      */
     private function _makeFields() {
-        foreach(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
-            $this->fields[] = $field;
+        if (is_array(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')))) {
+            foreach (json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
+                $this->fields[] = $field;
+            }
+        } else {
+            foreach (LengowCore::$DEFAULT_FIELDS as $field) {
+                $this->fields[] = $field;
+            }
         }
-        /*foreach (self::$DEFAULT_FIELDS as $field => $value) {
-            $this->fields[] = $field;
-        }*/
+        
         //Features
         if ($this->features) {
             foreach ($this->features as $feature) {
@@ -316,7 +320,7 @@ class LengowExportAbstract {
         else
             $this->full = LengowCore::isExportFullmode();
     }
-    
+
     /**
      * Set export features.
      *
@@ -456,14 +460,17 @@ class LengowExportAbstract {
      */
     public function _make($product, $id_product_attribute = null) {
         $array_product = array();
-        // Default fields
-        /*foreach (self::$DEFAULT_FIELDS as $field => $value) {
-            $array_product[$field] = $product->getData($value, $id_product_attribute);
-        }*/
-        foreach(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
-            $array_product[$field] = $product->getData(self::$DEFAULT_FIELDS[$field], $id_product_attribute);
+        // Default fieldss
+        if (is_array(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')))) {
+            foreach (json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
+                $array_product[$field] = $product->getData(self::$DEFAULT_FIELDS[$field], $id_product_attribute);
+            }
+        } else {
+            foreach (self::$DEFAULT_FIELDS as $field => $value) {
+                $array_product[$field] = $product->getData($value, $id_product_attribute);
+            }
         }
-        
+
         // Features
         if ($this->features) {
             foreach ($this->features as $feature) {
@@ -564,8 +571,7 @@ class LengowExportAbstract {
                     $this->_closeFile();
                     $lengow = new Lengow();
                     echo $lengow->getFileLink($this->format);
-                }
-                else
+                } else
                     echo $footer;
                 break;
         }
@@ -600,7 +606,6 @@ class LengowExportAbstract {
             fclose($this->handle);
             //rename($this->filename_temp, $this->filename);
         }
-        
     }
 
     /**
@@ -611,7 +616,7 @@ class LengowExportAbstract {
      * @return string The formated header.
      */
     private function _toUpperCase($str) {
-        if(_PS_VERSION_ <= '1.4.5')
+        if (_PS_VERSION_ <= '1.4.5')
             return substr(strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', LengowCore::replaceAccentedChars($str)))), 0, 58);
         else
             return substr(strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str)))), 0, 58);
@@ -625,7 +630,7 @@ class LengowExportAbstract {
      * @return string The formated fieldname.
      */
     private function _toFieldname($str) {
-        if(_PS_VERSION_ <= '1.4.5')
+        if (_PS_VERSION_ <= '1.4.5')
             return strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', LengowCore::replaceAccentedChars($str))));
         else
             return strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str))));
