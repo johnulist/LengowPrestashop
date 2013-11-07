@@ -370,6 +370,7 @@ class LengowImportAbstract {
                         while (!$product && $n < $size_ref) {
 
                             $product_sku = (string) $lengow_product->{$array_ref[$n]};
+                            $product_sku = str_replace('\_', '_', $product_sku);
                             $product_sku = str_replace('X', '_', $product_sku);
 
                             // If attribute, split product sku
