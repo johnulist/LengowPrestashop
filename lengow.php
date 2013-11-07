@@ -1681,8 +1681,8 @@ class Lengow extends Module {
                         unlink($temp_file);
                     }
                 }
+                closedir($handle);
             }
-            closedir($handle);
         } else {
             return rename($folder_temp, $folder_override);
         }
