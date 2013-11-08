@@ -67,7 +67,7 @@ class Lengow extends Module {
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
 
         parent::__construct();
-        $this->registerHook('displayBackOfficeHeader');
+        $this->registerHook('actionAdminControllerSetMedia');
         $this->displayName = $this->l('Lengow');
         $this->description = $this->l('New module of lengow (beta 1).');
         $this->confirmUninstall = $this->l('Are you sure you want to uninstall the Lengow module ?');
@@ -77,11 +77,6 @@ class Lengow extends Module {
             require_once _PS_MODULE_DIR_ . $this->name . $sep . 'backward_compatibility' . $sep . 'backward.php';
             $this->context = Context::getContext();
             $this->smarty = $this->context->smarty;
-        } else {
-            if (Tools::getValue('controller') == 'AdminModules' && Tools::getValue('configure') == 'lengow') {
-                $this->context->controller->addJs($this->_path . 'views/js/admin.js');
-                $this->context->controller->addCss($this->_path . 'views/css/admin.css');
-            }
         }
         LengowCore::updateMarketPlaceConfiguration();
         LengowCore::setModule($this);
@@ -197,7 +192,7 @@ class Lengow extends Module {
                 $this->reorderHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayAdminHomeStatistics') : true) &&
-                (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayBackOfficeHeader') : true) &&
+                (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('actionAdminControllerSetMedia') : true) &&
                 $this->registerHook('orderConfirmation'); // displayOrderConfirmation
     }
     
@@ -1250,7 +1245,7 @@ class Lengow extends Module {
      *
      * @param array $args Arguments of hook
      */
-    public function hookDisplayBackOfficeHeader($args) {
+    public function hookActionAdminControllerSetMedia($args) {
         if (Tools::getValue('controller') == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
             $this->context->controller->addJs($this->_path . 'views/js/chart.min.js');
