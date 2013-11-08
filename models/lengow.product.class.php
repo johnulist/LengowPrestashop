@@ -99,6 +99,7 @@ class LengowProductAbstract extends Product {
             $this->price = LengowProduct::getPriceStatic((int) $this->id, false, null, 2, null, false, true, 1, false, null, null, null, $this->specificPrice);
             $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
         }
+        
         if (LengowCore::compareVersion())
             $this->loadStockData();
         if ($this->id_category_default && $this->id_category_default > 1) {
@@ -255,7 +256,7 @@ class LengowProductAbstract extends Product {
                 $default_country = Configuration::get('PS_COUNTRY_DEFAULT');
                 $taxe_rules = LengowTaxRule::getLengowTaxRulesByGroupId(Configuration::get('PS_LANG_DEFAULT'), $carrier->id_tax_rules_group);
                 foreach ($taxe_rules as $taxe_rule) {
-                    if (isset($taxe_rule['id_country']) && $taxe_rule['id_country'] == $default_country) {
+                    if ($taxe_rule['id_country'] == $default_country) {
                         $tr = new TaxRule($taxe_rule['id_tax_rule']);
                     }
                 }

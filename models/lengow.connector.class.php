@@ -295,8 +295,10 @@ class LengowConnectorAbstract {
             );
         }
         curl_close($ch);
-        if(strtolower(json_decode($result)->return) == "ko") {
-            LengowCore::log('API Error : ' . json_decode($result)->error, -1);
+        if(is_object(json_decode($result))) {
+            if(strtolower(json_decode($result)->return) == "ko") {
+                LengowCore::log('API Error : ' . json_decode($result)->error, -1);
+            }
         }
         return $result;
     }

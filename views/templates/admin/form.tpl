@@ -86,7 +86,7 @@
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
-            <p class="preference_description">{l s='If don\'t want to export all your available products, click "no" and go onto Tab Prestashop to select yours products' mod='lengow'}</p>		
+            <p class="preference_description">{l s='If you want to export disabled products, click "yes".' mod='lengow'}</p>		
         </div>
         <div class="clear"></div>
         <label>{l s='Auto export of new product(s)' mod='lengow'}</label>

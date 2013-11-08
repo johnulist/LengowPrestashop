@@ -346,7 +346,6 @@ class LengowImportAbstract {
                     $cart->id_lang = $id_lang;
                     $cart->add();
                     Context::getContext()->cart = new Cart($cart->id);
-
                     $lengow_total_order = 0;
                     $shipping_price = 0;
                     $total_saleable_quantity = 0;
@@ -365,14 +364,11 @@ class LengowImportAbstract {
                         $id_product = 0;
                         $id_product_attribute = 0;
                         $product = null;
-
                         // Find product with sku or idMp
                         while (!$product && $n < $size_ref) {
-
                             $product_sku = (string) $lengow_product->{$array_ref[$n]};
                             $product_sku = str_replace('\_', '_', $product_sku);
                             $product_sku = str_replace('X', '_', $product_sku);
-
                             // If attribute, split product sku
                             if (preg_match('`_`', $product_sku)) {
                                 $array_sku = explode('_', $product_sku);
@@ -381,7 +377,6 @@ class LengowImportAbstract {
                             } else {
                                 $id_product = (string) $lengow_product->{$array_ref[$n]};
                             }
-
                             if (is_numeric($id_product)) {
                                 $product = new LengowProduct($id_product, $id_lang);
                                 if ($product->name == '')
@@ -391,7 +386,6 @@ class LengowImportAbstract {
                             }
                             $n++;
                         }
-
                         // If there is no product
                         if (!$product || !$product->id) {
 
@@ -424,7 +418,6 @@ class LengowImportAbstract {
 
                             $product = new LengowProduct((int) $id_product, $this->id_lang);
                         }
-
                         if (isset($lengow_products[$product_sku])) {
                             $lengow_products[$product_sku]['qty'] += $product_quantity;
                         } else {
@@ -460,9 +453,12 @@ class LengowImportAbstract {
                           continue 2;
                           }
                          */
-                        if (!$cart->updateQty($product_quantity, $id_product, $id_product_attribute)) {
+                        if ($product->active == 0 || !$cart->updateQty($product_quantity, $id_product, $id_product_attribute)) {
                             $r = $cart->containsProduct($id_product, $id_product_attribute, false);
-                            LengowCore::log('Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] not enough quantity (' . $product_quantity . ' ordering, ' . LengowProduct::getRealQuantity($id_product, $id_product_attribute) . ' in stock)');
+                            if($product->active == 0)
+                                LengowCore::log('Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] is disabled');
+                            else
+                                LengowCore::log('Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] not enough quantity (' . $product_quantity . ' ordering, ' . LengowProduct::getRealQuantity($id_product, $id_product_attribute) . ' in stock)');
                             unset($lengow_products[$product_sku]);
                             $cart->delete();
                             continue 2;
@@ -540,12 +536,12 @@ class LengowImportAbstract {
 
                         // Update status on lengow if no debug
                         if (self::$debug == false) {
-                            $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
+                            /*$lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
                             $orders = $lengow_connector->api('updatePrestaInternalOrderId', array('idClient' => LengowCore::getIdCustomer() ,
                               'idFlux' => $id_flux  ,
                               'idGroup' => LengowCore::getGroupCustomer() ,
                               'idCommandeMP' => $new_lengow_order->lengow_id_order  ,
-                              'idCommandePresta' => $new_lengow_order->id));
+                              'idCommandePresta' => $new_lengow_order->id));*/
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : success import on presta (ORDER ' . $id_order . ')', $this->force_log_output);
                         $count_orders_added++;
