@@ -256,7 +256,7 @@ class LengowProductAbstract extends Product {
                 $default_country = Configuration::get('PS_COUNTRY_DEFAULT');
                 $taxe_rules = LengowTaxRule::getLengowTaxRulesByGroupId(Configuration::get('PS_LANG_DEFAULT'), $carrier->id_tax_rules_group);
                 foreach ($taxe_rules as $taxe_rule) {
-                    if ($taxe_rule['id_country'] == $default_country) {
+                    if (isset($taxe_rule['id_country']) && $taxe_rule['id_country'] == $default_country) {
                         $tr = new TaxRule($taxe_rule['id_tax_rule']);
                     }
                 }
