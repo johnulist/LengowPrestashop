@@ -740,4 +740,29 @@ class LengowProductAbstract extends Product {
         }
     }
 
+    /**
+     * For a given uoc reference, returns the corresponding id
+     *
+     * @param string $pc
+     * @return int id
+     */
+    public static function getIdByUpc($upc) {
+        if (empty($upc))
+            return 0;
+
+        if (_PS_VERSION_ >= '1.5') {
+            $query = new DbQuery();
+            $query->select('p.id_product');
+            $query->from('product', 'p');
+            $query->where('p.upc = \'' . pSQL($upc) . '\'');
+
+            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        } else {
+            $sql = 'SELECT p.`id_product`
+                FROM `' . _DB_PREFIX_ . 'product` p
+                WHERE p.`upc` = \'' . pSQL($upc) . '\'';
+            return Db::getInstance()->getValue($sql);
+        }
+    }
+
 }

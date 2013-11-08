@@ -599,15 +599,17 @@ class LengowImportAbstract {
         // Find the product by reference or ean13
         $id_by_reference = LengowProduct::getIdByReference($value);
         $id_by_ean = LengowProduct::getIdByEan13($value);
+        $id_by_upc = LengowProduct::getIdByUpc($upc);
         $product_by_attributes = LengowProduct::searchAttributeId($value);
 
-        if (!$id_by_ean && !$id_by_reference && !isset($product_by_attributes[0])) {
+        if (!$id_by_ean && !$id_by_reference && !$id_by_upc && !isset($product_by_attributes[0])) {
             return $return;
         } else {
             if ($id_by_reference != 0) {
                 $product = new LengowProduct((int) $id_by_reference, $this->id_lang);
-            }
-            if ($id_by_ean != 0) {
+            } else if($id_by_upc) {
+                $product = new LengowProduct((int) $id_by_upc, $this->id_lang);
+            } else if ($id_by_ean != 0) {
                 $product = new LengowProduct((int) $id_by_ean, $this->id_lang);
             } else if (isset($product_by_attributes[0]) && $product_by_attributes[0]) {
                 $id_product = $product_by_attributes[0]['id_product'];
