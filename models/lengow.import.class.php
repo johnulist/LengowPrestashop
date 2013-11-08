@@ -536,12 +536,12 @@ class LengowImportAbstract {
 
                         // Update status on lengow if no debug
                         if (self::$debug == false) {
-                            /*$lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
+                            $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
                             $orders = $lengow_connector->api('updatePrestaInternalOrderId', array('idClient' => LengowCore::getIdCustomer() ,
                               'idFlux' => $id_flux  ,
                               'idGroup' => LengowCore::getGroupCustomer() ,
                               'idCommandeMP' => $new_lengow_order->lengow_id_order  ,
-                              'idCommandePresta' => $new_lengow_order->id));*/
+                              'idCommandePresta' => $new_lengow_order->id));
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : success import on presta (ORDER ' . $id_order . ')', $this->force_log_output);
                         $count_orders_added++;
