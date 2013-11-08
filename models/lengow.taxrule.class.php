@@ -22,7 +22,7 @@
  * @author Romain Le Polh <romain@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowTaxRule extends TaxRule {
+class LengowTaxRuleAbstract extends TaxRule {
     
     /**
      * Get all tax rules for specific group id
@@ -31,7 +31,7 @@ class LengowTaxRule extends TaxRule {
      * @param int $id_group
      * @return array list of tax rules
      */
-    public static function getTaxRulesByGroupId($id_lang, $id_group)
+    public static function getLengowTaxRulesByGroupId($id_lang, $id_group)
     {
         if (version_compare(_PS_VERSION_, '1.5', '<'))  {
             return Db::getInstance()->executeS('

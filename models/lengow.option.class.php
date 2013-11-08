@@ -23,7 +23,7 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowOption {
+class LengowOptionAbstract {
 
 	/**
 	 * tracker ID.

@@ -10,6 +10,15 @@
 
 <form id="_form" class="defaultForm lengow" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post" enctype="multipart/form-data" >
     <fieldset id="fieldset_0">
+        <legend>{l s='Check configuration' mod='lengow'}</legend>
+        <label>{l s='Checklist' mod='lengow'}</label>							
+        <div class="margin-form">
+            {$checklist}
+        </div>
+        <div class="clear"></div>
+    </fieldset>
+    <br />
+    <fieldset id="fieldset_1">
         <legend>{l s='Account' mod='lengow'}</legend>
         <label>{l s='Customer ID' mod='lengow'}</label>							
         <div class="margin-form">
@@ -29,7 +38,7 @@
         <div class="small"><sup>*</sup> {l s='Required field' mod='lengow'}</div>
     </fieldset>
     <br />
-    <fieldset id="fieldset_1">
+    <fieldset id="fieldset_2">
         <legend>{l s='Security' mod='lengow'}</legend>
         <label>{l s='Authorized IP' mod='lengow'}</label>
         <div class="margin-form">
@@ -39,7 +48,7 @@
         <div class="small"><sup>*</sup> {l s='Required field' mod='lengow'}</div>
     </fieldset>
     <br />
-    <fieldset id="fieldset_2"> 
+    <fieldset id="fieldset_3"> 
         <legend>{l s='Tracking' mod='lengow'}</legend>
         <label>{l s='Tracker type choice' mod='lengow'}</label>
         <div class="margin-form">
@@ -53,7 +62,7 @@
         <div class="small"><sup>*</sup> {l s='Required field' mod='lengow'}</div>
     </fieldset>
     <br />
-    <fieldset id="fieldset_3">
+    <fieldset id="fieldset_4">
         <legend>{l s='Export parameters' mod='lengow'}</legend>
         <label>{l s='Export all products' mod='lengow'}</label>
         <div class="margin-form">
@@ -77,7 +86,7 @@
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
-            <p class="preference_description">{l s='If don\'t want to export all your available products, click "no" and go onto Tab Prestashop to select yours products' mod='lengow'}</p>		
+            <p class="preference_description">{l s='If you want to export disabled products, click "yes".' mod='lengow'}</p>		
         </div>
         <div class="clear"></div>
         <label>{l s='Auto export of new product(s)' mod='lengow'}</label>
@@ -104,6 +113,19 @@
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
             <p class="preference_description">{l s='If don\'t want to export all your products\' variations, click "no"'}</p>		
+        </div>
+        <div class="clear"></div>
+        <label>{l s='Export product features' mod='lengow'}</label>
+        <div class="margin-form">
+            <input type="radio"	name="lengow_export_features" id="active_on" value="1" {if $lengow_export_features == 1} checked="checked"{/if} />
+            <label class="t" for="active_on">
+                <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
+            </label>
+            <input type="radio"	name="lengow_export_features" id="active_off" value="0" {if $lengow_export_features == 0} checked="checked"{/if}/>
+            <label class="t" for="active_off">
+                <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
+            </label>
+            <p class="preference_description">{l s='If you click "yes", your product(s) will be exported with features.'}</p>		
         </div>
         <div class="clear"></div>
         <label>{l s='Title + attributes + features' mod='lengow'}</label>
@@ -177,7 +199,7 @@
         <div class="small"><sup>*</sup> {l s='Required field' mod='lengow'}</div>
     </fieldset>
     <br />
-    <fieldset id="fieldset_4"> <legend>{l s='Feeds' mod='lengow'}</legend>
+    <fieldset id="fieldset_5"> <legend>{l s='Feeds' mod='lengow'}</legend>
         {$lengow_flow}
         <p class="preference_description">{l s='If you use the backoffice of the Lengow module, migrate your feed when you are sure to be ready' mod='lengow'}<br />
             {l s='If you want to use the file export, don\'t use this fonctionality. Please contact Lengow Support Team' mod='lengow'}	
@@ -185,7 +207,7 @@
         <div class="clear"></div>
     </fieldset>
     <br />
-    <fieldset id="fieldset_5"> <legend>{l s='Import parameters' mod='lengow'}</legend>
+    <fieldset id="fieldset_6"> <legend>{l s='Import parameters' mod='lengow'}</legend>
         <label>{l s='Status of process orders' mod='lengow'}</label>
         <div class="margin-form">
             <select name="lengow_order_process" class="" id="lengow_order_process">
@@ -257,7 +279,7 @@
         <div class="small"><sup>*</sup> {l s='Required field' mod='lengow'}</div>
     </fieldset>
     <br />
-    <fieldset id="fieldset_6"> <legend>{l s='Cron' mod='lengow'}</legend>
+    <fieldset id="fieldset_7"> <legend>{l s='Cron' mod='lengow'}</legend>
         {$lengow_cron}
         <div class="clear"></div>
     </fieldset>
@@ -273,6 +295,11 @@
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label> 
+        </div>
+        <div class="clear"></div>
+        <label>{l s='Logs' mod='lengow'}</label>
+        <div class="margin-form">
+            {$log_files}
         </div>
         <div class="margin-form">
             <input type="submit" id="_form_submit_btn" value="{l s='Save' mod='lengow'}" name="submitlengow" class="button" />

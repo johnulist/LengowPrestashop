@@ -22,7 +22,7 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowCart extends Cart {
+class LengowCartAbstract extends Cart {
 
     public static $TOTAL_CART_GET = array(
         'products' ,

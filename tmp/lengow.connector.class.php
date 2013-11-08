@@ -15,16 +15,8 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+require_once dirname(__FILE__) . $sep . '..' . $sep . 'models' . $sep . 'lengow.connector.class.php';
 
-/**
- * The Lengow Payment Class.
- *
- * @author Ludovic Drin <ludovic@lengow.com>
- * @copyright 2013 Lengow SAS
- */
-class LengowPaymentModuleAbstract extends PaymentModule {
-
-    public $name = 'LengowPayment';
+class LengowConnector extends LengowConnectorAbstract {
     
 }
-

@@ -22,8 +22,7 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowProduct extends Product {
-
+class LengowProductAbstract extends Product {
     /**
      * Version.
      */
@@ -96,8 +95,11 @@ class LengowProduct extends Product {
         }
         $this->new = $this->isNew();
         $this->base_price = $this->price;
-        $this->price = LengowProduct::getPriceStatic((int) $this->id, false, null, 2, null, false, true, 1, false, null, null, null, $this->specificPrice);
-        $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
+        if($this->id) {
+            $this->price = LengowProduct::getPriceStatic((int) $this->id, false, null, 2, null, false, true, 1, false, null, null, null, $this->specificPrice);
+            $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
+        }
+        
         if (LengowCore::compareVersion())
             $this->loadStockData();
         if ($this->id_category_default && $this->id_category_default > 1) {
@@ -252,14 +254,14 @@ class LengowProduct extends Product {
 
                 // Tax calcul
                 $default_country = Configuration::get('PS_COUNTRY_DEFAULT');
-                $taxe_rules = LengowTaxRule::getTaxRulesByGroupId(Configuration::get('PS_LANG_DEFAULT'), $carrier->id_tax_rules_group);
+                $taxe_rules = LengowTaxRule::getLengowTaxRulesByGroupId(Configuration::get('PS_LANG_DEFAULT'), $carrier->id_tax_rules_group);
                 foreach ($taxe_rules as $taxe_rule) {
                     if ($taxe_rule['id_country'] == $default_country) {
                         $tr = new TaxRule($taxe_rule['id_tax_rule']);
                     }
                 }
 
-                if ($tr) {
+                if (isset($tr)) {
                     $t = new Tax($tr->id_tax);
                     $tax_calculator = new TaxCalculator(array($t));
                     $taxes = $tax_calculator->getTaxesAmount($shipping_cost);
@@ -332,7 +334,10 @@ class LengowProduct extends Product {
                         return '';
             }
             return isset($this->images[$out[1]]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->images[$out[1]]['id_image'], LengowCore::getImageFormat()) : '';
+
         }
+        if(isset($this->{$name}))
+            return $this->{$name};
     }
 
     /**

@@ -16,15 +16,9 @@
  * under the License.
  */
 
-/**
- * The Lengow Payment Class.
- *
- * @author Ludovic Drin <ludovic@lengow.com>
- * @copyright 2013 Lengow SAS
- */
-class LengowPaymentModuleAbstract extends PaymentModule {
+require_once dirname(__FILE__) . $sep . '..' . $sep . 'models' . $sep . 'lengow.core.class.php';
+require_once dirname(__FILE__) . $sep . '..' . $sep . 'models' . $sep . 'lengow.option.class.php';
 
-    public $name = 'LengowPayment';
-    
+class LengowCore extends LengowCoreAbstract {
+
 }
-

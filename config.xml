@@ -2,7 +2,7 @@
         <module>
             <name>lengow</name>
             <displayName><![CDATA[Lengow]]></displayName>
-            <version><![CDATA[2.0.2.5]]></version>
+            <version><![CDATA[2.0.3]]></version>
             <description><![CDATA[Nouveau module de Lengow]]></description>
             <author><![CDATA[Lengow]]></author>
             <tab><![CDATA[export]]></tab>

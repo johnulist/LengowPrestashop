@@ -250,9 +250,6 @@
                 </actions>
                 <lengow>processing</lengow>
             </state>
-            <state name="PaymentInProgress">
-                <lengow>processing</lengow>
-            </state>
             <state name="Shipped">
                 <lengow>shipped</lengow>
             </state>
@@ -286,6 +283,31 @@
             <param usedby="shipped">
                 <type>carrier</type>
                 <name>Transporteur</name>
+                <accepted_values>
+                    <value label="La Poste">LAPOSTE</value>
+                    <value label="DHL">DHL</value>
+                    <value label="Fedex">FEDEX</value>
+                    <value label="GLS">GLS</value>
+                    <value label="UPS">UPS</value>
+                    <value label="TAT Express">TAT</value>
+                    <value label="TNT">TNT</value>
+                    <value label="Mondial Relay">MONDIALRELAY</value>
+                    <value label="SERNAM">SERNAM</value>
+                    <value label="Geodis Calberson">GEODISCALBERSON</value>
+                    <value label="France Express">FRANCEEXPRESS</value>
+                    <value label="SDEN">FRANCSDENEEXPRESS</value>
+                    <value label="CHRONOPOST">Chronopost</value>
+                    <value label="TATEX">TATEX</value>
+                    <value label="SCHENKER JOYAU">SCHENKER_JOYAU</value>
+                    <value label="Relais colis">Relais_colis</value>
+                    <value label="Gefco">Gefco</value>
+                    <value label="MORY">MORY</value>
+                    <value label="Heppner">Heppner</value>
+                    <value label="Exapaq">Exapaq</value>
+                    <value label="Mazet">Mazet</value>
+                    <value label="SIC EXPRESS">SICEXPRESS</value>
+                    <value label="TMB">TMB</value>
+                 </accepted_values>
             </param>
             <param usedby="shipped">
                 <type>tracking_url</type>
@@ -565,5 +587,35 @@
                 <lengow>canceled</lengow>
             </state>
         </states>
+    </marketplace>
+    <marketplace name="lechouchou">
+        <api>https://wsdl.lengow.com/wsdl/lechouchou/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml?TrackingColis=#TRACKING_COLIS#</api>
+        <states>
+            <state name="new">
+                <lengow>new</lengow>
+                <actions>
+                    <action type="accept">accepted</action>
+                    <action type="refuse">refused</action>
+                </actions>
+            </state>
+            <state name="processing">
+                <actions>
+                    <action type="shipped">shipped</action>
+                </actions>
+                <lengow>shipped</lengow>
+            </state>
+            <state name="accept">
+                <lengow>shipped</lengow>
+            </state>
+            <state name="refused">
+                <lengow>canceled</lengow>
+            </state>
+        </states>
+        <additional_params>
+            <param usedby="shipped">
+                <type>tracking</type>
+                <name>TrackingColis</name>
+            </param>
+        </additional_params>
     </marketplace>
 </marketplaces>

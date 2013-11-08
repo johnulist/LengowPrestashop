@@ -26,7 +26,7 @@ try {
         throw new LengowAPIException('Lengow needs the SIMPLE XML PHP extension.', -3);
     }
 } catch (LengowAPIException $e) {
-    echo $e->getMessage();
+    //echo $e->getMessage();
 }
 
 /**
@@ -35,11 +35,11 @@ try {
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowConnector {
+class LengowConnectorAbstract {
+
     /**
      * Version.
      */
-
     const VERSION = '1.0.1';
 
     /**
@@ -95,6 +95,7 @@ class LengowConnector {
         'updateEcommerceSolution' => array('service' => 'solution'),
         'statistics' => array('service' => 'statistics'),
         'commands' => array('service' => 'api'),
+        'authentification' => array('service' => 'solution'),
     );
 
     /**
@@ -138,7 +139,7 @@ class LengowConnector {
      *
      * @return array The formated data response
      */
-    public function api($method, $array) {
+    public function api($method, $array = array()) {
         try {
             if (!$api = $this->_getMethod($method))
                 throw new LengowAPIException('Error unknow method API', 3);
@@ -288,12 +289,17 @@ class LengowConnector {
         if ($result === false) {
             LengowCore::log('Connector Error (' . curl_error($ch) . ')' . $result, -1);
             throw new LengowApiException(
-            array('message' => curl_error($ch),
-        'type' => 'CurlException',
-            ), curl_errno($ch)
+                array('message' => curl_error($ch),
+                    'type' => 'CurlException',
+                ), curl_errno($ch)
             );
         }
         curl_close($ch);
+        if(is_object(json_decode($result))) {
+            if(strtolower(json_decode($result)->return) == "ko") {
+                LengowCore::log('API Error : ' . json_decode($result)->error, -1);
+            }
+        }
         return $result;
     }
 
@@ -357,4 +363,3 @@ class LengowApiException extends Exception {
     }
 
 }
-

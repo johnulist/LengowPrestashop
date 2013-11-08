@@ -28,11 +28,11 @@ if (_PS_VERSION_ >= '1.5') {
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowExport {
+class LengowExportAbstract {
+
     /**
      * Version.
      */
-
     const VERSION = '1.0.1';
 
     /**
@@ -74,7 +74,17 @@ class LengowExport {
         'product_variation' => 'variation',
         'currency' => 'currency',
         'condition' => 'condition',
-        'supplier' => 'supplier');
+        'supplier' => 'supplier',
+        'minimal_quantity' => 'minimal_quantity',
+        'is_virtual' => 'is_virtual',
+        'available_for_order' => 'available_for_order',
+        'available_date' => 'available_date',
+        'show_price' => 'show_price',
+        'visibility' => 'visibility',
+        'available_now' => 'available_now',
+        'available_later' => 'available_later',
+        'stock_availables' => 'stock_availables',
+    );
 
     /**
      * CSV separator.
@@ -125,12 +135,12 @@ class LengowExport {
      * File ressource
      */
     private $handle;
-    
+
     /**
      * File name
      */
     private $filename;
-    
+
     /**
      * File name temp
      */
@@ -172,16 +182,22 @@ class LengowExport {
     private $all_product = false;
 
     /**
+     * Export active product.
+     */
+    private $export_features = false;
+
+    /**
      * Construc new Lengow export.
      *
      * @param string $format The format used to export
      *
      * @return Exception Error
      */
-    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null) {
+    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null, $export_features = null) {
         try {
             $this->setFormat($format);
             $this->setFullmode($fullmode);
+            $this->setExportFeatures($export_features);
             $this->setProducts($all);
             $this->setStream($stream);
             $this->setTitle($full_title);
@@ -195,12 +211,16 @@ class LengowExport {
      * Make fields to export.
      */
     private function _makeFields() {
-        foreach(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
-            $this->fields[] = $field;
+        if (is_array(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')))) {
+            foreach (json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
+                $this->fields[] = $field;
+            }
+        } else {
+            foreach (LengowCore::$DEFAULT_FIELDS as $field) {
+                $this->fields[] = $field;
+            }
         }
-        /*foreach (self::$DEFAULT_FIELDS as $field => $value) {
-            $this->fields[] = $field;
-        }*/
+        
         //Features
         if ($this->features) {
             foreach ($this->features as $feature) {
@@ -302,6 +322,20 @@ class LengowExport {
     }
 
     /**
+     * Set export features.
+     *
+     * @param string $format The format to export
+     *
+     * @return boolean.
+     */
+    public function setExportFeatures($export_features) {
+        if ($export_features !== null)
+            $this->export_features = $export_features;
+        else
+            $this->export_features = LengowCore::isExportFeatures();
+    }
+
+    /**
      * Set format to export.
      *
      * @param string $format The format to export
@@ -374,7 +408,7 @@ class LengowExport {
             else
                 $this->max_images = LengowCore::countExportAllImages();
             // Is full export
-            if ($this->full) {
+            if ($this->full || $this->export_features) {
                 $this->attributes = AttributeGroup::getAttributesGroups(LengowCore::getContext()->language->id);
                 $this->features = Feature::getFeatures(LengowCore::getContext()->language->id);
             }
@@ -426,14 +460,17 @@ class LengowExport {
      */
     public function _make($product, $id_product_attribute = null) {
         $array_product = array();
-        // Default fields
-        /*foreach (self::$DEFAULT_FIELDS as $field => $value) {
-            $array_product[$field] = $product->getData($value, $id_product_attribute);
-        }*/
-        foreach(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
-            $array_product[$field] = $product->getData(self::$DEFAULT_FIELDS[$field], $id_product_attribute);
+        // Default fieldss
+        if (is_array(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')))) {
+            foreach (json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
+                $array_product[$field] = $product->getData(self::$DEFAULT_FIELDS[$field], $id_product_attribute);
+            }
+        } else {
+            foreach (self::$DEFAULT_FIELDS as $field => $value) {
+                $array_product[$field] = $product->getData($value, $id_product_attribute);
+            }
         }
-        
+
         // Features
         if ($this->features) {
             foreach ($this->features as $feature) {
@@ -534,8 +571,7 @@ class LengowExport {
                     $this->_closeFile();
                     $lengow = new Lengow();
                     echo $lengow->getFileLink($this->format);
-                }
-                else
+                } else
                     echo $footer;
                 break;
         }
@@ -552,7 +588,7 @@ class LengowExport {
             $context = LengowCore::getContext();
             $id_shop = $context->shop->id;
             $this->filename = _PS_MODULE_DIR_ . 'lengow' . $sep . 'export' . $sep . 'flux-' . $id_shop . '.' . $this->format;
-            $this->filename_temp = _PS_MODULE_DIR_ . 'lengow' . $sep . 'export' . $sep . 'flux-temp-' . $id_shop . '.' . $this->format;
+            //$this->filename_temp = _PS_MODULE_DIR_ . 'lengow' . $sep . 'export' . $sep . 'flux-temp-' . $id_shop . '.' . $this->format;
             $this->handle = fopen($this->filename_temp, 'w+');
         }
         fwrite($this->handle, $data);
@@ -568,9 +604,8 @@ class LengowExport {
     private function _closeFile() {
         if ($this->handle) {
             fclose($this->handle);
-            rename($this->filename_temp, $this->filename);
+            //rename($this->filename_temp, $this->filename);
         }
-        
     }
 
     /**
@@ -581,7 +616,7 @@ class LengowExport {
      * @return string The formated header.
      */
     private function _toUpperCase($str) {
-        if(_PS_VERSION_ <= '1.4.5')
+        if (_PS_VERSION_ <= '1.4.5')
             return substr(strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', LengowCore::replaceAccentedChars($str)))), 0, 58);
         else
             return substr(strtoupper(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str)))), 0, 58);
@@ -595,7 +630,7 @@ class LengowExport {
      * @return string The formated fieldname.
      */
     private function _toFieldname($str) {
-        if(_PS_VERSION_ <= '1.4.5')
+        if (_PS_VERSION_ <= '1.4.5')
             return strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', LengowCore::replaceAccentedChars($str))));
         else
             return strtolower(preg_replace('/[^a-zA-Z0-9_]+/', '', str_replace(array(' ', '\''), '_', Tools::replaceAccentedChars($str))));

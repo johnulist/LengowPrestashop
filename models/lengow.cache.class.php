@@ -22,6 +22,9 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
+
+require_once dirname(__FILE__) . $sep . '..' . $sep . _LENGOW_CLASS_FOLDER_ . $sep . 'lengow.specificprice.class.php';
+
 if(_PS_CACHE_ENABLED_ == false) {
     eval('class LengowCache {
 

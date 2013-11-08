@@ -22,7 +22,7 @@
  * @author Ludovic Drin <ludovic@lengow.com>
  * @copyright 2013 Lengow SAS
  */
-class LengowAddress extends Address {
+class LengowAddressAbstract extends Address {
 
     /**
      * Specify if an address is already in base
@@ -36,8 +36,9 @@ class LengowAddress extends Address {
                  SELECT `id_address`
                  FROM ' . _DB_PREFIX_ . 'address a
                  WHERE a.`alias` = "' . strval($alias) . '"');
-        if ($row['id_address'] > 0)
+        if ($row['id_address'] > 0) {
             return new LengowAddress($row['id_address']);
+        }
         return false;
     }
 

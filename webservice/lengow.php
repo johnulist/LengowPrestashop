@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright 2013 Lengow.
  *
@@ -19,11 +20,21 @@ require_once '..' . $sep . '..' . $sep . '..' . $sep . 'config' . $sep . 'config
 require_once '..' . $sep . '..' . $sep . '..' . $sep . 'init.php';
 require_once '..' . $sep . 'lengow.php';
 require_once '..' . $sep . 'models' . $sep . 'lengow.core.class.php';
+require_once '..' . $sep . 'models' . $sep . 'lengow.check.class.php';
 
 $lengow = new Lengow();
 // CheckIP
-if(LengowCore::checkIP()) {
-	echo 'Lengow REST API';
+if (LengowCore::checkIP()) {
+    // Checking configuration
+    if (Tools::getValue('action') == 'check') {
+        if(Tools::getValue('format') == 'json') {
+            header('Content-Type: application/json');
+            echo LengowCheck::getJsonCheckList();
+        } else {
+            echo "<h1>Lengow check configuration<h1>";
+            echo LengowCheck::getHtmlCheckList();
+        }
+    }
 } else {
-	die('Unauthorized access');
+    die('Unauthorized access');
 }

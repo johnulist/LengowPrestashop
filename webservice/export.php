@@ -62,12 +62,14 @@ if (LengowCore::checkIP()) {
     }
 
     // > Title
+    $title = null;
     if (Tools::getValue('title') && Tools::getValue('title') == 'full')
         $title = true;
     elseif (Tools::getValue('title') && Tools::getValue('title') == 'simple')
         $title = false;
 
     // > Active
+    $all_product = null;
     if (Tools::getValue('active') && Tools::getValue('active') == 'enabled')
         $all_product = false;
     elseif (Tools::getValue('active') && Tools::getValue('active') == 'all')
