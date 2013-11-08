@@ -159,6 +159,25 @@ class LengowCheck {
     }
 
     /**
+     * Check if config folder is writable
+     * 
+     * @return boolean
+     */
+    public static function isConfigWritable() {
+        $config_folder = dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config';
+        return is_writable($config_folder);
+    }
+
+    /**
+     * Check disabled product option
+     * 
+     * @return boolean
+     */
+    public static function isDisabledProduct() {
+        return (Configuration::get('LENGOW_EXPORT_DISABLED') == true) ? false : true;
+    }
+
+    /**
      * Get array of requirements and their status
      * 
      * @return array
@@ -200,6 +219,16 @@ class LengowCheck {
             'message' => self::$_module->l('Shop functionality'),
             'help' => self::$_module->l('Shop functionality are disabled, order import will be impossible, please enable them in your products settings.'),
             'state' => (int) self::isShopActivated()
+        );
+        $checklist[] = array(
+            'message' => self::$_module->l('Config folder is writable'),
+            'help' => self::$_module->l('The config folder must be writable.'),
+            'state' => (int) self::isConfigWritable()
+        );
+        $checklist[] = array(
+            'message' => self::$_module->l('Export disabled products'),
+            'help' => self::$_module->l('Disabled product are enabled in export, Marketplace order import will not work with this configuration.'),
+            'state' => (int) self::isDisabledProduct()
         );
 
         if(Configuration::get('LENGOW_DEBUG')) {
