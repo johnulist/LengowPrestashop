@@ -1313,6 +1313,10 @@ class Lengow extends Module {
      * @param array $args Arguments of hook
      */
     public function hookActionAdminControllerSetMedia($args) {
+        if (Tools::getValue('controller') == 'AdminModules' && Tools::getValue('configure') == 'lengow') {
+            $this->context->controller->addJs($this->_path . 'views/js/admin.js');
+            $this->context->controller->addCss($this->_path . 'views/css/admin.css');
+        }
         if (Tools::getValue('controller') == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
             $this->context->controller->addJs($this->_path . 'views/js/chart.min.js');
