@@ -372,7 +372,7 @@ class LengowCoreAbstract {
         self::$buffer_mail_passwd = Configuration::get('PS_MAIL_PASSWD');
         self::$buffer_mail_smtp_encryption = Configuration::get('PS_MAIL_SMTP_ENCRYPTION');
         self::$buffer_mail_smtp_port = Configuration::get('PS_MAIL_SMTP_PORT');
-        if(_PS_VERSION_ < '1.5')
+        if(_PS_VERSION_ < '1.5.4')
             self::_changeMailConfiguration();
         else
             Configuration::updateValue('PS_MAIL_METHOD', 3);

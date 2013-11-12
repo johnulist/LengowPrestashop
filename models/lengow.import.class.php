@@ -191,7 +191,7 @@ class LengowImportAbstract {
                     $id_shop = $this->id_shop;
                     // Customer
                     if (self::$debug == true)
-                        $email_address = 'romain+' . rand(1, 999) . '@lengow.com'; //'_' . (string) $lengow_order->billing_address->billing_email;
+                        $email_address = '_' . (string) $lengow_order->billing_address->billing_email;
                     else
                         $email_address = (string) $lengow_order->billing_address->billing_email;
                     $customer = new Customer();
