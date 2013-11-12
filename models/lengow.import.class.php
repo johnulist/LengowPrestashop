@@ -345,7 +345,7 @@ class LengowImportAbstract {
                     $cart->id_customer = $id_customer;
                     $cart->id_lang = $id_lang;
                     $cart->add();
-                    Context::getContext()->cart = new Cart($cart->id);
+                    Context::getContext()->cart = new LengowCart($cart->id);
                     $lengow_total_order = 0;
                     $shipping_price = 0;
                     $total_saleable_quantity = 0;
@@ -509,12 +509,18 @@ class LengowImportAbstract {
                         Context::getContext()->cart->getDeliveryOption(null, false, false);
                     }
                     $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, null, null, false), 2);
+                    
+                    if(_PS_VERSION_ >= '1.5.2' && _PS_VERSION_ <= '1.5.3')
+                        $validateOrder = 'validateOrder152';
+                    else
+                        $validateOrder = 'validateOrder';
+
                     if (!$lengow_new_order) {
                         LengowCore::log('No new order to import');
                         if (Validate::isLoadedObject($cart))
                             $cart->delete();
                         continue;
-                    } elseif ($payment->validateOrder($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true)) {
+                    } elseif ($payment->$validateOrder($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true)) {
                         $id_order = $payment->currentOrder;
                         $id_flux = (integer) $lengow_order->idFlux;
                         $marketplace = (string) $lengow_order->marketplace;
