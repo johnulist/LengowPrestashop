@@ -18,6 +18,6 @@
 
 require_once dirname(__FILE__) . $sep . '..' . $sep . 'models' . $sep . 'lengow.specificprice.class.php';
 
-class LengowSpecificPrice extends SpecificPrice {
+class LengowSpecificPrice extends LengowSpecificPriceAbstract {
 
 }

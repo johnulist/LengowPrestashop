@@ -1121,6 +1121,9 @@ class Lengow extends Module {
         } else if ($current_controller instanceof IndexController) {
             self::$_CURRENT_PAGE_TYPE = self::LENGOW_TRACK_HOMEPAGE;
         }
+        echo '# Page : ' . self::$_CURRENT_PAGE_TYPE . '<br />';
+        echo '# Current Controller : ' . get_class($current_controller) . '<br />';
+
         // ID category
         if (!(self::$_ID_CATEGORY = (int) Tools::getValue('id_category'))) {
             if (isset($_SERVER['HTTP_REFERER']) && preg_match('!^(.*)\/([0-9]+)\-(.*[^\.])|(.*)id_category=([0-9]+)(.*)$!', $_SERVER['HTTP_REFERER'], $regs) && !strstr($_SERVER['HTTP_REFERER'], '.html')) {
@@ -1137,6 +1140,12 @@ class Lengow extends Module {
         } else {
             self::$_CURRENT_PAGE_TYPE = self::LENGOW_TRACK_PAGE_LIST;
         }
+
+        // Basket
+        if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
+            self::$_ORDER_TOTAL = $this->context->cart->getOrderTotal();
+        }
+
         // Cart
         $cart = $this->context->cart;
         $cart_products = $cart->getProducts();
@@ -1148,11 +1157,12 @@ class Lengow extends Module {
                     $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
                 else
                     $id_product = $p['id_product'];
-                self::$_IDS_PRODUCTS_CART .= 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $currency->iso_code . '&q' . $i . '=' . $p['quantity'] . '&';
+                self::$_IDS_PRODUCTS_CART .= 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'] . '&';
                 $i++;
             }
             self::$_IDS_PRODUCTS_CART = rtrim(self::$_IDS_PRODUCTS_CART, '&');
         }
+
         // Generate tracker
         if ($tracking_mode == 'simpletag') {
             if (self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CONFIRMATION) {
@@ -1161,7 +1171,7 @@ class Lengow extends Module {
                             'page_type' => self::$_CURRENT_PAGE_TYPE,
                             'order_total' => self::$_ORDER_TOTAL,
                             'id_order' => self::$_ID_ORDER,
-                            'ids_products' => self::$_IDS_PRODUCTS,
+                            'ids_products' => self::$_IDS_PRODUCTS_CART,
                             'mode_payment' => self::$_ID_ORDER,
                             'id_customer' => LengowCore::getIdCustomer(),
                             'id_group' => LengowCore::getGroupCustomer(),

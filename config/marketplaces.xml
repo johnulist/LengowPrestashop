@@ -601,8 +601,9 @@
             <state name="processing">
                 <actions>
                     <action type="shipped">shipped</action>
+                    <action type="refuse">refused</action>
                 </actions>
-                <lengow>shipped</lengow>
+                <lengow>processing</lengow>
             </state>
             <state name="accept">
                 <lengow>shipped</lengow>
