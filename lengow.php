@@ -1121,8 +1121,6 @@ class Lengow extends Module {
         } else if ($current_controller instanceof IndexController) {
             self::$_CURRENT_PAGE_TYPE = self::LENGOW_TRACK_HOMEPAGE;
         }
-        echo '# Page : ' . self::$_CURRENT_PAGE_TYPE . '<br />';
-        echo '# Current Controller : ' . get_class($current_controller) . '<br />';
 
         // ID category
         if (!(self::$_ID_CATEGORY = (int) Tools::getValue('id_category'))) {
@@ -1142,7 +1140,8 @@ class Lengow extends Module {
         }
 
         // Basket
-        if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
+        if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART ||
+            self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_PAYMENT) {
             self::$_ORDER_TOTAL = $this->context->cart->getOrderTotal();
         }
 
@@ -1686,14 +1685,14 @@ class Lengow extends Module {
                         $temp_file = $folder_temp . DIRECTORY_SEPARATOR . $entry;
                         $override_file = $folder_override . DIRECTORY_SEPARATOR . $entry;
                         if (!file_exists($override_file))
-                            rename($temp_file, $override_file);
-                        unlink($temp_file);
+                            @rename($temp_file, $override_file);
+                        @unlink($temp_file);
                     }
                 }
-                closedir($handle);
+                @closedir($handle);
             }
         } else {
-            return rename($folder_temp, $folder_override);
+            return @rename($folder_temp, $folder_override);
         }
         
         return true;
