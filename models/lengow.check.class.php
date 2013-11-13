@@ -155,7 +155,7 @@ class LengowCheck {
         if ($result['return'] == 'Ok')
             return true;
         else
-            return false;
+            return $result['ip'];
     }
 
     /**
@@ -210,10 +210,10 @@ class LengowCheck {
         );
         $checklist[] = array(
             'message' => self::$_module->l('Lengow authentification'),
-            'help' => sprintf(self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP (%s) address is filled in your Lengow Dashboard.'), gethostbyname($_SERVER['HTTP_HOST'])),
+            'help' => sprintf(self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP (%s) address is filled in your Lengow Dashboard.'), self::isValidAuth()),
             'help_link' => 'https://solution.lengow.com/api/',
             'help_label' => self::$_module->l('Go to Lengow dashboard'),
-            'state' => (int) self::isValidAuth()
+            'state' => (int) self::isValidAuth() == 1 ? 1 : 0
         );
         $checklist[] = array(
             'message' => self::$_module->l('Shop functionality'),
