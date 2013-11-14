@@ -212,9 +212,9 @@ class LengowImportAbstract {
                             $customer->lastname = LengowAddress::cleanName((string) $lengow_order->billing_address->billing_lastname);
                         }
                         if (empty($customer->firstname))
-                            $customer->firstname = '-';
+                            $customer->firstname = '__';
                         if (empty($customer->lastname))
-                            $customer->lastname = '-';
+                            $customer->lastname = '__';
                         $customer->company = LengowAddress::cleanName((string) $lengow_order->billing_address->billing_society);
                         $customer->email = $email_address;
                         $customer->passwd = md5(rand());
@@ -297,6 +297,10 @@ class LengowImportAbstract {
                                 $shipping_address->firstname = self::cleanName((string) $lengow_order->delivery_address->delivery_lastname);
                                 $shipping_address->lastname = self::cleanName((string) $lengow_order->delivery_address->delivery_firstname);
                             }
+                            if (empty($shipping_address->firstname))
+                                $shipping_address->firstname = '__';
+                            if (empty($shipping_address->lastname))
+                                $shipping_address->lastname = '__';
                             $shipping_address->id_country = $id_country;
                             if (!$country = Country::getByIso((string) $lengow_order->delivery_address->delivery_country_iso)) {
                                 LengowCore::log('Order ' . $lengow_order_id . ' : no country ' . (string) $lengow_order->delivery_address->delivery_country_iso . ' (shipping) exist on this PRESTASHOP');
@@ -304,7 +308,7 @@ class LengowImportAbstract {
                             }
                             $shipping_address->country = (string) $lengow_order->delivery_address->delivery_country;
                             $shipping_address->address1 = (string) $lengow_order->delivery_address->delivery_address;
-                            $shipping_address->address2 = (string) $lengow_order->delivery_address->delivery_address_2;
+                            $shipping_address->address2 = (#tring) $lengow_order->delivery_address->delivery_address_2;
                             if ((string) $lengow_order->delivery_address->delivery_address_complement != '')
                                 $shipping_address->address2 .= (string) $lengow_order->delivery_address->delivery_address_complement;
                             if (empty($shipping_address->address1) && !empty($shipping_address->address2)) {
