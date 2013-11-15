@@ -308,7 +308,7 @@ class LengowImportAbstract {
                             }
                             $shipping_address->country = (string) $lengow_order->delivery_address->delivery_country;
                             $shipping_address->address1 = (string) $lengow_order->delivery_address->delivery_address;
-                            $shipping_address->address2 = (#tring) $lengow_order->delivery_address->delivery_address_2;
+                            $shipping_address->address2 = (string) $lengow_order->delivery_address->delivery_address_2;
                             if ((string) $lengow_order->delivery_address->delivery_address_complement != '')
                                 $shipping_address->address2 .= (string) $lengow_order->delivery_address->delivery_address_complement;
                             if (empty($shipping_address->address1) && !empty($shipping_address->address2)) {

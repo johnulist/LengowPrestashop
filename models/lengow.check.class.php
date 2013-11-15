@@ -62,7 +62,7 @@ class LengowCheck {
 
             if ($check['state'] === 0 || $check['state'] === 2) {
                 $out .= '<tr><td colspan="2"><p>' . $check['help'];
-                if($check['help_link'] != '') {
+                if(array_key_exists('help_link', $check) && $check['help_link'] != '') {
                     $out .= '<br /><a target="_blank" href="' . $check['help_link'] . '">' . $check['help_label'] . '</a>';
                 }
                 $out .= '</p></td></tr>';
