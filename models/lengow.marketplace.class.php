@@ -137,18 +137,20 @@ class LengowMarketplaceAbstract {
       * @param string $id_order The order ID
       * @param string $args An array of arguments
       */
-    public function wsdl($action, $id_flux, $id_order, $args = array()) {
+    public function wsdl($action, $id_flux, $id_lengow_order, $args = array()) {
         if(!in_array($action, self::$VALID_ACTIONS))
             return false;
         if(!$this->isAction($action))
             return false;
-        $order = new Order($id_order);
+        $lengow_order = new Order($id_lengow_order);
+        $order = new Order($args['id_order']);
+        
         $call_url = false;
         switch($action) {
             case 'shipped' :
                 $call_url = $this->api_url;
                 $call_url = str_replace('#ID_FLUX#', $id_flux, $call_url);
-                $call_url = str_replace('#ORDER_ID#', $id_order, $call_url);
+                $call_url = str_replace('#ORDER_ID#', $id_lengow_order, $call_url);
                 $action_array = $this->getAction($action);
                 $action_callback = $action_array['name'];
                 $call_url = str_replace('#ACTION#', $action_callback, $call_url);
@@ -177,7 +179,7 @@ class LengowMarketplaceAbstract {
             case 'refuse' :
                 $call_url = $this->api_url;
                 $call_url = str_replace('#ID_FLUX#', $id_flux, $call_url);
-                $call_url = str_replace('#ORDER_ID#', $id_order, $call_url);
+                $call_url = str_replace('#ORDER_ID#', $id_lengow_order, $call_url);
                 $action_array = $this->getAction($action);
                 $action_callback = $action_array['name'];
                 $call_url = str_replace('#ACTION#', $action_callback, $call_url);
@@ -198,7 +200,7 @@ class LengowMarketplaceAbstract {
                 $call_url = str_replace('#MP#', $this->name, $call_url);
                 $call_url = str_replace('#ID_CLIENT#', $args['id_client'], $call_url);
                 $call_url = str_replace('#ID_FLUX#', $id_flux, $call_url);
-                $call_url = str_replace('#ORDER_ID#', $id_order, $call_url);
+                $call_url = str_replace('#ORDER_ID#', $id_lengow_order, $call_url);
                 $call_url = str_replace('#INTERNAL_ORDER_ID#', $args['id_order_internal'], $call_url);
 
         }

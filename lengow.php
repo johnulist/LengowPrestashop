@@ -1230,11 +1230,11 @@ class Lengow extends Module {
                 if ($lengow_order->lengow_id_order != '' && $marketplace->isLoaded()) {
                     // Call Lengow API WSDL to send shipped state order
                     if ($id_order_state == LengowCore::getOrderState('shipped')) {
-                        $marketplace->wsdl('shipped', $lengow_order->lengow_id_flux, $lengow_order->lengow_id_order);
+                        $marketplace->wsdl('shipped', $lengow_order->lengow_id_flux, $lengow_order->lengow_id_order, $args);
                     }
                     // Call Lengow API WSDL to send refuse state order
                     if ($id_order_state == LengowCore::getOrderState('cancel')) {
-                        $marketplace->wsdl('refuse', $lengow_order->lengow_id_flux, $lengow_order->lengow_id_order);
+                        $marketplace->wsdl('refuse', $lengow_order->lengow_id_flux, $lengow_order->lengow_id_order, $args);
                     }
                     LengowCore::enableMail();
                 }
