@@ -90,7 +90,7 @@ class LengowImportAbstract {
      */
     protected function _importOrders($args = array()) {
         LengowCore::disableSendState();
-        if ($args['debug'] == true)
+        if (array_key_exists('debug', $args) && $args['debug'] == true)
             self::$debug = true;
 
         self::$import_start = true;
@@ -178,7 +178,7 @@ class LengowImportAbstract {
                 $lengow_order_state = (string) $lengow_order->order_status->marketplace;
                 $id_order_presta = (string) $lengow_order->order_external_id;
 
-                if (($marketplace->getStateLengow($lengow_order_state) == 'processing' || $marketplace->getStateLengow($lengow_order_state) == 'shipped' && !$id_order_presta)) {
+                if (($marketplace->getStateLengow($lengow_order_state) == 'processing' || $marketplace->getStateLengow($lengow_order_state) == 'shipped') && !$id_order_presta) {
                     // Currency
                     $id_currency = (int) Currency::getIdByIsoCode($lengow_order->order_currency);
                     if (!$id_currency) {
@@ -514,7 +514,7 @@ class LengowImportAbstract {
                     }
                     $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, null, null, false), 2);
                     
-                    if(_PS_VERSION_ >= '1.5.2' && _PS_VERSION_ <= '1.5.3')
+                    if(_PS_VERSION_ >= '1.5.2' && _PS_VERSION_ <= '1.5.3.1')
                         $validateOrder = 'validateOrder152';
                     else
                         $validateOrder = 'validateOrder';

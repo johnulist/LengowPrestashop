@@ -100,6 +100,22 @@ class LengowOrderAbstract extends Order {
     }
 
     /**
+     * Get id of imported order
+     *
+     * @param integer $id_order_lengow The marketplace ID
+     * @param integer $id_flux The flux ID
+     *
+     * @return interger $order_id
+     */
+    static public function getOrderId($id_order_lengow, $id_flux) {
+        $select = 'SELECT `id_order` FROM `' . _DB_PREFIX_ . 'lengow_orders` '
+                . 'WHERE `id_order_lengow` = \'' . pSQL($id_order_lengow) . '\' '
+                . 'AND `id_flux` = \'' . pSQL($id_flux) . '\';';
+        $order_id = Db::getInstance()->getValue($select);
+        return $order_id;
+    }
+
+    /**
      * Get Prestashop order with ID marketplace & ID flux
      *
      * @param integer $id_order_lengow The marketplace ID
