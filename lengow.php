@@ -1613,8 +1613,8 @@ class Lengow extends Module {
         $days = (integer) LengowCore::getCountDaysToImport();
         $date_from = date('Y-m-d', strtotime(date('Y-m-d') . ' -' . $days . 'days'));
         LengowCore::log('Cron import');
-        /* $result = $import->exec('commands', array('dateFrom' => $date_from,
-          'dateTo' => $date_to)); */
+        $result = $import->exec('commands', array('dateFrom' => $date_from,
+          'dateTo' => $date_to));
     }
 
     /**

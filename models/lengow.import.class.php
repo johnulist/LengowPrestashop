@@ -237,7 +237,8 @@ class LengowImportAbstract {
                     }
                     $address_cp = (string) $lengow_order->billing_address->billing_zipcode;
                     if (empty($address_cp)) {
-                        LengowCore::log('Order ' . $lengow_order_id . ' : no zipcode');
+                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no zipcode');
+                        $address_cp = ' ';
                         continue;
                     }
                     $address_city = (string) $lengow_order->billing_address->billing_city;
@@ -523,6 +524,7 @@ class LengowImportAbstract {
                         LengowCore::log('No new order to import');
                         if (Validate::isLoadedObject($cart))
                             $cart->delete();
+                        LengowCore::enableMail();
                         continue;
                     } elseif ($payment->$validateOrder($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true)) {
                         $id_order = $payment->currentOrder;
