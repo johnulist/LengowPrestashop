@@ -350,7 +350,7 @@ class LengowImportAbstract {
                     $cart->id_customer = $id_customer;
                     $cart->id_lang = $id_lang;
                     $cart->add();
-                    Context::getContext()->cart = new LengowCart($cart->id);
+                    Context::getContext()->cart = new Cart($cart->id);
                     $lengow_total_order = 0;
                     $shipping_price = 0;
                     $total_saleable_quantity = 0;
