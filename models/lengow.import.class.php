@@ -291,7 +291,7 @@ class LengowImportAbstract {
                             $shipping_address = new LengowAddress();
                             $shipping_address->id_customer = $id_customer;
                             if (empty($lengow_order->delivery_address->delivery_firstname)) {
-                                $name = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_lastname);
+                                $name = LengowAddress::extractName((string) $lengow_order->delivery_address->delivery_lastname);
                                 $shipping_address->firstname = $name['firstname'];
                                 $shipping_address->lastname = $name['lastname'];
                             } else {
