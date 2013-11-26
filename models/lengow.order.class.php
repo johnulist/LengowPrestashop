@@ -90,11 +90,11 @@ class LengowOrderAbstract extends Order {
      * @return boolean.
      */
     static public function isAlreadyImported($id_order_lengow, $id_flux) {
-        $select = 'SELECT COUNT(`id_order`) FROM `' . _DB_PREFIX_ . 'lengow_orders` '
+        $select = 'SELECT COUNT(`id_order`) AS `count` FROM `' . _DB_PREFIX_ . 'lengow_orders` '
                 . 'WHERE `id_order_lengow` = \'' . pSQL($id_order_lengow) . '\' '
                 . 'AND `id_flux` = \'' . pSQL($id_flux) . '\';';
-        $count = Db::getInstance()->getValue($select);
-        if($count >= 1)
+        $count = Db::getInstance()->ExecuteS($select);
+        if($count[0]['count'] >= 1)
             return true;
         return false;
     }
@@ -111,8 +111,8 @@ class LengowOrderAbstract extends Order {
         $select = 'SELECT `id_order` FROM `' . _DB_PREFIX_ . 'lengow_orders` '
                 . 'WHERE `id_order_lengow` = \'' . pSQL($id_order_lengow) . '\' '
                 . 'AND `id_flux` = \'' . pSQL($id_flux) . '\';';
-        $order_id = Db::getInstance()->getValue($select);
-        return $order_id;
+        $order_id = Db::getInstance()->ExecuteS($select);
+        return $order_id[0]['id_order'];
     }
 
     /**
