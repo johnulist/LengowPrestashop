@@ -467,6 +467,11 @@ class LengowImportAbstract {
 
                             $product = new LengowProduct((int) $id_product, $this->id_lang);
                         }
+                        // Test if product is active
+                        if($product->active != 1) {
+                            LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is disabled in your BO');
+                            continue;
+                        }
                         if (isset($lengow_products[$product_sku])) {
                             $lengow_products[$product_sku]['qty'] += $product_quantity;
                         } else {
