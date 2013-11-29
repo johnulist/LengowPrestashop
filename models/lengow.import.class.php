@@ -305,7 +305,7 @@ class LengowImportAbstract {
                             $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_office);
                         else if ((string) $lengow_order->billing_address->billing_phone_mobile != '')
                             $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_mobile);
-                        $billing_address->alias = LengowAddress::hash((string) $billing_address->firstname . (string) $billing_address->lastname . (string) $lengow_order->billing_address->billing_full_address);
+                        $billing_address->alias = LengowAddress::hash((string) $lengow_order->billing_address->billing_full_address);
                         try {
                             if(!$error = $billing_address->validateFields(false, true))
                                 throw new Exception($error);
@@ -325,14 +325,14 @@ class LengowImportAbstract {
                         $shipping_address_firstname = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_lastname);
                         $shipping_address_lastname = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_firstname);
                     }
-                    if (empty($shipping_address->firstname))
+                    if (empty($shipping_address_firstname))
                         $shipping_address_firstname = '__';
-                    if (empty($shipping_address->lastname))
+                    if (empty($shipping_address_lastname))
                         $shipping_address_lastname = '__';
 
                     if ((string) $billing_address->firstname . (string) $billing_address->lastname . (string) $lengow_order->$lengow_order->billing_address->billing_full_address 
-                        != $shipping_address_firstname . $billing_address_lastname . (string) $lengow_order->delivery_address->delivery_full_address) {
-                        if (!$shipping_address = LengowAddress::getByHash((string) $lengow_order->delivery_address->delivery_full_address)) {
+                        != $shipping_address_firstname . $shipping_address_lastname . (string) $lengow_order->delivery_address->delivery_full_address) {
+                        if (!$shipping_address = LengowAddress::getByHash($shipping_address_firstname . $shipping_address_lastname . (string) $lengow_order->delivery_address->delivery_full_address)) {
                             $shipping_address = new LengowAddress();
                             $shipping_address->id_customer = $id_customer;
                             if (empty($lengow_order->delivery_address->delivery_firstname)) {
@@ -370,7 +370,7 @@ class LengowImportAbstract {
                                 $shipping_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_home);
                             else if ((string) $lengow_order->delivery_address->delivery_phone_office != '')
                                 $shipping_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_office);
-                            $shipping_address->alias = LengowAddress::hash((string) $lengow_order->delivery_address->delivery_full_address);
+                            $shipping_address->alias = LengowAddress::hash((string) $shipping_address->firstname . (string) $shipping_address->lastname . (string) $lengow_order->delivery_address->delivery_full_address);
                             try {
                                 if(!$error = $shipping_address->validateFields(false, true))
                                     throw new Exception($error);
