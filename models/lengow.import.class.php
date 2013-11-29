@@ -305,7 +305,7 @@ class LengowImportAbstract {
                             $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_office);
                         else if ((string) $lengow_order->billing_address->billing_phone_mobile != '')
                             $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_mobile);
-                        $billing_address->alias = LengowAddress::hash((string) $lengow_order->billing_address->billing_full_address);
+                        $billing_address->alias = LengowAddress::hash((string) $billing_address->firstname . (string) $billing_address->lastname . (string) $lengow_order->billing_address->billing_full_address);
                         try {
                             if(!$error = $billing_address->validateFields(false, true))
                                 throw new Exception($error);
@@ -317,7 +317,21 @@ class LengowImportAbstract {
                     }
                     // Shipping address
                     // IF shipping != billing
-                    if ((string) $lengow_order->billing_address->billing_full_address != (string) $lengow_order->delivery_address->delivery_full_address) {
+                    if (empty($lengow_order->delivery_address->delivery_firstname)) {
+                        $name = LengowAddress::extractName((string) $lengow_order->delivery_address->delivery_lastname);
+                        $shipping_address_firstname = $name['firstname'];
+                        $shipping_address_lastname = $name['lastname'];
+                    } else {
+                        $shipping_address_firstname = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_lastname);
+                        $shipping_address_lastname = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_firstname);
+                    }
+                    if (empty($shipping_address->firstname))
+                        $shipping_address_firstname = '__';
+                    if (empty($shipping_address->lastname))
+                        $shipping_address_lastname = '__';
+
+                    if ((string) $billing_address->firstname . (string) $billing_address->lastname . (string) $lengow_order->$lengow_order->billing_address->billing_full_address 
+                        != $shipping_address_firstname . $billing_address_lastname . (string) $lengow_order->delivery_address->delivery_full_address) {
                         if (!$shipping_address = LengowAddress::getByHash((string) $lengow_order->delivery_address->delivery_full_address)) {
                             $shipping_address = new LengowAddress();
                             $shipping_address->id_customer = $id_customer;
