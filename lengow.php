@@ -1631,7 +1631,7 @@ class Lengow extends Module {
             /* Ceci est la façon correcte de traverser un dossier. */
             while (false !== ($filename = readdir($handle))) {
                 if ($filename != "." && $filename != "..") {
-                    $files[] = '<a target="_blank" href="' . _PS_BASE_URL_ . DS . 'modules' . DS . 'lengow' . DS . 'logs' . DS . $filename . '">' .$filename . '</a>';
+                    $files[] = '<a target="_blank" href="' . _PS_BASE_URL_ . __PS_BASE_URI__ . 'modules' . DS . 'lengow' . DS . 'logs' . DS . $filename . '">' .$filename . '</a>';
                 }
             }
             sort($files);
