@@ -7,6 +7,12 @@
 		<li>{l s='Feed ID'} : <strong>{$id_flux}</strong></li>
 		<li>{l s='Marketplace'} : <strong>{$marketplace}</strong></li>
 		<li>{l s='Total amount paid on Marketplace'} : <strong>{$total_paid}</strong></li>
+		{if $tracking_method}
+			<li>{l s='Tracking method'} : <strong>{$tracking_method}</strong></li>
+		{/if}
+		{if $tracking_carrier}
+			<li>{l s='Tracking carrier'} : <strong>{$tracking_carrier}</strong></li>
+		{/if}
 		<li>{l s='Carrier from marketplace'} : <strong>{$carrier}</strong></li>
 		<li>{l s='Message'} : <strong>{$message}</strong></li>
 	</ul>

@@ -1343,17 +1343,26 @@ class Lengow extends Module {
             } else {
                 $action_reimport = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
             }
-            $this->context->smarty->assign(
-                    array(
-                        'id_order_lengow' => $order->lengow_id_order,
-                        'id_flux' => $order->lengow_id_flux,
-                        'marketplace' => $order->lengow_marketplace,
-                        'total_paid' => $order->lengow_total_paid,
-                        'carrier' => $order->lengow_carrier,
-                        'message' => $order->lengow_message,
-                        'action_reimport' => $action_reimport,
-                    )
-            );
+            $lengow_order_extra = Tools::jsonDecode($order->lengow_extra);
+
+            $template_data = array(
+                                'id_order_lengow' => $order->lengow_id_order,
+                                'id_flux' => $order->lengow_id_flux,
+                                'marketplace' => $order->lengow_marketplace,
+                                'total_paid' => $order->lengow_total_paid,
+                                'carrier' => $order->lengow_carrier,
+                                'message' => $order->lengow_message,
+                                //'action_reimport' => $action_reimport,
+                             );
+
+            if(!is_object($lengow_order_extra->tracking_informations->tracking_method))
+                $template_data['tracking_method'] = $lengow_order_extra->tracking_informations->tracking_method;
+
+            if(!is_object($lengow_order_extra->tracking_informations->tracking_carrier))
+                $template_data['tracking_carrier'] = $lengow_order_extra->tracking_informations->tracking_carrier;
+
+            $this->context->smarty->assign($template_data);
+            
             return $this->display(__FILE__, 'views/templates/admin/order/info.tpl');
         } else {
             return '';

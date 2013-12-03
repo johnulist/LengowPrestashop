@@ -330,7 +330,7 @@ class LengowImportAbstract {
                     if (empty($shipping_address_lastname))
                         $shipping_address_lastname = '__';
 
-                    if ((string) $billing_address->firstname . (string) $billing_address->lastname . (string) $lengow_order->$lengow_order->billing_address->billing_full_address 
+                    if ((string) $billing_address->firstname . (string) $billing_address->lastname . (string) $lengow_order->billing_address->billing_full_address 
                         != $shipping_address_firstname . $shipping_address_lastname . (string) $lengow_order->delivery_address->delivery_full_address) {
                         if (!$shipping_address = LengowAddress::getByHash($shipping_address_firstname . $shipping_address_lastname . (string) $lengow_order->delivery_address->delivery_full_address)) {
                             $shipping_address = new LengowAddress();
