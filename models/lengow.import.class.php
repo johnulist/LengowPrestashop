@@ -371,6 +371,11 @@ class LengowImportAbstract {
                     }
                     $id_carrier = LengowCore::getDefaultCarrier();
                     $id_carrier = $this->getRealCarrier($id_carrier, $lengow_order->tracking_informations);
+                    /**
+                     * Try to match carrier, select default if no result
+                     */
+
+
                     // Order
                     $order_created_at_time = strtotime((string) $lengow_order->order_purchase_date . ' ' . (string) $lengow_order->order_purchase_heure);
                     $order_date_add = date('Y-m-d H:i:s', time());
@@ -541,6 +546,7 @@ class LengowImportAbstract {
                             . 'Total paid : ' . (float) $lengow_order->order_amount . ' | ' . "\r\n"
                             . 'Shipping : ' . (string) $lengow_order->order_shipping . ' | ' . "\r\n"
                             . 'Message : ' . (string) $lengow_order->order_comments . "\r\n";
+
 
                     LengowCore::disableMail();
 
