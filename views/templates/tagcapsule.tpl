@@ -10,3 +10,15 @@ var id_categorie = '{$id_category}'; // #ID CATEGORIE EN COURS#
 </script>
 <script type="text/javascript" src="https://tracking.lengow.com/tagcapsule.js?lengow_id={$id_customer}&idGroup={$id_group}"></script>
 <!-- /Tag_Lengow -->
+{if $page_type == 'confirmation'}
+	<div id="tagcapsule2"></div>
+	<script type="text/javascript">
+	setTimeout(
+		function() {
+			var script = document.createElement('script');
+			script.src = "https://tracking.lengow.com/tagcapsule.js?lengow_id={$id_customer}&idGroup={$id_group}";
+			page = "payment";
+			document.getElementById('tagcapsule2').appendChild(script);
+		}, 2000);
+	</script>
+{/if}

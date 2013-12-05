@@ -1274,7 +1274,7 @@ class Lengow extends Module {
      * @param array $args Arguments of hook
      */
     public function hookPaymentTop($args) {
-        self::$_CURRENT_PAGE_TYPE = self::LENGOW_TRACK_PAGE_PAYMENT;
+        self::$_CURRENT_PAGE_TYPE = self::LENGOW_TRACK_PAGE;
     }
 
     /**
