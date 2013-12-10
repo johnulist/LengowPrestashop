@@ -1104,7 +1104,7 @@ class Lengow extends Module {
         $tracking_mode = LengowCore::getTrackingMode();
 
         // SSL
-        if (isset($_SERVER['HTTPS']) && $_SERVER['https'] == 'on')
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')
             self::$_USE_SSL = true;
 
         if (empty($tracking_mode))
