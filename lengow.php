@@ -202,7 +202,7 @@ class Lengow extends Module {
                 $this->registerHook('addproduct') && // actionProductAdd
                 $this->registerHook('adminOrder') && // displayAdminOrder
                 $this->registerHook('newOrder') && // actionValidateOrder
-                $this->reorderHook('newOrder') && // actionValidateOrder
+                //$this->reorderHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayAdminHomeStatistics') : true) &&
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('actionAdminControllerSetMedia') : true) &&
@@ -1493,6 +1493,14 @@ class Lengow extends Module {
      * @return boolean Result of add tab on database.
      */
     private function _createTab() {
+        if (_PS_VERSION_ < '1.5')
+            $tabName = "AdminLengow14";
+        else
+            $tabName = "AdminLengow";
+
+        if(Tab::getIdFromClassName($tabName) !== false)
+            return;
+
         $tab = new Tab();
         if (_PS_VERSION_ < '1.5') {
             $tab->class_name = 'AdminLengow14';
@@ -1514,60 +1522,15 @@ class Lengow extends Module {
      * @return boolean Result of tab uninstallation
      */
     private function _uninstallTab() {
-        if (_PS_VERSION_ < '1.5') {
+        if (_PS_VERSION_ < '1.5')
             $tabName = "AdminLengow14";
-        } else {
+        else
             $tabName = "AdminLengow";
-        }
         $tab = Tab::getInstanceFromClassName($tabName);
         if ($tab->id != 0) {
             return $tab->delete();
         }
         return false;
-    }
-
-    /**
-     * To limited rewrite order's problems, we force the lengow's hook in first position.
-     *
-     * @param varchar The hook name to reorder.
-     */
-    public function reorderHook($hook_name) {
-        // Retrocompatibility
-        /*
-          if (_PS_VERSION_ >= '1.5') {
-          if ($alias = Hook::getRetroHookName($hook_name))
-          $hook_name = $alias;
-          }
-          // Get hook id
-          $id_hook = Hook::getIdByName($hook_name);
-          if ($id_hook) {
-          $select = 'SELECT * FROM `' . _DB_PREFIX_ . 'hook_module` WHERE `id_hook` = ' . pSQL($id_hook) . ' ';
-          if (_PS_VERSION_ >= '1.5') {
-          $select .= 'AND `id_shop` = \'' . (int) $this->context->shop->id . '\' ';
-          }
-          $select .= 'ORDER BY `position`';
-          //Db::getInstance()->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-          $hooks = Db::getInstance()->executeS($select, true, false);
-          $position = 2;
-          foreach($hooks as $hook) {
-          if($hook['id_module'] != $this->id) {
-          $update = 'UPDATE `' . _DB_PREFIX_ . 'hook_module` SET `position` = ' . ($position). ' WHERE `id_hook` = ' . pSQL($id_hook) . ' ';
-          if (_PS_VERSION_ >= '1.5') {
-          $update .= 'AND `id_shop` = \'' . (int) $this->context->shop->id . '\' ';
-          }
-          $update .= 'AND `id_module` = ' . $hook['id_module'] . '';
-          Db::getInstance()->execute($update, false);
-          $position++;
-          }
-          }
-          $update = 'UPDATE `' . _DB_PREFIX_ . 'hook_module` SET `position` = 1 WHERE `id_hook` = ' . pSQL($id_hook) . ' ';
-          if (_PS_VERSION_ >= '1.5') {
-          $update .= 'AND `id_shop` = \'' . (int) $this->context->shop->id . '\' ';
-          }
-          $update .= 'AND `id_module` = ' . $this->id . ' ';
-          Db::getInstance()->execute($update, false);
-          } */
-        return true;
     }
 
     /**
@@ -1637,10 +1600,9 @@ class Lengow extends Module {
     private function _getLogFiles() {
         $out = '';
         if($handle = opendir(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'logs')) {
-            /* Ceci est la façon correcte de traverser un dossier. */
             while (false !== ($filename = readdir($handle))) {
                 if ($filename != "." && $filename != "..") {
-                    $files[] = '<a target="_blank" href="' . _PS_BASE_URL_ . DS . 'modules' . DS . 'lengow' . DS . 'logs' . DS . $filename . '">' .$filename . '</a>';
+                    $files[] = '<a target="_blank" href="' . _PS_BASE_URL_ . __PS_BASE_URI__ . 'modules' . DS . 'lengow' . DS . 'logs' . DS . $filename . '">' .$filename . '</a>';
                 }
             }
             sort($files);

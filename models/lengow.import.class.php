@@ -123,6 +123,11 @@ class LengowImportAbstract {
             else
                 $lengow_order_id = (string) $lengow_order->order_id;
 
+            if((int)$lengow_order->tracking_informations->tracking_deliveringByMarketPlace == 1) {
+                LengowCore::log('Order ' . $lengow_order_id . ' : Shipping by ' . (string) $lengow_order->marketplace);
+                continue;
+            }
+
             $marketplace = LengowCore::getMarketplaceSingleton((string) $lengow_order->marketplace);
             $id_flux = (integer) $lengow_order->idFlux;
             if ((string) $lengow_order->order_status->marketplace == '') {
@@ -264,7 +269,6 @@ class LengowImportAbstract {
                     if (empty($address_cp)) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no zipcode');
                         $address_cp = ' ';
-                        continue;
                     }
                     $address_city = (string) $lengow_order->billing_address->billing_city;
                     if (empty($address_city)) {
@@ -300,6 +304,8 @@ class LengowImportAbstract {
                         $billing_address->address2 = preg_replace('/[!<>?=+@{}_$%]/sim', '', $billing_address->address2);
                         $billing_address->city = (string) $lengow_order->billing_address->billing_city;
                         $billing_address->postcode = (string) $lengow_order->billing_address->billing_zipcode;
+                        if(empty($billing_address->postcode))
+                            $billing_address->postcode = ' ';
                         $billing_address->phone = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_home);
                         if ((string) $lengow_order->billing_address->billing_phone_office != '')
                             $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_office);
@@ -365,6 +371,8 @@ class LengowImportAbstract {
                             $shipping_address->address2 = preg_replace('/[!<>?=+@{}_$%]/sim', '', $shipping_address->address2);
                             $shipping_address->city = (string) $lengow_order->delivery_address->delivery_city;
                             $shipping_address->postcode = (string) $lengow_order->delivery_address->delivery_zipcode;
+                            if(empty($shipping_address->postcode))
+                                $shipping_address->postcode = ' ';
                             $shipping_address->phone = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_home);
                             if ((string) $lengow_order->delivery_address->delivery_phone_home != '')
                                 $shipping_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_home);
@@ -484,7 +492,7 @@ class LengowImportAbstract {
                         // Test if product is active
                         if($product->active != 1) {
                             LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is disabled in your BO');
-                            continue;
+                            continue 2;
                         }
                         if (isset($lengow_products[$product_sku])) {
                             $lengow_products[$product_sku]['qty'] += $product_quantity;
@@ -613,6 +621,10 @@ class LengowImportAbstract {
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : success import on presta (ORDER ' . $id_order . ')', $this->force_log_output);
                         $count_orders_added++;
+                        if(Tools::getValue('limit') != '' && Tools::getValue('limit') > 0) {
+                            if($count_orders_added == (int) Tools::getValue('limit'))
+                                die();
+                        } 
                     } else {
                         LengowCore::log('Order ' . $lengow_order_id . ' : fail import on presta', $this->force_log_output);
                         if (Validate::isLoadedObject($cart))
