@@ -64,10 +64,12 @@ class LengowMarketplaceAbstract {
                         $this->actions[(string) $action['type']] = array();
                         $this->actions[(string) $action['type']]['name'] = (string) $action;
                         $params = self::$DOM->xpath('/marketplaces/marketplace[@name=\'' . $this->name . '\']/additional_params/param[@usedby=\'' . (string) $action['type']. '\']');
-                        if(isset($params[0])) {
-                            $this->actions[(string) $action['type']]['params'][(string) $params[0]->type]['name'] = (string) $params[0]->name;
-                            if(isset($params[0]->accepted_values))
-                                $this->actions[(string) $action['type']]['params'][(string) $params[0]->type]['accepted_values'] = $params[0]->accepted_values->value;
+                        if(count($params)) {
+                          foreach($params as $param) {
+                              $this->actions[(string) $action['type']]['params'][(string) $param->type]['name'] = (string) $param->name;
+                              if(isset($param->accepted_values))
+                                  $this->actions[(string) $action['type']]['params'][(string) $param->type]['accepted_values'] = $param->accepted_values->value;
+                          }
                         }
                     }
                 }
@@ -241,6 +243,7 @@ class LengowMarketplaceAbstract {
         $opts[CURLOPT_URL] = $url;
         // Exectute url request
         curl_setopt_array($ch, $opts);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         if ($result === false) {
             throw new LengowWsdlException(

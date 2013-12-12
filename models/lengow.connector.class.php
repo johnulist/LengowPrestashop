@@ -214,7 +214,8 @@ class LengowConnectorAbstract {
                 . $this->id_customer . '/'
                 . $array['id_group'] . '/'
                 . (isset($array['id']) && !empty($array['id']) ? $array['id'] : 'orders')
-                . '/commands/';
+                . '/commands/'
+                . (isset($array['state']) && !empty($array['state']) ? $array['state'] . '/' : '');
         return $url;
     }
 
@@ -285,6 +286,7 @@ class LengowConnectorAbstract {
         $opts[CURLOPT_URL] = $url;
         // Exectute url request
         curl_setopt_array($ch, $opts);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         if ($result === false) {
             LengowCore::log('Connector Error (' . curl_error($ch) . ')' . $result, -1);
