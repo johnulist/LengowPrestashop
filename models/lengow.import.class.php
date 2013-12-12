@@ -328,8 +328,8 @@ class LengowImportAbstract {
                         $shipping_address_firstname = $name['firstname'];
                         $shipping_address_lastname = $name['lastname'];
                     } else {
-                        $shipping_address_firstname = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_lastname);
-                        $shipping_address_lastname = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_firstname);
+                        $shipping_address_firstname = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_firstname);
+                        $shipping_address_lastname = LengowAddress::cleanName((string) $lengow_order->delivery_address->delivery_lastname);
                     }
                     if (empty($shipping_address_firstname))
                         $shipping_address_firstname = '--';
