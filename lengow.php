@@ -69,7 +69,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.3.1';
+        $this->version = '2.0.3.2';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
@@ -122,7 +122,7 @@ class Lengow extends Module {
           $new_employe->add();
           // Creation of customer Lengow
           $new_customer = new Customer();
-          $new_customer->lastname	= 'Client';
+          $new_customer->lastname   = 'Client';
           $new_customer->firstname = 'Lengow';
           $new_customer->passwd = '|€-§oW';
           $new_customer->email = openssl_random_pseudo_bytes(5);
@@ -159,40 +159,40 @@ class Lengow extends Module {
                 Configuration::updateValue('LENGOW_DEBUG', false) &&
                 // Orders lengow table
                 Db::getInstance()->execute('
-				CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'lengow_orders` (
-				`id_order` INTEGER(10) UNSIGNED NOT NULL ,
-				`id_order_lengow` VARCHAR(32) ,
-				`id_shop` INTEGER(11) UNSIGNED NOT NULL DEFAULT \'1\' ,
-				`id_shop_group` INTEGER(11) UNSIGNED NOT NULL DEFAULT \'1\' ,
-				`id_lang` INTEGER(10) UNSIGNED NOT NULL DEFAULT \'1\' ,
-				`id_flux` INTEGER(11) UNSIGNED NOT NULL ,
-				`marketplace` VARCHAR(100) ,
-				`message` TEXT ,
-				`total_paid` DECIMAL(17,2) NOT NULL ,
-				`carrier` VARCHAR(100) ,
-				`tracking` VARCHAR(100) ,
-				`extra` TEXT ,
-				`date_add` DATETIME NOT NULL ,
-				PRIMARY KEY(id_order) ,
-				INDEX (`id_order_lengow`) ,
-				INDEX (`id_flux`) ,
-				INDEX (`id_shop`) ,
-				INDEX (`id_shop_group`) ,
-				INDEX (`marketplace`) ,
-				INDEX (`date_add`)
-			) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;') &&
+                CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'lengow_orders` (
+                `id_order` INTEGER(10) UNSIGNED NOT NULL ,
+                `id_order_lengow` VARCHAR(32) ,
+                `id_shop` INTEGER(11) UNSIGNED NOT NULL DEFAULT \'1\' ,
+                `id_shop_group` INTEGER(11) UNSIGNED NOT NULL DEFAULT \'1\' ,
+                `id_lang` INTEGER(10) UNSIGNED NOT NULL DEFAULT \'1\' ,
+                `id_flux` INTEGER(11) UNSIGNED NOT NULL ,
+                `marketplace` VARCHAR(100) ,
+                `message` TEXT ,
+                `total_paid` DECIMAL(17,2) NOT NULL ,
+                `carrier` VARCHAR(100) ,
+                `tracking` VARCHAR(100) ,
+                `extra` TEXT ,
+                `date_add` DATETIME NOT NULL ,
+                PRIMARY KEY(id_order) ,
+                INDEX (`id_order_lengow`) ,
+                INDEX (`id_flux`) ,
+                INDEX (`id_shop`) ,
+                INDEX (`id_shop_group`) ,
+                INDEX (`marketplace`) ,
+                INDEX (`date_add`)
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;') &&
                 // Products exports
                 Db::getInstance()->execute('
-				CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'lengow_product` (
-				`id_product` INTEGER UNSIGNED NOT NULL ,
-				`id_shop` INTEGER(11) UNSIGNED NOT NULL DEFAULT \'1\' ,
-				`id_shop_group` INTEGER(11) UNSIGNED NOT NULL DEFAULT \'1\' ,
-				`id_lang` INTEGER(10) UNSIGNED NOT NULL DEFAULT \'1\' ,
-				PRIMARY KEY ( `id_product` ) ,
-				INDEX (`id_shop`) ,
-				INDEX (`id_shop_group`) ,
-				INDEX (`id_lang`)
-				) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;') &&
+                CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'lengow_product` (
+                `id_product` INTEGER UNSIGNED NOT NULL ,
+                `id_shop` INTEGER(11) UNSIGNED NOT NULL DEFAULT \'1\' ,
+                `id_shop_group` INTEGER(11) UNSIGNED NOT NULL DEFAULT \'1\' ,
+                `id_lang` INTEGER(10) UNSIGNED NOT NULL DEFAULT \'1\' ,
+                PRIMARY KEY ( `id_product` ) ,
+                INDEX (`id_shop`) ,
+                INDEX (`id_shop_group`) ,
+                INDEX (`id_lang`)
+                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;') &&
                 // Products exports
                 //$this->registerHook('leftColumn') &&
                 // TODO add hook add product
@@ -1146,20 +1146,38 @@ class Lengow extends Module {
         }
 
         // Cart
-        $cart = $this->context->cart;
-        $cart_products = $cart->getProducts();
-        if (count($cart_products) > 0) {
-            $currency = $this->context->currency;
-            $i = 1;
-            foreach ($cart_products as $p) {
-                if ($p['id_product_attribute'])
-                    $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
-                else
-                    $id_product = $p['id_product'];
-                self::$_IDS_PRODUCTS_CART .= 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'] . '&';
-                $i++;
+        if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
+            $cart = $this->context->cart;
+            $cart_products = $cart->getProducts();
+            if (count($cart_products) > 0) {
+                $i = 1;
+                foreach ($cart_products as $p) {
+                    if ($p['id_product_attribute'])
+                        $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
+                    else
+                        $id_product = $p['id_product'];
+                    self::$_IDS_PRODUCTS_CART .= 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'] . '&';
+                    $i++;
+                }
+                self::$_IDS_PRODUCTS_CART = rtrim(self::$_IDS_PRODUCTS_CART, '&');
             }
-            self::$_IDS_PRODUCTS_CART = rtrim(self::$_IDS_PRODUCTS_CART, '&');
+        }
+
+        // Product IDS
+        if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
+            $cart = $this->context->cart;
+            $cart_products = $cart->getProducts();
+            $array_products = array();
+            if (count($cart_products) > 0) {
+                foreach ($cart_products as $p) {
+                    if ($p['id_product_attribute'])
+                        $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
+                    else
+                        $id_product = $p['id_product'];
+                    $array_products[] = $id_product;
+                }
+                self::$_IDS_PRODUCTS = implode($array_products,'|');
+            }
         }
 
         // Generate tracker
@@ -1248,24 +1266,28 @@ class Lengow extends Module {
      * @param array $args Arguments of hook
      */
     public function hookOrderConfirmation($args) {
-
-        //if($args['objOrder']->module == 'LengowPayment') {
         self::$_CURRENT_PAGE_TYPE = self::LENGOW_TRACK_PAGE_CONFIRMATION;
-        // Cheque module doesn't validate order
-        //if ($args['objOrder']->valid) {
         self::$_ID_ORDER = $args['objOrder']->id;
         self::$_ORDER_TOTAL = $args['total_to_pay'];
         $ids_product = array();
         $products_list = $args['objOrder']->getProducts();
+        $i = 0;
         foreach ($products_list as $p) {
+            $i++;
+
             if ($p['product_attribute_id'])
-                $ids_product[] = $p['product_id'] . '_' . $p['product_attribute_id'];
+                $id_product = $p['product_id'] . '_' . $p['product_attribute_id'];
             else
-                $ids_product[] = $p['product_id'];
+                $id_product = $p['product_id'];
+
+            // Ids Product
+            $ids_products[] = $id_product;
+
+            // Basket Product
+            $products_cart[] .= 'i' . $i . '=' . $id_product . '&p' . $i . '=' . Tools::ps_round($p['unit_price_tax_incl'], 2) . '&q' . $i . '=' . $p['product_quantity'];
         }
-        self::$_IDS_PRODUCTS = implode('|', $ids_product);
-        //}
-        //}
+        self::$_IDS_PRODUCTS_CART = implode('&', $products_cart);
+        self::$_IDS_PRODUCTS = implode('|', $ids_products);
     }
 
     /**
@@ -1451,39 +1473,39 @@ class Lengow extends Module {
         $export_lengow_url = 'http://' . $_SERVER['HTTP_HOST'] . __PS_BASE_URI__ . 'modules/' . $this->name . '/webservice/export.php';
         $export_lengow_url_full = $export_lengow_url . '?mode=full';
         $html = '<h2>' . $this->l('Lengow: synchronize yout catalog') . ' (v' . $this->version . ')</h2>
-			  	 <fieldset>
-				     <legend>' . $this->l('Informations  :') . '</legend>' . $this->l("Lengow is a SaaS solution to enable e-shopping optimize its product catalogs to price comparison, affiliation but also marketplaces and sites of Cashback.") . '<br />	
-				     <br />' . $this->l('The principle is that the solution recovers the merchant\'s product catalog, configure, optimize and track information campaigns to restore market for e-trading statistics in the form of dashboards and charts.') . ' 
-					 <br />' . $this->l('This process allows e-merchants to optimize their flow and their cost of acquisition on each channel.') . '
-					 <br clear="all" />
-					 <br clear="all" />
-					 <a href="http://www.lengow.com" target="_blank"><div style="background-color:#2e85c9;text-align:center;padding:10px;border:1px solid #DDD"><img src="http://www.lengow.fr/img/slide_all_new.png" alt="' . $this->l('Lengow Solution') . '" border="0" /></div></a>
-				 </fieldset>
-				 <br clear="all" />
-				 <fieldset>
-				  	 <legend>' . $this->l('URL of your Product Catalog :') . '</legend>
-					 <a href="' . $export_lengow_url . '" target="_blank" style="font-family:Courier">' . $export_lengow_url . '</a>
-				 </fieldset>
-				 <br clear="all" />
-				 <fieldset>
-				  	 <legend>' . $this->l('URL of your Product Catalog Full :') . '</legend>
-					 <a href="' . $export_lengow_url_full . '" target="_blank" style="font-family:Courier">' . $export_lengow_url_full . '</a>
-				 </fieldset>
-				 <br clear="all" />
-			     <fieldset>
-					 <legend>' . $this->l('URL optional(s) parameter(s):') . '</legend>
-					 <b>CUR</b>: ' . $this->l('Use Prestashop currency conversion tool to convert your products prices using isocode.') . '<br/><br/>
-					 ' . $this->l('Example: convert your prices in $ (isocode: USD)') . ': <br/>
-			         <a href="' . $export_lengow_url_full . '&cur=USD" target="_blank" style="font-family:Courier">' . $export_lengow_url_full . '&cur=USD</a><br/>
-					 ' . $this->l('If not set, EUR is used as default value.') . '<br/><br/>
-					 <b>lang</b>: ' . $this->l('Use Prestashop translation tool using language iso2 code to translate your products titles and descriptions.') . '<br/><br/>
-					 ' . $this->l('Example: translate in Spanish (ES)') . ': <br/>
-			         <a href="' . $export_lengow_url_full . '&lang=ES" target="_blank" style="font-family:Courier">' . $export_lengow_url_full . '&lang=ES</a><br/>
-					 ' . $this->l('If not set below, FR is used as default value.') . '<br/><br/><br/>
-					 ' . $this->l('Both optional parameters can be used') . ': <br/>
-					 ' . $this->l('Example: convert your prices in &pound; (GBP) and translate in English') . ': <br/>
-					 <a href="' . $export_lengow_url_full . '&lang=EN&cur=GBP" target="_blank" style="font-family:Courier">' . $export_lengow_url_full . '&lang=EN&cur=GBP</a><br/>
-				 </fieldset>';
+                 <fieldset>
+                     <legend>' . $this->l('Informations  :') . '</legend>' . $this->l("Lengow is a SaaS solution to enable e-shopping optimize its product catalogs to price comparison, affiliation but also marketplaces and sites of Cashback.") . '<br />   
+                     <br />' . $this->l('The principle is that the solution recovers the merchant\'s product catalog, configure, optimize and track information campaigns to restore market for e-trading statistics in the form of dashboards and charts.') . ' 
+                     <br />' . $this->l('This process allows e-merchants to optimize their flow and their cost of acquisition on each channel.') . '
+                     <br clear="all" />
+                     <br clear="all" />
+                     <a href="http://www.lengow.com" target="_blank"><div style="background-color:#2e85c9;text-align:center;padding:10px;border:1px solid #DDD"><img src="http://www.lengow.fr/img/slide_all_new.png" alt="' . $this->l('Lengow Solution') . '" border="0" /></div></a>
+                 </fieldset>
+                 <br clear="all" />
+                 <fieldset>
+                     <legend>' . $this->l('URL of your Product Catalog :') . '</legend>
+                     <a href="' . $export_lengow_url . '" target="_blank" style="font-family:Courier">' . $export_lengow_url . '</a>
+                 </fieldset>
+                 <br clear="all" />
+                 <fieldset>
+                     <legend>' . $this->l('URL of your Product Catalog Full :') . '</legend>
+                     <a href="' . $export_lengow_url_full . '" target="_blank" style="font-family:Courier">' . $export_lengow_url_full . '</a>
+                 </fieldset>
+                 <br clear="all" />
+                 <fieldset>
+                     <legend>' . $this->l('URL optional(s) parameter(s):') . '</legend>
+                     <b>CUR</b>: ' . $this->l('Use Prestashop currency conversion tool to convert your products prices using isocode.') . '<br/><br/>
+                     ' . $this->l('Example: convert your prices in $ (isocode: USD)') . ': <br/>
+                     <a href="' . $export_lengow_url_full . '&cur=USD" target="_blank" style="font-family:Courier">' . $export_lengow_url_full . '&cur=USD</a><br/>
+                     ' . $this->l('If not set, EUR is used as default value.') . '<br/><br/>
+                     <b>lang</b>: ' . $this->l('Use Prestashop translation tool using language iso2 code to translate your products titles and descriptions.') . '<br/><br/>
+                     ' . $this->l('Example: translate in Spanish (ES)') . ': <br/>
+                     <a href="' . $export_lengow_url_full . '&lang=ES" target="_blank" style="font-family:Courier">' . $export_lengow_url_full . '&lang=ES</a><br/>
+                     ' . $this->l('If not set below, FR is used as default value.') . '<br/><br/><br/>
+                     ' . $this->l('Both optional parameters can be used') . ': <br/>
+                     ' . $this->l('Example: convert your prices in &pound; (GBP) and translate in English') . ': <br/>
+                     <a href="' . $export_lengow_url_full . '&lang=EN&cur=GBP" target="_blank" style="font-family:Courier">' . $export_lengow_url_full . '&lang=EN&cur=GBP</a><br/>
+                 </fieldset>';
         return $html;
     }
 
