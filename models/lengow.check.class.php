@@ -53,11 +53,11 @@ class LengowCheck {
             $out .= '<tr>';
             $out .= '<td><b>' . $check['message'] . '</b></td>';
             if ($check['state'] == 1)
-                $out .= '<td><img src="/img/admin/enabled.gif" alt="ok"></td>';
+                $out .= '<td><img src="' . _PS_BASE_URL_ . __PS_BASE_URI__ . '/img/admin/enabled.gif" alt="ok"></td>';
             elseif ($check['state'] == 2)
-                $out .= '<td><img src="/img/admin/error.png" alt="warning"></td>';
+                $out .= '<td><img src="' . _PS_BASE_URL_ . __PS_BASE_URI__ . '/img/admin/error.png" alt="warning"></td>';
             else
-                $out .= '<td><img src="/img/admin/disabled.gif" alt="nok"></td>';
+                $out .= '<td><img src="' . _PS_BASE_URL_ . __PS_BASE_URI__ . '/img/admin/disabled.gif" alt="nok"></td>';
             $out .= '</tr>';
 
             if ($check['state'] === 0 || $check['state'] === 2) {

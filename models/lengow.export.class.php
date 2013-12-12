@@ -588,8 +588,7 @@ class LengowExportAbstract {
             $context = LengowCore::getContext();
             $id_shop = $context->shop->id;
             $this->filename = _PS_MODULE_DIR_ . 'lengow' . $sep . 'export' . $sep . 'flux-' . $id_shop . '.' . $this->format;
-            //$this->filename_temp = _PS_MODULE_DIR_ . 'lengow' . $sep . 'export' . $sep . 'flux-temp-' . $id_shop . '.' . $this->format;
-            $this->handle = fopen($this->filename_temp, 'w+');
+            $this->handle = fopen($this->filename, 'w+');
         }
         fwrite($this->handle, $data);
     }
@@ -604,7 +603,6 @@ class LengowExportAbstract {
     private function _closeFile() {
         if ($this->handle) {
             fclose($this->handle);
-            //rename($this->filename_temp, $this->filename);
         }
     }
 
