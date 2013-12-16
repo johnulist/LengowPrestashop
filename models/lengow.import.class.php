@@ -135,9 +135,27 @@ class LengowImportAbstract {
                 continue;
             }
             if ((string) $lengow_order->tracking_informations->tracking_deliveringByMarketPlace == '') {
-                LengowCore::log('Order ' . $lengow_order_id . ' : delivry by the marketplace (' . $lengow_order->marketplace . ')');
+                LengowCore::log('Order ' . $lengow_order_id . ' : delivery by the marketplace (' . $lengow_order->marketplace . ')');
                 continue;
             }
+
+            /**
+             * Add lengow order to database with basics informations
+             *     - Check if order is not already in database and if not flagged as 'is_import'
+             */
+            $id_flux = (integer) $lengow_order->idFlux;
+            $marketplace = (string) $lengow_order->marketplace;
+            $message = (string) $lengow_order->order_comments;
+            $total_paid = (float) $lengow_order->order_amount;
+            $carrier = (string) $lengow_order->order_shipping;
+            $tracking = (string) $lengow_order->tracking_informations->tracking_number;
+            $extra = Tools::jsonEncode($lengow_order);
+            if(LengowOrder::getImportFlag($lengow_order_id, $id_flux)) {
+                LengowCore::log('Order ' . $lengow_order_id . ' : An error occured during last import, ignore order');
+                continue;
+            }
+            LengowOrder::addLengow(null, $lengow_order_id, $id_flux, $marketplace, $message, $total_paid, $carrier, $tracking, $extra);
+
             if (LengowOrder::isAlreadyImported($lengow_order_id, $id_flux)) {
                 LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux), true);
                 $id_state_lengow = LengowCore::getOrderState($marketplace->getStateLengow((string) $lengow_order->order_status->marketplace));
@@ -606,7 +624,7 @@ class LengowImportAbstract {
                         $carrier = (string) $lengow_order->order_shipping;
                         $tracking = (string) $lengow_order->tracking_informations->tracking_number;
                         $extra = Tools::jsonEncode($lengow_order);
-                        LengowOrder::addLengow($id_order, $lengow_order_id, $id_flux, $marketplace, $message, $total_paid, $carrier, $tracking, $extra);
+                        LengowOrder::updateLengow($id_order, $lengow_order_id, $id_flux, $marketplace, $message, $total_paid, $carrier, $tracking, $extra);
                         $new_lengow_order = new LengowOrder($id_order);
                         if (Configuration::get('LENGOW_FORCE_PRICE')) {
                             $current_order = LengowCart::$current_order;
