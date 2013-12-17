@@ -88,13 +88,11 @@ class Lengow extends Module {
         }
 
         LengowCore::updateMarketPlaceConfiguration();
+        LengowCore::updatePluginsVersion();
         LengowCore::setModule($this);
         LengowCore::cleanLog();
 
-        // Update Process
-        Configuration::updateValue('LENGOW_VERSION', '');
-        if(Configuration::get('LENGOW_VERSION') == '')
-            Configuration::updateValue('LENGOW_VERSION', '2.0.0.0');
+        LengowCheck::checkPluginVersion();
 
         $this->update();
         $this->_installOverride();
@@ -222,20 +220,6 @@ class Lengow extends Module {
     public function update() {
         if (Configuration::get('LENGOW_EXPORT_FIELDS') == '')
             Configuration::updateValue('LENGOW_EXPORT_FIELDS', json_encode(LengowCore::$DEFAULT_FIELDS));
-
-        // Update version 2.0.4
-        if(Configuration::get('LENGOW_VERSION') == '2.0.0.0') {
-            $add_log_table = 'CREATE TABLE ' . _DB_PREFIX_ . 'lengow_import_logs ('
-                        . ' `lengow_order_id` VARCHAR(32)'
-                        . ' `is_import` INTEGER DEFAULT 0'
-                        . ' PRIMARY_KEY(lengow_order_id));';
-            echo $add_log_table;
-            Db::getInstance()->execute($add_log_table);
-
-            Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
-        }
-        
-
     }
 
     /**

@@ -166,6 +166,11 @@ class LengowCoreAbstract {
     public static $image_type_cache;
 
     /**
+     * Lengow XML Plugins status
+     */
+    public static $LENGOW_PLUGINS_VERSION = 'http://kml.lengow.com/plugins.xml';
+
+    /**
      * Prestashop context.
      *
      * @param object $context The current context
@@ -639,6 +644,24 @@ class LengowCoreAbstract {
                 stream_copy_to_stream($xml, $handle);
                 fclose($handle);
                 Configuration::updateValue('LENGOW_MP_CONF', date('Y-m-d'));
+            }
+        }
+    }
+
+    /**
+     * Check and update xml of plugins version
+     *
+     * @return boolean
+     */
+    public static function updatePluginsVersion() {
+        $sep = DIRECTORY_SEPARATOR;
+        $plg_update = Configuration::get('LENGOW_PLG_CONF');
+        if (!$plg_update || $plg_update != date('Y-m-d')) {
+            if ($xml = fopen(self::$LENGOW_PLUGINS_VERSION, 'r')) {
+                $handle = fopen(dirname(__FILE__) . $sep . '..' . $sep . 'config' . $sep . LengowCheck::$XML_PLUGINS, 'w');
+                stream_copy_to_stream($xml, $handle);
+                fclose($handle);
+                Configuration::updateValue('LENGOW_PLG_CONF', date('Y-m-d'));
             }
         }
     }
