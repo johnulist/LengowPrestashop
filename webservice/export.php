@@ -37,6 +37,11 @@ if (LengowCore::checkIP()) {
         $fullmode = true;
     else if (Tools::getValue('mode') && Tools::getValue('mode') == 'simple')
         $fullmode = false;
+    // > Feature
+    $export_feature = null;
+    if ($export_feature = Tools::getValue('feature')) {
+        $export_feature = true;
+    }
     // > Stream
     $stream = null;
     if (Tools::getValue('stream'))
@@ -60,7 +65,6 @@ if (LengowCore::checkIP()) {
         if ($id_language = Language::getIdByIso($iso_code))
             Context::getContext()->language = new Language($id_language);
     }
-
     // > Title
     $title = null;
     if (Tools::getValue('title') && Tools::getValue('title') == 'full')
@@ -75,7 +79,7 @@ if (LengowCore::checkIP()) {
     elseif (Tools::getValue('active') && Tools::getValue('active') == 'all')
         $all_product = true;
 
-    $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product);
+    $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product, $export_feature);
     $export->exec();
 } else {
     die('Unauthorized access');
