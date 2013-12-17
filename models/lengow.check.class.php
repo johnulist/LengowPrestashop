@@ -67,6 +67,12 @@ class LengowCheck {
                 }
                 $out .= '</p></td></tr>';
             }
+
+            if(array_key_exists('additional_infos', $check)) {
+                $out .= '<tr><td colspan="2"><p>';
+                $out .= $check['additional_infos'];
+                $out .= '</p></td></tr>';
+            }
         }
 
         return $out;
@@ -159,6 +165,29 @@ class LengowCheck {
     }
 
     /**
+     * Get website IP
+     *
+     * @return string IP Address
+     */
+    public static function getWebsiteAddress() {
+        if (!self::isCurlActivated())
+            return false;
+
+        // Fake customer id to force API to return IP
+        $id_customer = Configuration::get('LENGOW_ID_CUSTOMER') + 9;
+        $id_group = Configuration::get('LENGOW_ID_GROUP');
+        $token = Configuration::get('LENGOW_TOKEN');
+
+        $connector = new LengowConnector((int) $id_customer, $token);
+        $result = $connector->api('authentification');
+
+        if(array_key_exists('ip', $result))
+            return $result['ip'];
+        else
+            return 'IP not found';
+    }
+
+    /**
      * Check if config folder is writable
      * 
      * @return boolean
@@ -210,10 +239,11 @@ class LengowCheck {
         );
         $checklist[] = array(
             'message' => self::$_module->l('Lengow authentification'),
-            'help' => sprintf(self::$_module->l('Please check your Client ID, Group ID and Token API. Make sure your website IP (%s) address is filled in your Lengow Dashboard.'), self::isValidAuth()),
+            'help' => self::$_module->l('Please check your Client ID, Group ID and Token API.'),
             'help_link' => 'https://solution.lengow.com/api/',
             'help_label' => self::$_module->l('Go to Lengow dashboard'),
-            'state' => (int) self::isValidAuth() == 1 ? 1 : 0
+            'state' => (int) self::isValidAuth() == 1 ? 1 : 0,
+            'additional_infos' => sprintf(self::$_module->l('Make sure your website IP (%s) address is filled in your Lengow Dashboard.'), self::getWebsiteAddress())
         );
         $checklist[] = array(
             'message' => self::$_module->l('Shop functionality'),

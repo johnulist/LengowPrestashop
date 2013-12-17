@@ -271,6 +271,11 @@
             <p class="preference_description">{l s='This option allows to force the product prices of the marketplace orders during the import' mod='lengow'}</p>		
         </div>
         <div class="clear"></div>
+        <label>{l s='Import state' mod='lengow'}</label>
+        <div class="margin-form">
+            {$lengow_is_import}
+        </div>
+        <div class="clear"></div>
         <label>{l s='Your import script' mod='lengow'}</label>
         <div class="margin-form">
             {$url_feed_import}
@@ -296,7 +301,7 @@
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label> 
         </div>
-        <div class="clear"></div>
+        <div class=:"clear"></div>
         <label>{l s='Logs' mod='lengow'}</label>
         <div class="margin-form">
             {$log_files}

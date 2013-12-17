@@ -29,12 +29,12 @@ if(LengowCore::checkIP()) {
 	$date_to = date('Y-m-d');
 	$days = (integer) LengowCore::getCountDaysToImport();
 	if(Tools::getValue('days'))
-            $days = (integer) Tools::getValue('days');
+        $days = (integer) Tools::getValue('days');
         
-        if(Tools::getValue('debug'))
-            $debug = true;
-        else
-            $debug = false;
+    if(Tools::getValue('debug'))
+        $debug = true;
+    else
+        $debug = false;
         
 	// > Shop
 	if($id_shop = Tools::getValue('shop')) {
@@ -44,7 +44,8 @@ if(LengowCore::checkIP()) {
 	$date_from = date('Y-m-d', strtotime(date('Y-m-d') . ' -' . $days . 'days'));
 	$import->exec('commands', array('dateFrom' => $date_from,
 	                                'dateTo' => $date_to,
-                                        'debug' => $debug));
+                                    'debug' => $debug));
+	LengowCore::setImportEnd();
 } else {
 	die('Unauthorized access');
 }
