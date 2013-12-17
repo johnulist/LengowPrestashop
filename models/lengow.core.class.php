@@ -375,14 +375,6 @@ class LengowCoreAbstract {
         Configuration::updateValue('LENGOW_MAIL_PASSWD', Configuration::get('PS_MAIL_PASSWD'));
         Configuration::updateValue('LENGOW_MAIL_SMTP_ENCRYPTION', Configuration::get('PS_MAIL_SMTP_ENCRYPTION'));
         Configuration::updateValue('LENGOW_MAIL_SMTP_PORT', Configuration::get('PS_MAIL_SMTP_PORT'));
-
-        /*self::$buffer_mail_value = Configuration::get('PS_MAIL_METHOD');
-        self::$buffer_mail_domain = Configuration::get('PS_MAIL_DOMAIN');
-        self::$buffer_mail_server = Configuration::get('PS_MAIL_SERVER');
-        self::$buffer_mail_user = Configuration::get('PS_MAIL_USER');
-        self::$buffer_mail_passwd = Configuration::get('PS_MAIL_PASSWD');
-        self::$buffer_mail_smtp_encryption = Configuration::get('PS_MAIL_SMTP_ENCRYPTION');
-        self::$buffer_mail_smtp_port = Configuration::get('PS_MAIL_SMTP_PORT');*/
         if(_PS_VERSION_ < '1.5.4')
             self::_changeMailConfiguration();
         else
@@ -418,14 +410,6 @@ class LengowCoreAbstract {
         Configuration::updateValue('PS_MAIL_PASSWD', Configuration::get('LENGOW_MAIL_PASSWD'));
         Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', Configuration::get('LENGOW_MAIL_SMTP_ENCRYPTION'));
         Configuration::updateValue('PS_MAIL_SMTP_PORT', Configuration::get('LENGOW_MAIL_SMTP_PORT'));
-
-        Configuration::updateValue('PS_MAIL_METHOD', self::$buffer_mail_value);
-        Configuration::updateValue('PS_MAIL_DOMAIN', self::$buffer_mail_domain);
-        Configuration::updateValue('PS_MAIL_SERVER', self::$buffer_mail_server);
-        Configuration::updateValue('PS_MAIL_USER', self::$buffer_mail_user);
-        Configuration::updateValue('PS_MAIL_PASSWD', self::$buffer_mail_passwd);
-        Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', self::$buffer_mail_smtp_encryption);
-        Configuration::updateValue('PS_MAIL_SMTP_PORT', self::$buffer_mail_smtp_port);
     }
 
     /**
