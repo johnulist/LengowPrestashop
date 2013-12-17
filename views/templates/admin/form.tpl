@@ -184,7 +184,7 @@
         <label>{l s='Fields to export' mod='lengow'}</label>
         <div class="margin-form">
             <select name="lengow_export_fields[]" class="lengow-select" size="15" multiple="multiple">
-                {foreach $options.export_fields in item=field}
+                {foreach from=$options.export_fields item=field}
                     <option value="{$field->id}"{if $field->id|in_array:$lengow_export_fields} selected="selected"{/if}>{$field->name}</option>
                 {/foreach}
             </select>
