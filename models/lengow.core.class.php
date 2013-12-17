@@ -368,13 +368,21 @@ class LengowCoreAbstract {
      * Disable mail.
      */
     public static function disableMail() {
-        self::$buffer_mail_value = Configuration::get('PS_MAIL_METHOD');
+        Configuration::updateValue('LENGOW_MAIL_VALUE', Configuration::get('PS_MAIL_METHOD'));
+        Configuration::updateValue('LENGOW_MAIL_DOMAIN', Configuration::get('PS_MAIL_DOMAIN'));
+        Configuration::updateValue('LENGOW_MAIL_SERVER', Configuration::get('PS_MAIL_SERVER'));
+        Configuration::updateValue('LENGOW_MAIL_USER', Configuration::get('PS_MAIL_USER'));
+        Configuration::updateValue('LENGOW_MAIL_PASSWD', Configuration::get('PS_MAIL_PASSWD'));
+        Configuration::updateValue('LENGOW_MAIL_SMTP_ENCRYPTION', Configuration::get('PS_MAIL_SMTP_ENCRYPTION'));
+        Configuration::updateValue('LENGOW_MAIL_SMTP_PORT', Configuration::get('PS_MAIL_SMTP_PORT'));
+
+        /*self::$buffer_mail_value = Configuration::get('PS_MAIL_METHOD');
         self::$buffer_mail_domain = Configuration::get('PS_MAIL_DOMAIN');
         self::$buffer_mail_server = Configuration::get('PS_MAIL_SERVER');
         self::$buffer_mail_user = Configuration::get('PS_MAIL_USER');
         self::$buffer_mail_passwd = Configuration::get('PS_MAIL_PASSWD');
         self::$buffer_mail_smtp_encryption = Configuration::get('PS_MAIL_SMTP_ENCRYPTION');
-        self::$buffer_mail_smtp_port = Configuration::get('PS_MAIL_SMTP_PORT');
+        self::$buffer_mail_smtp_port = Configuration::get('PS_MAIL_SMTP_PORT');*/
         if(_PS_VERSION_ < '1.5.4')
             self::_changeMailConfiguration();
         else
@@ -403,6 +411,14 @@ class LengowCoreAbstract {
      * Enable mail.
      */
     public static function enableMail() {
+        Configuration::updateValue('PS_MAIL_METHOD', Configuration::get('LENGOW_MAIL_VALUE'));
+        Configuration::updateValue('PS_MAIL_DOMAIN', Configuration::get('LENGOW_MAIL_DOMAIN'));
+        Configuration::updateValue('PS_MAIL_SERVER', Configuration::get('LENGOW_MAIL_SERVER'));
+        Configuration::updateValue('PS_MAIL_USER', Configuration::get('LENGOW_MAIL_USER'));
+        Configuration::updateValue('PS_MAIL_PASSWD', Configuration::get('LENGOW_MAIL_PASSWD'));
+        Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', Configuration::get('LENGOW_MAIL_SMTP_ENCRYPTION'));
+        Configuration::updateValue('PS_MAIL_SMTP_PORT', Configuration::get('LENGOW_MAIL_SMTP_PORT'));
+
         Configuration::updateValue('PS_MAIL_METHOD', self::$buffer_mail_value);
         Configuration::updateValue('PS_MAIL_DOMAIN', self::$buffer_mail_domain);
         Configuration::updateValue('PS_MAIL_SERVER', self::$buffer_mail_server);
@@ -792,5 +808,21 @@ class LengowCoreAbstract {
         return preg_replace($patterns, $replacements, $str);
     }
 
+    /**
+     * Update import state when he is processing
+     *
+     * @return boolean
+     */
+    public static function setImportProcessing() {
+        return Configuration::updateValue('LENGOW_IS_IMPORT', 'processing');
+    }
 
+    /**
+     * Update import state when he is finished
+     *
+     * @return boolean
+     */
+    public static function setImportEnd() {
+        return Configuration::updateValue('LENGOW_IS_IMPORT', 'stopped');
+    }
 }

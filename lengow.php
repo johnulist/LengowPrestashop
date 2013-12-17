@@ -285,6 +285,9 @@ class Lengow extends Module {
      */
     private function _postProcessForm() {
         $output = null;
+        if(isset($_POST['reset-import'])) {
+            Configuration::updateValue('LENGOW_IS_IMPORT', 'stopped');
+        }
         if (isset($_POST['submit' . $this->name])) {
             Configuration::updateValue('LENGOW_AUTHORIZED_IP', Tools::getValue('lengow_authorized_ip'));
             Configuration::updateValue('LENGOW_TRACKING', Tools::getValue('lengow_tracking'));
@@ -715,6 +718,12 @@ class Lengow extends Module {
                     ),
                     array(
                         'type' => 'free',
+                        'label' => $this->l('Import state'),
+                        'name' => 'lengow_is_import',
+                        'size' => 200,
+                    ),
+                    array(
+                        'type' => 'free',
                         'label' => $this->l('Your import script'),
                         'name' => 'url_feed_import',
                         'size' => 100,
@@ -822,6 +831,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_carrier_default'] = Configuration::get('LENGOW_CARRIER_DEFAULT');
             $helper->fields_value['lengow_force_price'] = Configuration::get('LENGOW_FORCE_PRICE');
             $helper->fields_value['lengow_debug'] = Configuration::get('LENGOW_DEBUG');
+            $helper->fields_value['lengow_is_import'] = $this->_getFormIsImport();
 
             $links = $this->_getWebservicesLinks();
             $helper->fields_value['url_feed_export'] = $links['link_feed_export'];
@@ -887,6 +897,7 @@ class Lengow extends Module {
                     'url_feed_import' => $links['link_feed_import'],
                     'lengow_flow' => $this->_getFormFeeds(),
                     'lengow_cron' => $this->_getFormCron(),
+                    'lengow_is_import' => $this->_getFormIsImport(),
                     'link_file_export' => $this->getFileLink(),
                     'options' => $options,
                     'checklist' => $this->_getCheckList(),
@@ -1046,6 +1057,24 @@ class Lengow extends Module {
         $form .= '<p>' . $this->l('If you are using an unix system, you can use unix crontab like this :') . '</p>';
         $form .= '<strong><code>*/15 * * * * wget ' . $links['url_feed_import'] . '</code></strong><br /><br />';
         return '<div class="lengow-margin">' . $form . '</div>';
+    }
+
+    /**
+     *
+     * Get state of import process
+     * 
+     * @return string Html content
+     */
+    private function _getFormIsImport() {
+        $content = '<p>';
+        if(Configuration::get('LENGOW_IS_IMPORT') === 'processing') {
+            $content .= $this->l('Import is running, click on the button below to reset it.');
+            $content .= '<input type="submit" value="Reset Import" name="reset-import" id="reset-import" />';
+        } else {
+            $content .= $this->l('There is no import process currently running.');
+        }
+        $content .= '</p>';
+        return $content;
     }
 
     /**

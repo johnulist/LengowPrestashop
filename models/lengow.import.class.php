@@ -89,6 +89,10 @@ class LengowImportAbstract {
      * @param array $args The arguments to request at the API
      */
     protected function _importOrders($args = array()) {
+        if(Configuration::get('LENGOW_IS_IMPORT') === 'processing')
+            die('An import process seems already running. You can reset it on the module page configuration.');
+        LengowCore::setImportProcessing();
+        sleep(15);
         LengowCore::disableSendState();
         if (array_key_exists('debug', $args) && $args['debug'] == true)
             self::$debug = true;
@@ -104,6 +108,7 @@ class LengowImportAbstract {
             'state' => 'plugin'));
         if (!is_object($orders)) {
             LengowCore::log('Error on lengow webservice', $this->force_log_output);
+            LengowCore::setImportEnd();
             die();
         } else {
             $find_count_orders = count($orders->orders->order);
@@ -614,16 +619,18 @@ class LengowImportAbstract {
                         if (self::$debug == false) {
                             $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
                             $orders = $lengow_connector->api('updatePrestaInternalOrderId', array('idClient' => LengowCore::getIdCustomer() ,
-                              'idFlux' => $id_flux  ,
-                              'idGroup' => LengowCore::getGroupCustomer() ,
-                              'idCommandeMP' => $new_lengow_order->lengow_id_order  ,
+                              'idFlux' => $id_flux,
+                              'idGroup' => LengowCore::getGroupCustomer(),
+                              'idCommandeMP' => $new_lengow_order->lengow_id_order,
                               'idCommandePresta' => $new_lengow_order->id));
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : success import on presta (ORDER ' . $id_order . ')', $this->force_log_output);
                         $count_orders_added++;
                         if(Tools::getValue('limit') != '' && Tools::getValue('limit') > 0) {
-                            if($count_orders_added == (int) Tools::getValue('limit'))
+                            if($count_orders_added == (int) Tools::getValue('limit')) {
+                                LengowCore::setImportEnd();
                                 die();
+                            }
                         } 
                     } else {
                         LengowCore::log('Order ' . $lengow_order_id . ' : fail import on presta', $this->force_log_output);
