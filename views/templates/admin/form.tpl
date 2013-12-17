@@ -184,7 +184,7 @@
         <label>{l s='Fields to export' mod='lengow'}</label>
         <div class="margin-form">
             <select name="lengow_export_fields[]" class="lengow-select" size="15" multiple="multiple">
-                {foreach $options.export_fields in item=field}
+                {foreach from=$options.export_fields item=field}
                     <option value="{$field->id}"{if $field->id|in_array:$lengow_export_fields} selected="selected"{/if}>{$field->name}</option>
                 {/foreach}
             </select>
@@ -271,6 +271,11 @@
             <p class="preference_description">{l s='This option allows to force the product prices of the marketplace orders during the import' mod='lengow'}</p>		
         </div>
         <div class="clear"></div>
+        <label>{l s='Import state' mod='lengow'}</label>
+        <div class="margin-form">
+            {$lengow_is_import}
+        </div>
+        <div class="clear"></div>
         <label>{l s='Your import script' mod='lengow'}</label>
         <div class="margin-form">
             {$url_feed_import}
@@ -296,7 +301,7 @@
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label> 
         </div>
-        <div class="clear"></div>
+        <div class=:"clear"></div>
         <label>{l s='Logs' mod='lengow'}</label>
         <div class="margin-form">
             {$log_files}

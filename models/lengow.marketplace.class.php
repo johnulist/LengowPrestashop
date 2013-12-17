@@ -165,7 +165,7 @@ class LengowMarketplaceAbstract {
                                 break;
                             case 'carrier' :
                                 $carrier = new Carrier($order->id_carrier);
-                                $gets[] = $param['name'] . '=' . $carrier->name;
+                                $gets[] = $param['name'] . '=' . urlencode($carrier->name);
                                 break;
                             case 'tracking_url' :
                                 break;

@@ -366,7 +366,7 @@ class AdminLengowController extends ModuleAdminController {
 		$this->toolbar_btn['importlengow'] = array(
 				'href' => $this->context->link->getAdminLink('AdminLengow', true).'&importorder=1',
 				'desc' => $this->l('Import orders from lengow')
-			);
+			);+
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
@@ -388,8 +388,9 @@ class AdminLengowController extends ModuleAdminController {
 		$params .= '&shop=' . Tools::getValue('shop');
 		$params .= '&cur=' . Tools::getValue('cur');
 		$params .= '&lang=' . Tools::getValue('lang');
+		$is_https =  isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? 's' : '';
 		$shop_url = new ShopUrl((integer) Tools::getValue('shop'));
-		$new_flow = 'http://' . $shop_url->domain . '/modules/lengow/webservice/export.php?' . $params; 
+		$new_flow = 'http' . $is_https . '://' . $shop_url->domain . __PS_BASE_URI__ . 'modules/lengow/webservice/export.php?' . $params; 
 		$args = array('idClient' => LengowCore::getIdCustomer() ,
                	  	  'idGroup' => LengowCore::getGroupCustomer() , 
                 	  'urlFlux' => $new_flow);
