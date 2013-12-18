@@ -105,21 +105,6 @@ class LengowOrderAbstract extends Order {
     }
 
     /**
-     * Check state of lengow order import
-     *
-     * @param integer $id_order_lengow The marketplace ID
-     * @param integer $id_flux The flux ID
-     *
-     * @return boolean.
-     */
-    static public function getImportFlag($id_order_lengow, $id_flux) {
-        $select = 'SELECT `is_import` FROM `' . _DB_PREFIX_ . 'lengow_orders` '
-                . 'AND `id_flux` = \'' . pSQL($id_flux) . '\';';
-        $is_import = Db::getInstance()->ExecuteS($select);
-        return $is_import[0]['is_import'];
-    }
-
-    /**
      * Get id of imported order
      *
      * @param integer $id_order_lengow The marketplace ID
@@ -171,7 +156,7 @@ class LengowOrderAbstract extends Order {
      *
      * @return boolean.
      */
-    public static function addLengow($id_order = null, $id_order_lengow, $id_flux, $marketplace, $message, $total_paid, $carrier, $tracking, $extra, $id_lang = null, $id_shop = null, $id_shop_group = null) {
+    public static function addLengow($id_order, $id_order_lengow, $id_flux, $marketplace, $message, $total_paid, $carrier, $tracking, $extra, $id_lang = null, $id_shop = null, $id_shop_group = null) {
         $context = LengowCore::getContext();
         if(empty($id_lang))
             $id_lang = $context->language->id;
@@ -192,51 +177,7 @@ class LengowOrderAbstract extends Order {
                                               'tracking'        =>    pSQL($tracking),
                                               'extra'           =>    pSQL($extra),
                                               'date_add'        =>    date('Y-m-d H:i:s'),
-                                              'is_import'       =>    1,
                                              ), 'INSERT');
-    }
-
-    /**
-     * Update a Lengow's order on database
-     *
-     * @param integer $id_order The Prestashop order ID
-     * @param integer $id_order_lengow The marketplace ID
-     * @param integer $id_flux The flux ID
-     * @param string $marketplace The marketplace ID
-     * @param string $message Message from marketplace
-     * @param float $total_paid The total paid on marketplace
-     * @param string $carrier Carrier of order's marketplace
-     * @param string $tracking Trakcking from marketplace
-     * @param string $extra Extra value (node json) of order imported
-     * @param integer $id_lang Land ID
-     * @param integer $id_shop Shop ID
-     * @param integer $id_shop_group Shop group ID
-     *
-     * @return boolean.
-     */
-    public static function updateLengow($id_order, $id_order_lengow, $id_flux, $marketplace, $message, $total_paid, $carrier, $tracking, $extra, $id_lang = null, $id_shop = null, $id_shop_group = null) {
-        $context = LengowCore::getContext();
-        if(empty($id_lang))
-            $id_lang = $context->language->id;
-        if(empty($id_shop))
-            $id_shop = $context->shop->id;
-        $id_shop_group = $context->shop->id_shop_group;
-        return Db::getInstance()->autoExecute(_DB_PREFIX_ . 'lengow_orders', array(
-                                              'id_order'        =>    pSQL($id_order),
-                                              'id_order_lengow' =>    pSQL($id_order_lengow),
-                                              'id_shop'         =>    $id_shop,
-                                              'id_shop_group'   =>    $id_shop_group,
-                                              'id_lang'         =>    $id_lang,
-                                              'id_flux'         =>    $id_flux,
-                                              'marketplace'     =>    pSQL($marketplace),
-                                              'message'         =>    pSQL($message),
-                                              'total_paid'      =>    $total_paid,
-                                              'carrier'         =>    pSQL($carrier),
-                                              'tracking'        =>    pSQL($tracking),
-                                              'extra'           =>    pSQL($extra),
-                                              'date_add'        =>    date('Y-m-d H:i:s'),
-                                              'is_import'       =>    0,
-                                             ), 'UPDATE', 'id_order_lengow = "' . pSQL($id_order_lengow) . '"');
     }
 
     /**
