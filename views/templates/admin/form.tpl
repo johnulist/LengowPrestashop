@@ -271,6 +271,19 @@
             <p class="preference_description">{l s='This option allows to force the product prices of the marketplace orders during the import' mod='lengow'}</p>		
         </div>
         <div class="clear"></div>
+        <label>{l s='Force Products'}</label>
+        <div class="margin-form">
+            <input type="radio" name="lengow_import_force_product"id="active_on" value="1" {if $lengow_import_force_product}checked="checked"{/if} />
+            <label class="t" for="active_on">
+                <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
+            </label>
+            <input type="radio" name="lengow_import_force_product"id="active_off" value="0" {if $lengow_import_force_product == 0}checked="checked"{/if} />
+            <label class="t" for="active_off">
+                <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
+            </label> 
+            <p class="preference_description">{l s='Yes if you want to force import of disabled or out of stock product' mod='lengow'}</p>       
+        </div>
+        <div class="clear"></div>
         <label>{l s='Import state' mod='lengow'}</label>
         <div class="margin-form">
             {$lengow_is_import}

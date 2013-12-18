@@ -563,21 +563,56 @@ class LengowImportAbstract {
                         }
                         $id_product_complete = $id_product_attribute > 0 ? $id_product . '_' . $id_product_attribute : $id_product;
 
-                        if ($product->active == 0 || !$cart->updateQty($product_quantity, $id_product, $id_product_attribute)) {
-                            $r = $cart->containsProduct($id_product, $id_product_attribute, false);
-                            if($product->active == 0) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] is disabled');
-                                LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' is disabled in your back office');
+                        if(Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT') == true) {
+                            // Force disabled or out of stock product
+                            if($cart->containsProduct($id_product, $id_product_attribute)) {
+                                $result_update = Db::getInstance()->execute('
+                                    UPDATE `'._DB_PREFIX_.'cart_product`
+                                    SET `quantity` = `quantity` + '.(int)$product_quantity.', `date_add` = NOW()
+                                    WHERE `id_product` = '.(int)$id_product.
+                                    (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+                                    AND `id_cart` = '.(int)$cart->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $cart->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
+                                    LIMIT 1'
+                                );
+                            } else {
+                                $result_add = Db::getInstance()->insert('cart_product', array(
+                                    'id_product' => (int)$id_product,
+                                    'id_product_attribute' => (int)$id_product_attribute,
+                                    'id_cart' => (int)$cart->id,
+                                    'id_address_delivery' => (int)$id_address_delivery,
+                                    'id_shop' => $this->context->shop->id,
+                                    'quantity' => (int)$product_quantity,
+                                    'date_add' => date('Y-m-d H:i:s')
+                                ));
                             }
-                            else {
-                                $msg = 'Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] not enough quantity (' . $product_quantity . ' ordering, ' . LengowProduct::getRealQuantity($id_product, $id_product_attribute) . ' in stock)';
-                                LengowCore::log($msg);
-                                LengowCore::endProcessOrder($lengow_order_id, 1, 0, $msg);
+
+                            if($result_add === false) {
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart');
+                                continue 2;
                             }
-                            unset($lengow_products[$product_sku]);
-                            $cart->delete();
-                            continue 2;
+                            if($result_update === false) {
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart');
+                                continue 2;
+                            }
+                        } else {
+                            // Basic functionnality
+                            if ($product->active == 0 || !$cart->updateQty($product_quantity, $id_product, $id_product_attribute)) {
+                                $r = $cart->containsProduct($id_product, $id_product_attribute, false);
+                                if($product->active == 0) {
+                                    LengowCore::log('Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] is disabled');
+                                    LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' is disabled in your back office');
+                                }
+                                else {
+                                    $msg = 'Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] not enough quantity (' . $product_quantity . ' ordering, ' . LengowProduct::getRealQuantity($id_product, $id_product_attribute) . ' in stock)';
+                                    LengowCore::log($msg);
+                                    LengowCore::endProcessOrder($lengow_order_id, 1, 0, $msg);
+                                }
+                                unset($lengow_products[$product_sku]);
+                                $cart->delete();
+                                continue 2;
+                            }
                         }
+                        
                         $total_saleable_quantity += (integer) $lengow_product->quantity;
                         $lengow_new_order = true;
                     }

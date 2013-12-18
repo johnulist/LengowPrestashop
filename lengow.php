@@ -156,6 +156,7 @@ class Lengow extends Module {
                 Configuration::updateValue('LENGOW_ORDER_ID_SHIPPED', 4) &&
                 Configuration::updateValue('LENGOW_ORDER_ID_CANCEL', 6) &&
                 Configuration::updateValue('LENGOW_IMPORT_METHOD_NAME', false) &&
+                Configuration::updateValue('LENGOW_IMPORT_FORCE_PRODUCT', false) &&
                 Configuration::updateValue('LENGOW_IMPORT_DAYS', 3) &&
                 Configuration::updateValue('LENGOW_FORCE_PRICE', false) &&
                 Configuration::updateValue('LENGOW_CARRIER_DEFAULT', Configuration::get('PS_CARRIER_DEFAULT')) &&
@@ -267,6 +268,7 @@ class Lengow extends Module {
                 !Configuration::deleteByName('LENGOW_IMAGE_TYPE') ||
                 !Configuration::deleteByName('LENGOW_IMAGES_COUNT') ||
                 !Configuration::deleteByName('LENGOW_IMPORT_METHOD_NAME') ||
+                !Configuration::deleteByName('LENGOW_IMPORT_FORCE_PRODUCT') ||
                 !Configuration::deleteByName('LENGOW_IMPORT_DAYS') ||
                 !Configuration::deleteByName('LENGOW_EXPORT_FEATURES') ||
                 !Configuration::deleteByName('LENGOW_EXPORT_FORMAT') ||
@@ -331,6 +333,7 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_IMAGE_TYPE', Tools::getValue('lengow_image_type'));
             Configuration::updateValue('LENGOW_IMAGES_COUNT', Tools::getValue('lengow_images_count'));
             Configuration::updateValue('LENGOW_IMPORT_METHOD_NAME', Tools::getValue('lengow_method_name'));
+            Configuration::updateValue('LENGOW_IMPORT_FORCE_PRODUCT', Tools::getValue('lengow_import_force_product'));
             Configuration::updateValue('LENGOW_IMPORT_DAYS', Tools::getValue('lengow_import_days'));
             Configuration::updateValue('LENGOW_FORCE_PRICE', Tools::getValue('lengow_force_price'));
             Configuration::updateValue('LENGOW_EXPORT_FORMAT', Tools::getValue('lengow_export_format'));
@@ -742,6 +745,26 @@ class Lengow extends Module {
                         ),
                     ),
                     array(
+                        'type' => 'radio',
+                        'label' => $this->l('Force products'),
+                        'desc' => $this->l('Yes if you want to force import of disabled or out of stock product'),
+                        'name' => 'lengow_import_force_product',
+                        'is_bool' => true,
+                        'class' => 't',
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
                         'type' => 'free',
                         'label' => $this->l('Import state'),
                         'name' => 'lengow_is_import',
@@ -851,6 +874,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_image_type'] = Configuration::get('LENGOW_IMAGE_TYPE');
             $helper->fields_value['lengow_images_count'] = Configuration::get('LENGOW_IMAGES_COUNT');
             $helper->fields_value['lengow_method_name'] = Configuration::get('LENGOW_IMPORT_METHOD_NAME');
+            $helper->fields_value['lengow_import_force_product'] = Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT');
             $helper->fields_value['lengow_import_days'] = Configuration::get('LENGOW_IMPORT_DAYS');
             $helper->fields_value['lengow_export_format'] = Configuration::get('LENGOW_EXPORT_FORMAT');
             $helper->fields_value['lengow_carrier_default'] = Configuration::get('LENGOW_CARRIER_DEFAULT');
