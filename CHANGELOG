@@ -9,6 +9,7 @@ Version 2.0.4
     - #46 - Add import log table
     - #46 - logs' action in webservice Lengow
     - Add option to force import disabled product or out of stock
+    - Fix update tracking info
 
 =============================================================
 Version 2.0.3.2
