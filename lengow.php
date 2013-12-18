@@ -235,7 +235,7 @@ class Lengow extends Module {
                          . ' `message` varchar(255) DEFAULT NULL,'
                          . ' `date` datetime DEFAULT NULL,'
                          . ' `extra` text NOT NULL,'
-                         . ' PRIMARY_KEY(lengow_order_id));';
+                         . ' PRIMARY KEY(lengow_order_id));';
 
             Db::getInstance()->execute($add_log_table);
  
