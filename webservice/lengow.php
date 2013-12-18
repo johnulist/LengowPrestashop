@@ -25,6 +25,7 @@ require_once '..' . $sep . 'models' . $sep . 'lengow.check.class.php';
 $lengow = new Lengow();
 // CheckIP
 if (LengowCore::checkIP()) {
+
     // Checking configuration
     if (Tools::getValue('action') == 'check') {
         if(Tools::getValue('format') == 'json') {
@@ -34,6 +35,18 @@ if (LengowCore::checkIP()) {
             echo "<h1>Lengow check configuration<h1>";
             echo LengowCheck::getHtmlCheckList();
         }
+    }
+
+    if (Tools::getValue('action') == 'logs') {
+        $days = null;
+        $show_extra = null;
+
+        if(Tools::getValue('days') != '')
+            $days = Tools::getValue('days');
+
+        if(Tools::getValue('show_extra') == 1)
+            $show_extra = true;
+        echo LengowCheck::getHtmlLogs($days, $show_extra);
     }
 } else {
     die('Unauthorized access');

@@ -833,4 +833,78 @@ class LengowCoreAbstract {
     public static function setImportEnd() {
         return Configuration::updateValue('LENGOW_IS_IMPORT', 'stopped');
     }
+
+    /**
+     * Set current flag to 1 for order in process
+     *
+     * @return void
+     */
+    public static function startProcessOrder($lengow_order_id = null, $extra) {
+        if(is_null($lengow_order_id))
+            return false;
+
+        $db = Db::getInstance();
+
+        $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
+                   . 'WHERE `lengow_order_id` = \'' . $lengow_order_id . '\' ';
+
+        $results = $db->ExecuteS($sql_exist);
+        if(empty($results)) {
+            // Insert
+            $sql_add = $db->insert('lengow_logs_import', array(
+                'lengow_order_id' => pSQL($lengow_order_id),
+                'is_processing' => 1,
+                'is_finished' => 0,
+                'extra' => pSQL($extra),
+                'date' => date("Y-m-d H:i:s")
+            ));
+        } else {
+            // Update
+            $sql_update = $db->update('lengow_logs_import', array(
+                'is_processing' => 1
+            ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+        }
+    }
+
+    /**
+     * Set flag to 0 for order in process
+     *
+     * @return void
+     */
+    public static function endProcessOrder($lengow_order_id, $is_processing, $is_finished, $message = null) {
+        $db = Db::getInstance();
+        $sql_update = $db->update('lengow_logs_import', array(
+                'is_processing' => (int) $is_processing,
+                'is_finished' => (int) $is_finished,
+                'message' => pSQL($message),
+        ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+    }
+
+    /**
+     * Check if order is processing or finished
+     *
+     * @return boolean
+     */
+    public static function isProcessing($lengow_order_id = null) {
+        if(is_null($lengow_order_id))
+            return false;
+
+        $db = Db::getInstance();
+
+        $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
+                   . 'WHERE `lengow_order_id` = \'' . $lengow_order_id . '\' ';
+
+        $results = $db->ExecuteS($sql_exist);
+
+        if(empty($results))
+            return false;
+
+        foreach($results as $row) {
+
+            if($row['is_processing'] == 1 || $row['is_finished'] == 1)
+                return true;
+            else
+                return false;
+        }
+    }
 }
