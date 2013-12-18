@@ -1,5 +1,24 @@
 =============================================================
-Version 2.0.3 - 2013-11-06
+Version 2.0.4
+=============================================================
+    - Warning if plugin is outdated
+    - Block import if another is already running
+    - Always show IP Address in checklist configuration
+    - Now save mail settings in database
+
+=============================================================
+Version 2.0.3.2
+=============================================================
+    - Lastname and firstname inverted during import in
+      delivery address
+    - Add try/catch during import
+    - Fix bug with tagcapsule (Confirmation and payment)
+    - Fix Clean phone method during import
+    - Replace DB::getValue by ExecuteS in import
+    - Search product by UPC, SKU, ID, Reference
+
+=============================================================
+Version 2.0.3
 =============================================================
     - Allow override
     - Add check configuration
