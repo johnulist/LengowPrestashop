@@ -308,7 +308,6 @@ class LengowImportAbstract {
                     if (empty($address_iso_country)) {
                         $id_country = Context::getContext()->country->id;
                         LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no country ISO');
-                        // continue;
                     } else if (!$id_country = Country::getByIso((string) $lengow_order->billing_address->billing_country_iso)) {
                         $id_country = Context::getContext()->country->id;
                         LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no country ' . (string) $lengow_order->billing_address->billing_country_iso . ' (billing) exist on this PRESTASHOP');
@@ -530,9 +529,11 @@ class LengowImportAbstract {
                         }
                         // Test if product is active
                         if($product->active != 1) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is disabled in your back office');
-                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' is disabled in your back office');
-                            continue 2;
+                            if(Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT') != 1) {
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is disabled in your back office');
+                                LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' is disabled in your back office');
+                                continue 2;
+                            }
                         }
                         if (isset($lengow_products[$product_sku])) {
                             $lengow_products[$product_sku]['qty'] += $product_quantity;
@@ -571,7 +572,7 @@ class LengowImportAbstract {
                                     SET `quantity` = `quantity` + '.(int)$product_quantity.', `date_add` = NOW()
                                     WHERE `id_product` = '.(int)$id_product.
                                     (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-                                    AND `id_cart` = '.(int)$cart->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $cart->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
+                                    AND `id_cart` = '.(int)$cart->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $cart->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$shipping_address->id : '').'
                                     LIMIT 1'
                                 );
                             } else {
@@ -579,18 +580,18 @@ class LengowImportAbstract {
                                     'id_product' => (int)$id_product,
                                     'id_product_attribute' => (int)$id_product_attribute,
                                     'id_cart' => (int)$cart->id,
-                                    'id_address_delivery' => (int)$id_address_delivery,
+                                    'id_address_delivery' => (int)$shipping_address->id,
                                     'id_shop' => $this->context->shop->id,
                                     'quantity' => (int)$product_quantity,
                                     'date_add' => date('Y-m-d H:i:s')
                                 ));
                             }
 
-                            if($result_add === false) {
+                            if(isset($result_add) && $result_add === false) {
                                 LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart');
                                 continue 2;
                             }
-                            if($result_update === false) {
+                            if(isset($result_update) && $result_update === false) {
                                 LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart');
                                 continue 2;
                             }
@@ -612,7 +613,7 @@ class LengowImportAbstract {
                                 continue 2;
                             }
                         }
-                        
+
                         $total_saleable_quantity += (integer) $lengow_product->quantity;
                         $lengow_new_order = true;
                     }
@@ -707,6 +708,7 @@ class LengowImportAbstract {
                         if(Tools::getValue('limit') != '' && Tools::getValue('limit') > 0) {
                             if($count_orders_added == (int) Tools::getValue('limit')) {
                                 LengowCore::setImportEnd();
+                                LengowCore::enableMail();
                                 die();
                             }
                         } 
