@@ -5,11 +5,12 @@ Version 2.0.4
     - Block import if another is already running
     - Always show IP Address in checklist configuration
     - Now save mail settings in database
-    - #46 - Skip order if is already imported or stopped during process
-    - #46 - Add import log table
-    - #46 - logs' action in webservice Lengow
+    - Skip order if is already imported or stopped during process
+    - Add import log table
+    - logs action in webservice Lengow
     - Add option to force import disabled product or out of stock
     - Fix update tracking info
+    - Now compatible with soColissimo
 
 =============================================================
 Version 2.0.3.2
