@@ -666,6 +666,18 @@ class LengowImportAbstract {
                     else
                         $validateOrder = 'validateOrder';
 
+                    // SoColissimo
+                    if(LengowCore::isColissimo()) {
+                        // Insert into socolissimo_delivery_info
+                        $shipping_address_complement = ($lengow_order->delivery_address->delivery_address_complement != '' ? pSQL($lengow_order->delivery_address->delivery_address_complement) : '');
+                        $shipping_society = ($lengow_order->delivery_address->delivery_country->delivery_society != '' ? pSQL($lengow_order->delivery_address->delivery_country->delivery_society) : '');
+
+                        $this->addColissimoAddress($cart->id, $id_customer, $shipping_address_lastname, $shipping_address_firstname, $shipping_address_complement, 
+                                $shipping_address->address1, $shipping_address->address2, $shipping_address->postcode, $shipping_address->city, 
+                                $shipping_address->phone_mobile, $customer->email, $shipping_society);
+                    }
+                    // End SoColissimo
+
                     if (!$lengow_new_order) {
                         LengowCore::log('No new order to import');
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
@@ -800,6 +812,42 @@ class LengowImportAbstract {
 
     protected function getRealCarrier($id_carrier, $tracking_informations) {
         return $id_carrier;
+    }
+
+    /**
+     * Save delivery address into socolissimo delivery table
+     * Fix for old version of Socolissimo module
+     *
+     * @return boolean
+     */
+    protected function addColissimoAddress($cart_id, $id_customer, $lastname, $firstname, $complement, $address1, $address2, $postcode, $city, $phone_mobile, $email, $society, $dvmode = 'DOM') {
+        $sql = 'INSERT INTO ' . _DB_PREFIX_ . 'socolissimo_delivery_info (
+                    `id_cart`, `id_customer`, `delivery_mode`, `prid`, `prname`, `prfirstname`, `prcompladress`,
+                    `pradress1`, `pradress2`, `pradress3`, `pradress4`, `przipcode`, `prtown`, `cephonenumber`, `ceemail` ,
+                    `cecompanyname`, `cedeliveryinformation`, `cedoorcode1`, `cedoorcode2`)
+                VALUES (' . $cart_id . ', ' . $id_customer . ',
+                \'' . pSQL($dvmode) . '\',
+                \'\',
+                \'' . pSQL($lastname) . '\',
+                \'' . pSQL($firstname) . '\',
+                \'' . pSQL($complement) . '\',
+                \'' . pSQL($address1) . '\',
+                \'' . pSQL($address2) . '\',
+                \'' . pSQL($address1) . '\',
+                \'' . pSQL($address2) . '\',
+                \'' . pSQL($postcode) . '\',
+                \'' . pSQL($city) . '\',
+                \'' . pSQL(LengowCore::cleanPhone($phone_mobile)) .'\',
+                \'' . pSQL($email) . '\',
+                \'' . pSQL($society) . '\',
+                \'\',
+                \'\',
+                \'\')';
+
+        if (Db::getInstance()->execute($sql))
+            return true;
+
+        return false;
     }
 
 }

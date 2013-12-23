@@ -907,4 +907,30 @@ class LengowCoreAbstract {
                 return false;
         }
     }
+
+    /**
+     * Check is soColissimo is installed, activated and selected as default lengow carrier
+     *
+     * @return boolean true if installed and activated
+     */
+    public static function isColissimo() {
+        $module_name = 'socolissimo';
+        $supported_version = '2.8.5';
+        $module_dir = _PS_MODULE_DIR_ . $module_name . DS;
+        
+        if(Module::isInstalled($module_name) 
+            && Module::isEnabled($module_name)
+            && Configuration::get('SOCOLISSIMO_CARRIER_ID') == Configuration::get('LENGOW_CARRIER_DEFAULT')) {
+
+            require_once($module_dir . $module_name . '.php');
+            $soColissimo = new Socolissimo();
+
+            if(version_compare($soColissimo->version, $supported_version, '<')) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
 }
