@@ -67,6 +67,9 @@ class LengowMarketplaceAbstract {
                         if(count($params)) {
                           foreach($params as $param) {
                               $this->actions[(string) $action['type']]['params'][(string) $param->type]['name'] = (string) $param->name;
+                              foreach($param->attributes() as $key => $value) {
+                                $this->actions[(string) $action['type']]['params'][(string) $param->type][$key] = (string) $value;
+                              }
                               if(isset($param->accepted_values))
                                   $this->actions[(string) $action['type']]['params'][(string) $param->type]['accepted_values'] = $param->accepted_values->value;
                           }
@@ -161,21 +164,47 @@ class LengowMarketplaceAbstract {
                     foreach($action_array['params'] as $type => $param) {
                         switch($type) {
                             case 'tracking' :
-                                $gets[] = $param['name'] . '=' . $order->shipping_number;
+                                $gets[$param['name']] = array(
+                                            'value' => $order->shipping_number,
+                                            'require' => explode(' ', $param['require'])
+                                          );
                                 break;
                             case 'carrier' :
                                 $carrier = new Carrier($order->id_carrier);
-                                $gets[] = $param['name'] . '=' . urlencode($carrier->name);
+                                $gets[$param['name']] = array(
+                                            'value' => $carrier->name,
+                                            'require' => explode(' ', $param['require'])
+                                          );
                                 break;
                             case 'tracking_url' :
                                 break;
                             case 'shipping_price' :
-                                $gets[] = $param['name'] . '=' . $order->total_shipping;
+                                $gets[$param['name']] = array(
+                                            'value' => $order->total_shipping,
+                                            'require' => explode(' ', $param['require'])
+                                          );
                                 break;
                         }
                     }
-                    if(count($gets) > 0)
-                        $call_url .= '?' . implode('&', $gets);
+                    // Check dependencies in parameters
+                    if(count($gets) > 0) {
+                      foreach($gets as $key => $get) {
+                        if(array_key_exists('require', $get)) {
+                          foreach($get['require'] as $require) {
+                            if($gets[$require]['value'] == '') {
+                              unset($gets[$require]);
+                              unset($gets[$key]);
+                            }
+                          }
+                        }
+                      }
+                    }
+                    // Build URL
+                    $url = array();
+                    foreach($gets as $key => $value) {
+                      $url[] = $key . '=' . urlencode($value['value']);
+                    }
+                    $call_url .= '?' . implode('&', $url);
                 }
                 break; 
             case 'refuse' :
