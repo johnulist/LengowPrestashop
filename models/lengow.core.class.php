@@ -613,6 +613,7 @@ class LengowCoreAbstract {
         $ips = trim(str_replace(array("\r\n", ',', '-', '|', ' '), ';', $ips), ';');
         $ips = explode(';', $ips);
         $authorized_ips = array_merge($ips, self::$IPS_LENGOW);
+        $authorized_ips[] = $_SERVER['SERVER_ADDR'];
         // Proxy
         /* if(function_exists('apache_request_headers')) {
           $headers = apache_request_headers();
