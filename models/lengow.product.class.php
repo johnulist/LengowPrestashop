@@ -626,7 +626,7 @@ class LengowProductAbstract extends Product {
      * @param int $id_shop
      * @return int real_quantity
      */
-    public static function getRealQuantity($id_product, $id_product_attribute = 0, $id_warehouse = 0, $id_shop = null) {
+    public static function getRealQuantity($id_product, $id_product_attribute = 0, $id_warehouse = null, $id_shop = null) {
         if (version_compare(_PS_VERSION_, '1.5', '<'))
             return Product::getQuantity($id_product, $id_product_attribute);
         else
