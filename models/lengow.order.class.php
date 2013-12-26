@@ -290,6 +290,7 @@ class LengowOrderAbstract extends Order {
                 $this->rebuildOrderPayment();
                 $this->rebuildOrderInvoice();
                 $this->rebuildOrderCarrier();
+                $this->rebuildOrderDetailTax();
             }
         }
     }
@@ -347,6 +348,19 @@ class LengowOrderAbstract extends Order {
             $order_carrier->shipping_cost_tax_exc = $this->total_shipping_tax_excl;
             $order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
             $order_carrier->update();
+        }
+    }
+
+    /**
+     * Rebuild OrderDetailTax
+     *
+     * @return void
+     */
+    public function rebuildOrderDetailTax() {
+        $detail_list = OrderDetail::getList($this->id);
+        foreach($detail_list as $detail) {
+            $order_detail = new OrderDetail($detail['id_order_detail']);
+            $order_detail->updateTaxAmount($this);
         }
     }
 }
