@@ -228,6 +228,9 @@ class LengowImportAbstract {
                 $lengow_order_state = (string) $lengow_order->order_status->marketplace;
                 $id_order_presta = (string) $lengow_order->order_external_id;
 
+                if(self::$debug == true)
+                    $id_order_presta = false;
+                
                 if (($marketplace->getStateLengow($lengow_order_state) == 'processing' || $marketplace->getStateLengow($lengow_order_state) == 'shipped') && !$id_order_presta) {
                     // Currency
                     $id_currency = (int) Currency::getIdByIsoCode($lengow_order->order_currency);
@@ -424,10 +427,6 @@ class LengowImportAbstract {
                     }
                     $id_carrier = LengowCore::getDefaultCarrier();
                     $id_carrier = $this->getRealCarrier($id_carrier, $lengow_order->tracking_informations);
-                    /**
-                     * Try to match carrier, select default if no result
-                     */
-
 
                     // Order
                     $order_created_at_time = strtotime((string) $lengow_order->order_purchase_date . ' ' . (string) $lengow_order->order_purchase_heure);
@@ -461,39 +460,59 @@ class LengowImportAbstract {
                     $lengow_new_order = false;
                     $lengow_products = array();
                     $lengow_products_order = $lengow_order->cart->products->product;
+
                     foreach ($lengow_products_order as $lengow_product) {
+
                         $product_name = (string) $lengow_product->title;
                         $product_quantity = (integer) $lengow_product->quantity;
                         $product_price = (float) $lengow_product->price_unit;
-
                         $array_ref = array('sku', 'idMP');
-                        $n = 0;
                         $size_ref = count($array_ref);
-                        $id_product = 0;
                         $id_product_attribute = 0;
+                        $id_product = 0;
                         $product = null;
-                        // Find product with sku or idMp
-                        while (!$product && $n < $size_ref) {
-                            $product_sku = (string) $lengow_product->{$array_ref[$n]};
-                            $product_sku = str_replace('\_', '_', $product_sku);
-                            $product_sku = str_replace('X', '_', $product_sku);
-                            // If attribute, split product sku
-                            if (preg_match('`_`', $product_sku)) {
-                                $array_sku = explode('_', $product_sku);
-                                $id_product = $array_sku[0];
-                                $id_product_attribute = $array_sku[1];
-                            } else {
-                                $id_product = (string) $lengow_product->{$array_ref[$n]};
+                        $n = 0;
+                        $product_field = strtolower((string) $lengow_product->sku['field'][0]);
+                        if($product_field == 'identifiant_unique')
+                            $product_field = 'id_product';
+
+                        while(!$product && $n < $size_ref) {
+                            $product_ids = LengowProduct::getIdsProduct($lengow_product, $array_ref[$n]);
+                            $id_product = $product_ids['id_product'];
+                            $id_product_attribute = $product_ids['id_product_attribute'];
+
+                            if(array_key_exists($product_field, LengowExport::$DEFAULT_FIELDS)) {
+                                switch(LengowExport::$DEFAULT_FIELDS[$product_field]) {
+                                    case 'reference':
+                                        $product_ids = LengowProduct::findProduct('reference', $lengow_product->{$array_ref[$n]});
+                                        $id_product = $product_ids['id_product'];
+                                        $id_product_attribute = (array_key_exists('id_product_attribute', $product_ids) ? $product_ids['id_product_attribute'] : 0);
+                                        break;
+                                    case 'ean':
+                                        $product_ids = LengowProduct::findProduct('ean13', $lengow_product->{$array_ref[$n]});
+                                        $id_product = $product_ids['id_product'];
+                                        $id_product_attribute = (array_key_exists('id_product_attribute', $product_ids) ? $product_ids['id_product_attribute'] : 0);
+                                        break;
+                                    case 'upc':
+                                        $product_ids = LengowProduct::findProduct('upc', $lengow_product->{$array_ref[$n]});
+                                        $id_product = $product_ids['id_product'];
+                                        $id_product_attribute = (array_key_exists('id_product_attribute', $product_ids) ? $product_ids['id_product_attribute'] : 0);
+                                        break;
+                                    default:
+                                        $product = new LengowProduct($id_product, $id_lang);
+                                        break;
+                                }
                             }
-                            if (is_numeric($id_product)) {
-                                $product = new LengowProduct($id_product, $id_lang);
-                                if ($product->name == '')
-                                    $product = null;
-                            } else {
+
+                            $product = new LengowProduct($id_product);
+
+                            // Check Product
+                            if($product->name == '')
                                 $product = null;
-                            }
+
                             $n++;
                         }
+
                         // If there is no product
                         if (!$product || !$product->id) {
 
@@ -512,7 +531,7 @@ class LengowImportAbstract {
                             }
 
                             if ($id_product == 0) {
-                                LengowCore::log('Log #1 - Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku . ' doesn\'t exist');
+                                LengowCore::log('Log - Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku . ' doesn\'t exist');
                                 LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' doesn\'t exist');
                                 unset($lengow_products[$product_sku]);
                                 $cart->delete();
@@ -779,6 +798,7 @@ class LengowImportAbstract {
             return $return;
 
         // Find the product by reference or ean13
+
         $id_by_reference = LengowProduct::getIdByReference($value);
         $id_by_ean = LengowProduct::getIdByEan13($value);
         $id_by_upc = LengowProduct::getIdByUpc($value);
@@ -812,6 +832,13 @@ class LengowImportAbstract {
 
     protected function getRealCarrier($id_carrier, $tracking_informations) {
         return $id_carrier;
+
+        $tracking_method = $tracking_informations->tracking_method;
+        $tracking_carrier = $tracking_informations->tracking_carrier;
+        $tracking_relay = $tracking_informations->tracking_relay;
+
+        if($tracking_method == '' && $tracking_carrier == '' && $tracking_relay == '')
+            return $id_carrier;
     }
 
     /**

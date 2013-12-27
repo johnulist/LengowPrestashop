@@ -664,10 +664,7 @@ class LengowProductAbstract extends Product {
      * @return int id
      */
     public static function getIdByReference($reference) {
-        if (empty($reference))
-            return 0;
-
-        if (!Validate::isReference($reference))
+        if(empty($reference) || !Validate::isReference($reference))
             return 0;
 
         if (_PS_VERSION_ >= '1.5') {
@@ -675,13 +672,67 @@ class LengowProductAbstract extends Product {
             $query->select('p.id_product');
             $query->from('product', 'p');
             $query->where('p.reference = \'' . pSQL($reference) . '\'');
-            return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+
+            // If no result, search in attribute
+            if($result == '') {
+                $query = new DbQuery();
+                $query->select('pa.id_product, pa.id_product_attribute');
+                $query->from('product_attribute', 'pa');
+                $query->where('pa.reference = \'' . pSQL($reference) . '\'');
+                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+            }
         } else {
             $sql = 'SELECT p.`id_product`
                     FROM `' . _DB_PREFIX_ . 'product` p
                     WHERE p.`reference` = \'' . pSQL($reference) . '\'';
-            return Db::getInstance()->getValue($sql);
+            $result = Db::getInstance()->getRow($sql);
+
+            if($result == '') {
+                $sql = 'SELECT pa.`id_product`, pa.`id_product_attribute`
+                        FROM `' . _DB_PREFIX_ . 'product_attribute` pa
+                        WHERE pa.`reference` = \'' . pSQL($reference) . '\'';
+                $result = Db::getInstance()->getRow($sql);
+            }
         }
+
+        return $result;
+    }
+
+
+    public static function findProduct($key, $value) {
+        if(empty($key) || empty($value))
+            return 0;
+
+        if (_PS_VERSION_ >= '1.5') {
+            $query = new DbQuery();
+            $query->select('p.id_product');
+            $query->from('product', 'p');
+            $query->where('p.' . $key . ' = \'' . pSQL($value) . '\'');
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+
+            // If no result, search in attribute
+            if($result == '') {
+                $query = new DbQuery();
+                $query->select('pa.id_product, pa.id_product_attribute');
+                $query->from('product_attribute', 'pa');
+                $query->where('pa.' . $key . ' = \'' . pSQL($value) . '\'');
+                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+            }
+        } else {
+            $sql = 'SELECT p.`id_product`
+                    FROM `' . _DB_PREFIX_ . 'product` p
+                    WHERE p.`' . $key . '` = \'' . pSQL($value) . '\'';
+            $result = Db::getInstance()->getRow($sql);
+
+            if($result == '') {
+                $sql = 'SELECT pa.`id_product`, pa.`id_product_attribute`
+                        FROM `' . _DB_PREFIX_ . 'product_attribute` pa
+                        WHERE pa.`' . $key . '` = \'' . pSQL($value) . '\'';
+                $result = Db::getInstance()->getRow($sql);
+            }
+        }
+        return $result;
     }
 
     /**
@@ -766,4 +817,30 @@ class LengowProductAbstract extends Product {
         }
     }
 
+
+    /**
+     * Get Product id and attribute id for a product node
+     *
+     * @return array
+     */
+    public static function getIdsProduct($product, $ref) {
+        $product_sku = (string) $product->{$ref};
+        $product_sku = str_replace('\_', '_', $product_sku);
+        $product_sku = str_replace('X', '_', $product_sku);
+
+        // If attribute, split product sku
+        if (preg_match('`_`', $product_sku)) {
+            $array_sku = explode('_', $product_sku);
+            $id_product = $array_sku[0];
+            $id_product_attribute = $array_sku[1];
+        } else {
+            $id_product = (string) $product->{$ref};
+            $id_product_attribute = null;
+        }
+
+        return array(
+            'id_product' => $id_product,
+            'id_product_attribute' => $id_product_attribute
+            );
+    }
 }
