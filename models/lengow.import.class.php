@@ -89,14 +89,15 @@ class LengowImportAbstract {
      * @param array $args The arguments to request at the API
      */
     protected function _importOrders($args = array()) {
-        if(Configuration::get('LENGOW_IS_IMPORT') === 'processing')
+
+        if (array_key_exists('debug', $args) && $args['debug'] == true)
+            self::$debug = true;
+
+        if(Configuration::get('LENGOW_IS_IMPORT') === 'processing' && self::$debug != true)
             die('An import process seems already running. You can reset it on the module page configuration.');
 
         LengowCore::setImportProcessing();
         LengowCore::disableSendState();
-
-        if (array_key_exists('debug', $args) && $args['debug'] == true)
-            self::$debug = true;
 
         self::$import_start = true;
         $count_orders_updated = 0;
@@ -601,15 +602,28 @@ class LengowImportAbstract {
                                     LIMIT 1'
                                 );
                             } else {
-                                $result_add = Db::getInstance()->insert('cart_product', array(
-                                    'id_product' => (int)$id_product,
-                                    'id_product_attribute' => (int)$id_product_attribute,
-                                    'id_cart' => (int)$cart->id,
-                                    'id_address_delivery' => (int)$shipping_address->id,
-                                    'id_shop' => $this->context->shop->id,
-                                    'quantity' => (int)$product_quantity,
-                                    'date_add' => date('Y-m-d H:i:s')
-                                ));
+                                if(_PS_VERSION_ >= '1.5') {
+                                    $result_add = Db::getInstance()->insert('cart_product', array(
+                                        'id_product' => (int)$id_product,
+                                        'id_product_attribute' => (int)$id_product_attribute,
+                                        'id_cart' => (int)$cart->id,
+                                        'id_address_delivery' => (int)$shipping_address->id,
+                                        'id_shop' => $this->context->shop->id,
+                                        'quantity' => (int)$product_quantity,
+                                        'date_add' => date('Y-m-d H:i:s')
+                                    ));
+                                } else {
+                                    $result_add = Db::getInstance()->autoExecute('cart_product', array(
+                                        'id_product' => (int)$id_product,
+                                        'id_product_attribute' => (int)$id_product_attribute,
+                                        'id_cart' => (int)$cart->id,
+                                        'id_address_delivery' => (int)$shipping_address->id,
+                                        'id_shop' => $this->context->shop->id,
+                                        'quantity' => (int)$product_quantity,
+                                        'date_add' => date('Y-m-d H:i:s')
+                                    ), 'INSERT');
+                                }
+                                
                             }
 
                             if(isset($result_add) && $result_add === false) {

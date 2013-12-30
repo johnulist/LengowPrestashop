@@ -382,7 +382,7 @@ class LengowCoreAbstract {
         Configuration::updateValue('LENGOW_MAIL_SMTP_ENCRYPTION', Configuration::get('PS_MAIL_SMTP_ENCRYPTION'));
         Configuration::updateValue('LENGOW_MAIL_SMTP_PORT', Configuration::get('PS_MAIL_SMTP_PORT'));
         if(_PS_VERSION_ < '1.5.4')
-            self::_changeMailConfiguration();
+            LengowCore::_changeMailConfiguration();
         else
             Configuration::updateValue('PS_MAIL_METHOD', 3);
     }
@@ -392,7 +392,7 @@ class LengowCoreAbstract {
      * 
      * @return boolean
      */
-    private function _changeMailConfiguration() {
+    private static function _changeMailConfiguration() {
         if(Configuration::updateValue('PS_MAIL_DOMAIN', 'temp.lengow') &&
            Configuration::updateValue('PS_MAIL_SERVER', 'temp.lengow') &&
            Configuration::updateValue('PS_MAIL_USER', 'temp@lengow.temp') &&
@@ -852,18 +852,34 @@ class LengowCoreAbstract {
         $results = $db->ExecuteS($sql_exist);
         if(empty($results)) {
             // Insert
-            $sql_add = $db->insert('lengow_logs_import', array(
-                'lengow_order_id' => pSQL($lengow_order_id),
-                'is_processing' => 1,
-                'is_finished' => 0,
-                'extra' => pSQL($extra),
-                'date' => date("Y-m-d H:i:s")
-            ));
+            if (_PS_VERSION_ >= '1.5') {
+                $sql_add = $db->insert('lengow_logs_import', array(
+                    'lengow_order_id' => pSQL($lengow_order_id),
+                    'is_processing' => 1,
+                    'is_finished' => 0,
+                    'extra' => pSQL($extra),
+                    'date' => date("Y-m-d H:i:s")
+                ));
+            } else {
+                $sql_add = $db->autoExecute('lengow_logs_import', array(
+                    'lengow_order_id' => pSQL($lengow_order_id),
+                    'is_processing' => 1,
+                    'is_finished' => 0,
+                    'extra' => pSQL($extra),
+                    'date' => date("Y-m-d H:i:s")
+                    ), 'INSERT');
+            }
         } else {
             // Update
-            $sql_update = $db->update('lengow_logs_import', array(
-                'is_processing' => 1
-            ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            if (_PS_VERSION_ >= '1.5') {
+                $sql_update = $db->update('lengow_logs_import', array(
+                    'is_processing' => 1
+                ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            } else {
+                 $sql_update = $db->autoExecute('lengow_logs_import', array(
+                    'is_processing' => 1
+                ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            }
         }
     }
 
@@ -874,11 +890,19 @@ class LengowCoreAbstract {
      */
     public static function endProcessOrder($lengow_order_id, $is_processing, $is_finished, $message = null) {
         $db = Db::getInstance();
-        $sql_update = $db->update('lengow_logs_import', array(
-                'is_processing' => (int) $is_processing,
-                'is_finished' => (int) $is_finished,
-                'message' => pSQL($message),
-        ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+        if (_PS_VERSION_ >= '1.5') {
+            $sql_update = $db->update('lengow_logs_import', array(
+                    'is_processing' => (int) $is_processing,
+                    'is_finished' => (int) $is_finished,
+                    'message' => pSQL($message),
+            ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+        } else {
+            $sql_update = $db->autoExecute('lengow_logs_import', array(
+                    'is_processing' => (int) $is_processing,
+                    'is_finished' => (int) $is_finished,
+                    'message' => pSQL($message),
+            ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+        }
     }
 
     /**
@@ -918,20 +942,36 @@ class LengowCoreAbstract {
         $module_name = 'socolissimo';
         $supported_version = '2.8.5';
         $module_dir = _PS_MODULE_DIR_ . $module_name . DS;
-        
-        if(Module::isInstalled($module_name) 
-            && Module::isEnabled($module_name)
-            && Configuration::get('SOCOLISSIMO_CARRIER_ID') == Configuration::get('LENGOW_CARRIER_DEFAULT')) {
 
-            require_once($module_dir . $module_name . '.php');
-            $soColissimo = new Socolissimo();
+        if(_PS_VERSION_ >= '1.5') {
+            if(Module::isInstalled($module_name) 
+                && Module::isEnabled($module_name)
+                && Configuration::get('SOCOLISSIMO_CARRIER_ID') == Configuration::get('LENGOW_CARRIER_DEFAULT')) {
 
-            if(version_compare($soColissimo->version, $supported_version, '<')) {
-                return true;
-            } else {
-                return false;
+                require_once($module_dir . $module_name . '.php');
+                $soColissimo = new Socolissimo();
+
+                if(version_compare($soColissimo->version, $supported_version, '<')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            if(Module::isInstalled($module_name)
+                && Configuration::get('SOCOLISSIMO_CARRIER_ID') == Configuration::get('LENGOW_CARRIER_DEFAULT')) {
+
+                require_once($module_dir . $module_name . '.php');
+                $soColissimo = new Socolissimo();
+
+                if(version_compare($soColissimo->version, $supported_version, '<')) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
+        
         return false;
     }
 }
