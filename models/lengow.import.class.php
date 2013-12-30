@@ -507,8 +507,14 @@ class LengowImportAbstract {
                             $product = new LengowProduct($id_product);
 
                             // Check Product
-                            if($product->name == '')
+                            if($product->name == '') {
                                 $product = null;
+                            } else {
+                                if ($id_product_attribute)
+                                    $product_sku = $id_product . '_' . $id_product_attribute;
+                                else
+                                    $product_sku = $id_product;
+                            }
 
                             $n++;
                         }
