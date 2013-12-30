@@ -48,6 +48,78 @@ if (LengowCore::checkIP()) {
             $show_extra = true;
         echo LengowCheck::getHtmlLogs($days, $show_extra);
     }
+
+    if(Tools::getValue('action') == 'tax') {
+        $id_order = Tools::getValue('id_order');
+        $rate = Tools::getValue('rate');
+
+        if($rate == '')
+            die('No rate');
+        if($id_order == '')
+            die('No order in parameters');
+
+        $order = new LengowOrder($id_order);
+        if($order->getTaxesAverageUsed() == 19.6 || $order->getTaxesAverageUsed() == 20) {
+
+            $rate = 1 + ($rate / 100);
+
+            // Total paid
+            $order->total_paid_tax_excl = Tools::ps_round($order->total_paid_tax_incl / $rate, 2);
+
+            // Total product
+            $order->total_products = Tools::ps_round($order->total_products_wt / $rate, 2);
+
+            // Total shipping
+            $order->total_shipping_tax_excl = Tools::ps_round($order->total_shipping_tax_incl / $rate, 2);
+
+            // Total shipping
+            $order->total_wrapping_tax_excl = Tools::ps_round($order->total_wrapping_tax_incl / $rate, 2);
+
+            $order->update();
+
+            // Update Order Carrier
+            $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_carrier`
+                    SET `shipping_cost_tax_excl` = `shipping_cost_tax_incl` / ' . $rate . '
+                    WHERE `id_order` = ' . $id_order . '
+                    LIMIT 1';
+
+            Db::getInstance()->execute($sql);
+
+            // Update Order Detail
+            foreach($order->getOrderDetailList() as $detail) {
+                $detail = new OrderDetail($detail['id_order_detail']);
+                $detail->unit_price_tax_excl = $detail->unit_price_tax_incl / $rate;
+                $detail->total_price_tax_excl = $detail->total_price_tax_incl / $rate;
+
+                $detail->reduction_amount_tax_excl = $detail->reduction_amount_tax_incl / $rate;
+                
+                // Update detail tax
+                $unit_amount = $detail->unit_price_tax_incl - $detail->unit_price_tax_excl;
+                $total_amount = $detail->total_price_tax_incl -  $detail->total_price_tax_excl;
+                echo 'Unit : ' . $unit_amount;
+                echo '<br/>Total : ' . $total_amount;
+                $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_detail_tax`
+                        SET `unit_amount` = ' . $unit_amount . ',
+                            `total_amount` = ' . $total_amount . '
+                        WHERE `id_order_detail` = ' . $detail->id . '
+                        LIMIT 1';
+
+                Db::getInstance()->execute($sql);
+
+                $detail->update();
+            }
+
+            // Order Invoice
+            if($order->hasInvoice()) {
+                $invoice = new OrderInvoice($order->invoice_number);
+                $invoice->total_paid_tax_excl = $invoice->total_paid_tax_incl / $rate;
+                $invoice->total_discount_tax_excl = $invoice->total_discount_tax_incl / $rate;
+                $invoice->total_products = $invoice->total_products_wt / $rate;
+                $invoice->update();
+            }
+            exit('End Process');
+        }
+    }
 } else {
     die('Unauthorized access');
 }
