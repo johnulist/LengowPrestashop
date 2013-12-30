@@ -9,8 +9,11 @@ Version 2.0.4
     - Add import log table
     - logs action in webservice Lengow
     - Add option to force import disabled product or out of stock
-    - Fix update tracking info
+    - Fix update tracking info on Amazon
     - Now compatible with soColissimo
+    - Matching API Field for better product search
+    - Prevent Prestashop bug when advanced stock is enabled
+    - Fix bug with tax on invoice details
 
 =============================================================
 Version 2.0.3.2
