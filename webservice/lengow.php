@@ -62,61 +62,64 @@ if (LengowCore::checkIP()) {
         if($order->getTaxesAverageUsed() == 19.6 || $order->getTaxesAverageUsed() == 20) {
 
             $rate = 1 + ($rate / 100);
-
-            // Total paid
-            $order->total_paid_tax_excl = Tools::ps_round($order->total_paid_tax_incl / $rate, 2);
-
-            // Total product
             $order->total_products = Tools::ps_round($order->total_products_wt / $rate, 2);
+            if(_PS_VERSION_ >= '1.5') {
+                $order->total_paid_tax_excl = Tools::ps_round($order->total_paid_tax_incl / $rate, 2);
+                $order->total_shipping_tax_excl = Tools::ps_round($order->total_shipping_tax_incl / $rate, 2);
+                $order->total_wrapping_tax_excl = Tools::ps_round($order->total_wrapping_tax_incl / $rate, 2);
 
-            // Total shipping
-            $order->total_shipping_tax_excl = Tools::ps_round($order->total_shipping_tax_incl / $rate, 2);
-
-            // Total shipping
-            $order->total_wrapping_tax_excl = Tools::ps_round($order->total_wrapping_tax_incl / $rate, 2);
-
+                // Update Order Carrier
+                $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_carrier`
+                        SET `shipping_cost_tax_excl` = `shipping_cost_tax_incl` / ' . $rate . '
+                        WHERE `id_order` = ' . $id_order . '
+                        LIMIT 1';
+                Db::getInstance()->execute($sql);
+            }
             $order->update();
 
-            // Update Order Carrier
-            $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_carrier`
-                    SET `shipping_cost_tax_excl` = `shipping_cost_tax_incl` / ' . $rate . '
-                    WHERE `id_order` = ' . $id_order . '
-                    LIMIT 1';
-
-            Db::getInstance()->execute($sql);
-
             // Update Order Detail
-            foreach($order->getOrderDetailList() as $detail) {
-                $detail = new OrderDetail($detail['id_order_detail']);
-                $detail->unit_price_tax_excl = $detail->unit_price_tax_incl / $rate;
-                $detail->total_price_tax_excl = $detail->total_price_tax_incl / $rate;
+            if(_PS_VERSION_ >= '1.5')
+                $order_detail = $order->getOrderDetailList();
+            else
+                $order_detail = $order->getProductsDetail();
 
-                $detail->reduction_amount_tax_excl = $detail->reduction_amount_tax_incl / $rate;
-                
-                // Update detail tax
-                $unit_amount = $detail->unit_price_tax_incl - $detail->unit_price_tax_excl;
-                $total_amount = $detail->total_price_tax_incl -  $detail->total_price_tax_excl;
-                echo 'Unit : ' . $unit_amount;
-                echo '<br/>Total : ' . $total_amount;
-                $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_detail_tax`
+            foreach($order_detail as $detail) {
+                $detail = new OrderDetail($detail['id_order_detail']);
+
+                if(_PS_VERSION_ >= '1.5') {
+                    $detail->unit_price_tax_excl = $detail->unit_price_tax_incl / $rate;
+                    $detail->total_price_tax_excl = $detail->total_price_tax_incl / $rate;
+                    $detail->reduction_amount_tax_excl = $detail->reduction_amount_tax_incl / $rate;
+                    // Update detail tax
+                    $unit_amount = $detail->unit_price_tax_incl - $detail->unit_price_tax_excl;
+                    $total_amount = $detail->total_price_tax_incl -  $detail->total_price_tax_excl;
+
+                    $sql = 'UPDATE `' . _DB_PREFIX_ . 'order_detail_tax`
                         SET `unit_amount` = ' . $unit_amount . ',
                             `total_amount` = ' . $total_amount . '
                         WHERE `id_order_detail` = ' . $detail->id . '
                         LIMIT 1';
 
-                Db::getInstance()->execute($sql);
+                    Db::getInstance()->execute($sql);
+                } else {
+                    $detail->product_price = Tools::ps_round(($detail->product_price * (1 + ($detail->tax_rate / 100))) / $rate, 6);
+                    $detail->tax_rate = Tools::getValue('rate');
+                }
 
                 $detail->update();
             }
 
             // Order Invoice
-            if($order->hasInvoice()) {
-                $invoice = new OrderInvoice($order->invoice_number);
-                $invoice->total_paid_tax_excl = $invoice->total_paid_tax_incl / $rate;
-                $invoice->total_discount_tax_excl = $invoice->total_discount_tax_incl / $rate;
-                $invoice->total_products = $invoice->total_products_wt / $rate;
-                $invoice->update();
+            if(_PS_VERSION_ >= '1.5') {
+                if($order->hasInvoice()) {
+                    $invoice = new OrderInvoice($order->invoice_number);
+                    $invoice->total_paid_tax_excl = $invoice->total_paid_tax_incl / $rate;
+                    $invoice->total_discount_tax_excl = $invoice->total_discount_tax_incl / $rate;
+                    $invoice->total_products = $invoice->total_products_wt / $rate;
+                    $invoice->update();
+                }
             }
+            
             exit('End Process');
         }
     }
