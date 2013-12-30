@@ -861,7 +861,7 @@ class LengowCoreAbstract {
                     'date' => date("Y-m-d H:i:s")
                 ));
             } else {
-                $sql_add = $db->autoExecute('lengow_logs_import', array(
+                $sql_add = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
                     'lengow_order_id' => pSQL($lengow_order_id),
                     'is_processing' => 1,
                     'is_finished' => 0,
@@ -876,7 +876,7 @@ class LengowCoreAbstract {
                     'is_processing' => 1
                 ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
             } else {
-                 $sql_update = $db->autoExecute('lengow_logs_import', array(
+                 $sql_update = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
                     'is_processing' => 1
                 ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
             }
@@ -897,7 +897,7 @@ class LengowCoreAbstract {
                     'message' => pSQL($message),
             ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
         } else {
-            $sql_update = $db->autoExecute('lengow_logs_import', array(
+            $sql_update = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
                     'is_processing' => (int) $is_processing,
                     'is_finished' => (int) $is_finished,
                     'message' => pSQL($message),

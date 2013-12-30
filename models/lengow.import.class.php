@@ -613,7 +613,7 @@ class LengowImportAbstract {
                                         'date_add' => date('Y-m-d H:i:s')
                                     ));
                                 } else {
-                                    $result_add = Db::getInstance()->autoExecute('cart_product', array(
+                                    $result_add = Db::getInstance()->autoExecute(_DB_PREFIX_ . 'cart_product', array(
                                         'id_product' => (int)$id_product,
                                         'id_product_attribute' => (int)$id_product_attribute,
                                         'id_cart' => (int)$cart->id,
@@ -623,7 +623,6 @@ class LengowImportAbstract {
                                         'date_add' => date('Y-m-d H:i:s')
                                     ), 'INSERT');
                                 }
-                                
                             }
 
                             if(isset($result_add) && $result_add === false) {
