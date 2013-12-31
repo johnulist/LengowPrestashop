@@ -38,14 +38,16 @@ if (LengowCore::checkIP()) {
     }
 
     if (Tools::getValue('action') == 'logs') {
-        $days = null;
-        $show_extra = null;
+        $days = 10;
+        $show_extra = false;
 
-        if(Tools::getValue('days') != '')
+        if(Tools::getValue('days') != '') {
             $days = Tools::getValue('days');
+        }
 
         if(Tools::getValue('show_extra') == 1)
             $show_extra = true;
+
         echo LengowCheck::getHtmlLogs($days, $show_extra);
     }
 
