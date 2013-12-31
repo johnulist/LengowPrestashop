@@ -252,6 +252,10 @@ class LengowProductAbstract extends Product {
                     }
                 }
 
+                // Check if product have single shipping cost
+                if($this->additional_shipping_cost > 0)
+                    $shipping_cost += $this->additional_shipping_cost;
+
                 // Tax calcul
                 $default_country = Configuration::get('PS_COUNTRY_DEFAULT');
                 $taxe_rules = LengowTaxRule::getLengowTaxRulesByGroupId(Configuration::get('PS_LANG_DEFAULT'), $carrier->id_tax_rules_group);
