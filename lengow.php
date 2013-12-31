@@ -228,6 +228,7 @@ class Lengow extends Module {
 
         // Update version 2.0.4
         if(Configuration::get('LENGOW_VERSION') == '2.0.0.0') {
+            // Import log
             $add_log_table = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'lengow_logs_import ('
                          . ' `lengow_order_id` VARCHAR(32) NOT NULL,'
                          . ' `is_processing` int(11) DEFAULT 0,'
@@ -238,7 +239,27 @@ class Lengow extends Module {
                          . ' PRIMARY KEY(lengow_order_id));';
 
             Db::getInstance()->execute($add_log_table);
- 
+            
+            // Add Lengow order error status
+            /*$states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state WHERE module_name = \'' . $this->name . '\'');
+            if(empty($states)) {
+                $lengow_state = new OrderState();
+                $lengow_state->send_email = false;
+                $lengow_state->module_name = $this->name;
+                $lengow_state->invoice = false;
+                $lengow_state->delivery = false;
+                $lengow_state->shipped = false;
+                $lengow_state->paid = false;
+                $lengow_state->unremovable = false;
+                $lengow_state->logable = false;
+                $lengow_state->color = '#205985';
+                $lengow_state->name[1] = 'Erreur technique - Lengow';
+                $languages = Language::getLanguages(false);
+                foreach ($languages as $language)
+                    $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
+                $lengow_state->add();
+            }*/
+
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
         }
     }
@@ -1433,11 +1454,13 @@ class Lengow extends Module {
     public function hookAdminOrder($args) {
         $order = new LengowOrder($args['id_order']);
         if (!empty($order->lengow_id_order)) {
-            // Case reimport order
-            // Todo check is valid and active order
-            // Todo cancel this order
-            // Todo Reimport order
-            // Todo goto new order
+            if(Tools::getValue('action') == 'reImportOrder') {
+                // Case reimport order
+                // Todo check is valid and active order
+                // Todo cancel this order
+                // Todo Reimport order
+                // Todo goto new order
+            }
             if (_PS_VERSION_ < '1.5') {
                 $action_reimport = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
             } else {
@@ -1452,7 +1475,7 @@ class Lengow extends Module {
                                 'total_paid' => $order->lengow_total_paid,
                                 'carrier' => $order->lengow_carrier,
                                 'message' => $order->lengow_message,
-                                //'action_reimport' => $action_reimport,
+                                /*'action_reimport' => $action_reimport,*/
                              );
 
             if(!is_object($lengow_order_extra->tracking_informations->tracking_method))
