@@ -15,6 +15,8 @@ Version 2.0.4
     - Prevent Prestashop bug when advanced stock is enabled
     - Fix bug with tax on invoice details
     - Fix fatal error when uninstalling module in 1.4 version
+    - Force carrier is modified by ValidateOrder
+    - Fix bug during 1.4.2.5 installation
 
 =============================================================
 Version 2.0.3.2
