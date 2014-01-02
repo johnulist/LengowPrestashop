@@ -107,8 +107,10 @@ class LengowProductAbstract extends Product {
             $this->category_name = $this->category_default->name;
         } else {
             $categories = self::getProductCategories($this->id);
-            $this->category_default = new Category($categories[0], $id_lang);
-            $this->category_name = $this->category_default->name;
+            if(!empty($categories)) {
+                $this->category_default = new Category($categories[0], $id_lang);
+                $this->category_name = $this->category_default->name;
+            }
         }
         $images = $this->getImages($id_lang);
         $array_images = array();
@@ -120,8 +122,10 @@ class LengowProductAbstract extends Product {
         }
         $this->images = $array_images;
         $today = date('Y-m-d H:i:s');
-        if ($this->specificPrice['from'] <= $today && $today <= $this->specificPrice['to']) {
-            $this->is_sale = true;
+        if(isset($this->specificPrice)) {
+            if ($this->specificPrice['from'] <= $today && $today <= $this->specificPrice['to']) {
+                $this->is_sale = true;
+            }
         }
         $this->_makeFeatures($context);
         $this->_makeAttributes($context);
