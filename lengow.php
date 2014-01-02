@@ -1645,11 +1645,18 @@ class Lengow extends Module {
      * @return boolean Result of tab uninstallation
      */
     private function _uninstallTab() {
-        if (_PS_VERSION_ < '1.5')
+        if (_PS_VERSION_ < '1.5') {
             $tabName = "AdminLengow14";
-        else
+        } else {
             $tabName = "AdminLengow";
-        $tab = Tab::getInstanceFromClassName($tabName);
+        }
+        if(_PS_VERSION_ >= '1.5') {
+            $tab = Tab::getInstanceFromClassName($tabName);
+        } else {
+            $tab_id = Tab::getIdFromClassName($tabName);
+            $tab = new Tab($tab_id);
+        }
+        
         if ($tab->id != 0) {
             return $tab->delete();
         }
