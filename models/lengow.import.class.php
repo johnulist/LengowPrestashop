@@ -764,6 +764,9 @@ class LengowImportAbstract {
                             }
                         }
 
+                        if($new_lengow_order->getIdOrderCarrier() != LengowCore::getDefaultCarrier())
+                            $new_lengow_order->forceCarrier(LengowCore::getDefaultCarrier());
+
                         // Update status on lengow if no debug
                         if (self::$debug == false) {
                             $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());

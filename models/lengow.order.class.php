@@ -363,5 +363,25 @@ class LengowOrderAbstract extends Order {
             $order_detail->updateTaxAmount($this);
         }
     }
+
+    /**
+     * Rebuild OrderCarrier after validateOrder
+     *
+     * @param int $id_carrier 
+     * @return void
+     */
+    public function forceCarrier($id_carrier) {
+        if($id_carrier == '')
+            return null;
+        
+        $this->id_carrier = $id_carrier;
+        $this->update();
+
+        if($this->getIdOrderCarrier() != '') {
+            $order_carrier = new OrderCarrier($this->getIdOrderCarrier());
+            $order_carrier->id_carrier = $id_carrier;
+            $order_carrier->update();
+        }
+    }
 }
                                                      
