@@ -926,16 +926,29 @@ class Lengow extends Module {
      * @return varchar form html
      */
     public function displayForm14() {
-        $options = array(
-            'trackers' => LengowCore::getTrackers(),
-            'images' => ImageType::getImagesTypes('products'),
-            'images_count' => LengowCore::getImagesCount(),
-            'formats' => LengowCore::getExportFormats(),
-            'states' => OrderState::getOrderStates((int) $this->context->cookie->id_lang),
-            'shippings' => LengowCore::getShippingName(),
-            'export_fields' => LengowExport::getDefaultFields(),
-            'carriers' => Carrier::getCarriers($this->context->cookie->id_lang, true, false, false, null, Carrier::ALL_CARRIERS),
-        );
+        if(_PS_VERSION_ <= '1.4.3') {
+            $options = array(
+                'trackers' => LengowCore::getTrackers(),
+                'images' => ImageType::getImagesTypes('products'),
+                'images_count' => LengowCore::getImagesCount(),
+                'formats' => LengowCore::getExportFormats(),
+                'states' => OrderState::getOrderStates((int) $this->context->cookie->id_lang),
+                'shippings' => LengowCore::getShippingName(),
+                'export_fields' => LengowExport::getDefaultFields(),
+                'carriers' => Carrier::getCarriers($this->context->cookie->id_lang, true, false, false, null, ALL_CARRIERS),
+            );
+        } else {
+            $options = array(
+                'trackers' => LengowCore::getTrackers(),
+                'images' => ImageType::getImagesTypes('products'),
+                'images_count' => LengowCore::getImagesCount(),
+                'formats' => LengowCore::getExportFormats(),
+                'states' => OrderState::getOrderStates((int) $this->context->cookie->id_lang),
+                'shippings' => LengowCore::getShippingName(),
+                'export_fields' => LengowExport::getDefaultFields(),
+                'carriers' => Carrier::getCarriers($this->context->cookie->id_lang, true, false, false, null, Carrier::ALL_CARRIERS),
+            );
+        }
         $links = $this->_getWebservicesLinks();
         $this->context->smarty->assign(
                 array(
