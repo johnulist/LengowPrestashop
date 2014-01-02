@@ -89,7 +89,7 @@ class LengowAddressAbstract extends Address {
      * @return string
      */
     public static function cleanName($name) {
-        return Tools::replaceAccentedChars(substr(trim(preg_replace('/[0-9!<>,;?=+()@#"�{}_$%:]/', '', $name)), 0, 31));
+        return LengowCore::replaceAccentedChars(substr(trim(preg_replace('/[0-9!<>,;?=+()@#"�{}_$%:]/', '', $name)), 0, 31));
     }
 
     /**
