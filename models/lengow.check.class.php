@@ -267,7 +267,7 @@ class LengowCheck {
             'message' => self::$_module->l('Prestashop plugin version'),
             'help' => self::$_module->l('There is a new version of Lengow Module, please update it.'),
             'help_link' => 'http://www.lengow.fr/plugin-prestashop.html',
-            'help_label' => self::$_module->l('Download the last version'),
+            'help_label' => self::$_module->l('Download the lastest version'),
             'state' => (int) self::checkPluginVersion(self::$_module->version)
         );
 
