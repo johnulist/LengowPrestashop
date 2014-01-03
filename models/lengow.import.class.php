@@ -764,8 +764,10 @@ class LengowImportAbstract {
                             }
                         }
 
-                        if($new_lengow_order->getIdOrderCarrier() != LengowCore::getDefaultCarrier())
-                            $new_lengow_order->forceCarrier(LengowCore::getDefaultCarrier());
+                        if(_PS_VERSION_ >= '1.5') {
+                            if($new_lengow_order->getIdOrderCarrier() != LengowCore::getDefaultCarrier())
+                                $new_lengow_order->forceCarrier(LengowCore::getDefaultCarrier());
+                        }
 
                         // Update status on lengow if no debug
                         if (self::$debug == false) {
