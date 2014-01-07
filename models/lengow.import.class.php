@@ -326,6 +326,8 @@ class LengowImportAbstract {
                         $billing_address->country = (string) $lengow_order->billing_address->billing_country;
                         $billing_address->address1 = (string) $lengow_order->billing_address->billing_address;
                         $billing_address->address2 = (string) $lengow_order->billing_address->billing_address_2;
+                        if((string) $lengow_order->billing_address->billing_society != '')
+                                $billing_address->company = (string) $lengow_order->billing_address->billing_society;
                         if ((string) $lengow_order->billing_address->billing_address_complement != '')
                             $billing_address->address2 .= (string) $lengow_order->billing_address->billing_address_complement;
                         if (empty($billing_address->address1) && !empty($billing_address->address2)) {
@@ -395,6 +397,8 @@ class LengowImportAbstract {
                             $shipping_address->country = (string) $lengow_order->delivery_address->delivery_country;
                             $shipping_address->address1 = (string) $lengow_order->delivery_address->delivery_address;
                             $shipping_address->address2 = (string) $lengow_order->delivery_address->delivery_address_2;
+                            if((string) $lengow_order->delivery_address->delivery_society != '')
+                                $shipping_address->company = (string) $lengow_order->delivery_address->delivery_society;
                             if ((string) $lengow_order->delivery_address->delivery_address_complement != '')
                                 $shipping_address->address2 .= (string) $lengow_order->delivery_address->delivery_address_complement;
                             if (empty($shipping_address->address1) && !empty($shipping_address->address2)) {
@@ -676,6 +680,37 @@ class LengowImportAbstract {
                         $total_saleable_quantity += (integer) $lengow_product->quantity;
                         $lengow_new_order = true;
                     }
+
+                    // Check product wharehouse
+                    if(_PS_VERSION_ >= '1.5' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1) {
+                        $valid_order = false;
+                        $products_warehouse = array();
+                        $stocks = array();
+                        $cart_products = $cart->getProducts();
+                        foreach($cart_products as $cart_product) {
+                            $wharehouses = Warehouse::getWarehousesByProductId($cart_product['id_product'], $cart_product['id_product_attribute']);
+                            foreach($wharehouses as $wharehouse) {
+                                $sm = new StockManager();
+                                if($sm->getProductPhysicalQuantities($cart_product['id_product'], $cart_product['id_product_attribute'], $wharehouse['id_warehouse']) >= $cart_product['cart_quantity']) {
+                                    $stocks[$wharehouse['id_warehouse']][] = $cart_product['id_product'] . '_' . $cart_product['id_product_attribute'];
+                                    $products_warehouse[$cart_product['id_product'] . '_' . $cart_product['id_product_attribute']][] = $wharehouse['id_warehouse'];
+                                }
+                            }
+                        }
+
+                        foreach($stocks as $stock) {
+                            if(count($stock) == count($cart_products)) {
+                                $valid_order = true;
+                            }
+                        }
+
+                        if($valid_order == false) {
+                            LengowCore::log('Order ' . $lengow_order_id . ' : Products are stocked in different warehouse ');
+                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order ' . $lengow_order_id . ' : Products are stocked in diferent warehouse.');
+                            continue;
+                        }
+                    }
+
                     $cart->lengow_products = $lengow_products;
                     $cart->lengow_shipping = $shipping_price;
                     $buffer_cart = $cart;
@@ -801,7 +836,7 @@ class LengowImportAbstract {
                         LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Already imported in Prestashop with order ID ' . $id_order_presta);
                     } else {
                         LengowCore::log('Order ' . $lengow_order_id . ' : order\'s status not available to import');
-                        LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order\'s status not available to import');
+                        LengowCore::deleteProcessOrder($lengow_order_id);
                     }
                 }
             }
