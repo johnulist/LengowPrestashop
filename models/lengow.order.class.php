@@ -210,7 +210,7 @@ class LengowOrderAbstract extends Order {
      * @return boolean. 
      */
     private function _getLengowFields($id) {
-        $query = 'SELECT `id_order_lengow` , `id_flux` , `marketplace` , `message` , `total_paid` , `carrier` , `tracking` , `extra` , `is_import` '
+        $query = 'SELECT `id_order_lengow` , `id_flux` , `marketplace` , `message` , `total_paid` , `carrier` , `tracking` , `extra` '
                . 'FROM `' . _DB_PREFIX_ . 'lengow_orders` '
                . 'WHERE `id_order` = \'' . pSQL($id) . '\' '
                . 'LIMIT 1;';
@@ -224,7 +224,6 @@ class LengowOrderAbstract extends Order {
             $this->lengow_carrier = $result['carrier'];
             $this->lengow_tracking = $result['tracking'];
             $this->lengow_extra = $result['extra'];
-            $this->is_import = $result['is_import'];
             return true;
         } else {
             return false;
