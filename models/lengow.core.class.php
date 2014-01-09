@@ -883,6 +883,17 @@ class LengowCoreAbstract {
         }
     }
 
+    public static function deleteProcessOrder($lengow_order_id = null) {
+        if(is_null($lengow_order_id))
+            return false;
+
+        $db = Db::getInstance();
+
+        $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'lengow_logs_import WHERE lengow_order_id = \'' . $lengow_order_id . '\' LIMIT 1';
+
+        return $db->execute($sql);
+    }
+
     /**
      * Set flag to 0 for order in process
      *
