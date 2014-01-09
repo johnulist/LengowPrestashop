@@ -408,8 +408,10 @@ class LengowExportAbstract {
             else
                 $this->max_images = LengowCore::countExportAllImages();
             // Is full export
-            if ($this->full || $this->export_features) {
+            if ($this->full) {
                 $this->attributes = AttributeGroup::getAttributesGroups(LengowCore::getContext()->language->id);
+                $this->features = Feature::getFeatures(LengowCore::getContext()->language->id);
+            } else if($this->export_features) {
                 $this->features = Feature::getFeatures(LengowCore::getContext()->language->id);
             }
             $this->_makeFields();
