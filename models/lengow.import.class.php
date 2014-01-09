@@ -336,7 +336,7 @@ class LengowImportAbstract {
                         }
                         $billing_address->address1 = preg_replace('/[!<>?=+@{}_$%]/sim', '', $billing_address->address1);
                         $billing_address->address2 = preg_replace('/[!<>?=+@{}_$%]/sim', '', $billing_address->address2);
-                        $billing_address->city = (string) $lengow_order->billing_address->billing_city;
+                        $billing_address->city = preg_replace('/[!<>?=#+;@{}_$%]/sim', '', (string) $lengow_order->billing_address->billing_city);
                         $billing_address->postcode = (string) $lengow_order->billing_address->billing_zipcode;
                         if(empty($billing_address->postcode))
                             $billing_address->postcode = ' ';
@@ -407,7 +407,7 @@ class LengowImportAbstract {
                             }
                             $shipping_address->address1 = preg_replace('/[!<>?=+@{}_$%]/sim', '', $shipping_address->address1);
                             $shipping_address->address2 = preg_replace('/[!<>?=+@{}_$%]/sim', '', $shipping_address->address2);
-                            $shipping_address->city = (string) $lengow_order->delivery_address->delivery_city;
+                            $shipping_address->city = preg_replace('/[!<>?=#+;@{}_$%]/sim', '', (string) $lengow_order->delivery_address->delivery_city);
                             $shipping_address->postcode = (string) $lengow_order->delivery_address->delivery_zipcode;
                             if(empty($shipping_address->postcode))
                                 $shipping_address->postcode = ' ';
@@ -754,7 +754,8 @@ class LengowImportAbstract {
                         Context::getContext()->cart->getDeliveryOption(null, false, false);
                     }
                     $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, null, null, false), 2);
-                    
+                    //$lengow_total_pay = (float) Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), 2);
+
                     if(_PS_VERSION_ >= '1.5.2' && _PS_VERSION_ <= '1.5.3.1')
                         $validateOrder = 'validateOrder152';
                     else
