@@ -17,6 +17,7 @@ Version 2.0.4
     - Fix fatal error when uninstalling module in 1.4 version
     - Force carrier is modified by ValidateOrder
     - Fix bug during 1.4.2.5 installation
+    - Block commands when product came from different warehouse
 
 =============================================================
 Version 2.0.3.2
