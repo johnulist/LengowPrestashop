@@ -93,6 +93,7 @@ class Lengow extends Module {
         LengowCore::cleanLog();
 
         // Update Process
+        //Configuration::updateValue('LENGOW_VERSION', '');
         if(Configuration::get('LENGOW_VERSION') == '')
             Configuration::updateValue('LENGOW_VERSION', '2.0.0.0');
 
@@ -1259,6 +1260,7 @@ class Lengow extends Module {
 
         // Cart
         if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
+            $ids_product = array();
             $cart = $this->context->cart;
             $cart_products = $cart->getProducts();
             if (count($cart_products) > 0) {
@@ -1268,10 +1270,10 @@ class Lengow extends Module {
                         $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
                     else
                         $id_product = $p['id_product'];
-                    self::$_IDS_PRODUCTS_CART .= 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'] . '&';
+                    $products_cart[] = 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'];
                     $i++;
                 }
-                self::$_IDS_PRODUCTS_CART = rtrim(self::$_IDS_PRODUCTS_CART, '&');
+                self::$_IDS_PRODUCTS_CART = implode('&', $products_cart);
             }
         }
 
