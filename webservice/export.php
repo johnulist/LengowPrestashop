@@ -75,7 +75,12 @@ if (LengowCore::checkIP()) {
     elseif (Tools::getValue('active') && Tools::getValue('active') == 'all')
         $all_product = true;
 
-    $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product);
+    // > Limit
+    $limit = null;
+    if(Tools::getValue('limit') && Tools::getValue('limit') > 0)
+        $limit = Tools::getValue('limit');
+
+    $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product, null, $limit);
     $export->exec();
 } else {
     die('Unauthorized access');
