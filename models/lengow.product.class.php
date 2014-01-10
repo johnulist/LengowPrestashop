@@ -402,8 +402,8 @@ class LengowProductAbstract extends Product {
         if ($all == false) {
             $selected_products_sql = 'AND p.`id_product` IN ('
                     . 'SELECT `id_product` FROM `' . _DB_PREFIX_ . 'lengow_product` '
-                    . 'WHERE `id_shop` = ' . $id_shop . ' '
-                    . 'AND `id_lang` = ' . $id_lang . ')';
+                    . 'WHERE `id_shop` = ' . $id_shop . ' )';
+                    //. 'AND `id_lang` = ' . $id_lang . ')';
         }
         if (LengowCore::compareVersion() < 0) {
             $query = 'SELECT p.`id_product` '
