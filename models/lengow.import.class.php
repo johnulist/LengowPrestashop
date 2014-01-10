@@ -135,7 +135,7 @@ class LengowImportAbstract {
             /**
              * Log into database order is processing
              */
-            if(LengowCore::isProcessing($lengow_order_id)) {
+            if(LengowCore::isProcessing($lengow_order_id) && self::$debug != true) {
                 LengowCore::log('Order ' . $lengow_order_id . ' : Order is flagged as processing or finished, ignore it');
                 continue;
             }
@@ -486,8 +486,6 @@ class LengowImportAbstract {
                             $id_product = $product_ids['id_product'];
                             $id_product_attribute = $product_ids['id_product_attribute'];
 
-
-
                             if(array_key_exists($product_field, LengowExport::$DEFAULT_FIELDS)) {
                                 switch(LengowExport::$DEFAULT_FIELDS[$product_field]) {
                                     case 'reference':
@@ -683,31 +681,12 @@ class LengowImportAbstract {
 
                     // Check product wharehouse
                     if(_PS_VERSION_ >= '1.5' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1) {
-                        $valid_order = false;
-                        $products_warehouse = array();
-                        $stocks = array();
-                        $cart_products = $cart->getProducts();
-                        foreach($cart_products as $cart_product) {
-                            $wharehouses = Warehouse::getWarehousesByProductId($cart_product['id_product'], $cart_product['id_product_attribute']);
-                            foreach($wharehouses as $wharehouse) {
-                                $sm = new StockManager();
-                                if($sm->getProductPhysicalQuantities($cart_product['id_product'], $cart_product['id_product_attribute'], $wharehouse['id_warehouse']) >= $cart_product['cart_quantity']) {
-                                    $stocks[$wharehouse['id_warehouse']][] = $cart_product['id_product'] . '_' . $cart_product['id_product_attribute'];
-                                    $products_warehouse[$cart_product['id_product'] . '_' . $cart_product['id_product_attribute']][] = $wharehouse['id_warehouse'];
-                                }
+                        foreach($cart->getPackageList() as $key => $value) {
+                            if(count($value) > 1) {
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Products are stocked in different warehouse ');
+                                LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order ' . $lengow_order_id . ' : Products are stocked in diferent warehouse.');
+                                continue 2;
                             }
-                        }
-
-                        foreach($stocks as $stock) {
-                            if(count($stock) == count($cart_products)) {
-                                $valid_order = true;
-                            }
-                        }
-
-                        if($valid_order == false) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : Products are stocked in different warehouse ');
-                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order ' . $lengow_order_id . ' : Products are stocked in diferent warehouse.');
-                            continue;
                         }
                     }
 
