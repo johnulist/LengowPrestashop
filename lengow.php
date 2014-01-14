@@ -1475,11 +1475,23 @@ class Lengow extends Module {
                 // Todo cancel this order
                 // Todo Reimport order
                 // Todo goto new order
+            } else if(Tools::getValue('action') == 'synchronize') {
+                $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
+                $args = array(
+                        'idClient' => LengowCore::getIdCustomer() ,
+                        'idFlux' => $order->lengow_id_flux,
+                        'idGroup' => LengowCore::getGroupCustomer(),
+                        'idCommandeMP' => $order->lengow_id_order,
+                        'idCommandePresta' => $order->id);
+                $lengow_connector->api('updatePrestaInternalOrderId', $args);
             }
+
             if (_PS_VERSION_ < '1.5') {
                 $action_reimport = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
+                $action_synchronize = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
             } else {
                 $action_reimport = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
+                $action_synchronize = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
             }
             $lengow_order_extra = Tools::jsonDecode($order->lengow_extra);
 
@@ -1490,6 +1502,7 @@ class Lengow extends Module {
                                 'total_paid' => $order->lengow_total_paid,
                                 'carrier' => $order->lengow_carrier,
                                 'message' => $order->lengow_message,
+                                'action_synchronize' => $action_synchronize
                                 /*'action_reimport' => $action_reimport,*/
                              );
 

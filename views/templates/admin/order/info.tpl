@@ -11,4 +11,5 @@
 		<li>{l s='Message'} : <strong>{$message}</strong></li>
 	</ul>
 	<!--<a href="{$action_reimport}">{l s='Cancel and re-import order'}</a>-->
+	<a href="{$action_synchronize}">{l s='Synchronize ID'}</a>
 </fieldset>
