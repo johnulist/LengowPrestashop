@@ -382,5 +382,13 @@ class LengowOrderAbstract extends Order {
             $order_carrier->update();
         }
     }
+
+    public function getIdOrderCarrier() 
+    {
+        return (int)Db::getInstance()->getValue('
+                SELECT `id_order_carrier`
+                FROM `'._DB_PREFIX_.'order_carrier`
+                WHERE `id_order` = '.(int)$this->id);
+    }       
 }
                                                      
