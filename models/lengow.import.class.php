@@ -584,6 +584,13 @@ class LengowImportAbstract {
                                 continue 2;
                             }
                         }
+                        if($product->available_for_order != 1) {
+                            if(Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT') != 1) {
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is not available for order');
+                                LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' is not available for order');
+                                continue 2;
+                            }
+                        }
                         if (isset($lengow_products[$product_sku])) {
                             $lengow_products[$product_sku]['qty'] += $product_quantity;
                         } else {
@@ -824,6 +831,7 @@ class LengowImportAbstract {
             unset($cart);
         }
         self::$import_start = false;
+        LengowCore::setImportEnd();
         return array('new' => $count_orders_added,
             'update' => $count_orders_updated);
     }
