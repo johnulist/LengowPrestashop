@@ -635,8 +635,11 @@ class LengowProductAbstract extends Product {
      * @return int real_quantity
      */
     public static function getRealQuantity($id_product, $id_product_attribute = 0, $id_warehouse = null, $id_shop = null) {
-        if (version_compare(_PS_VERSION_, '1.5', '<'))
+        if (version_compare(_PS_VERSION_, '1.5', '<')) {
+            if($id_product_attribute == 0 || $id_product_attribute == null)
+                return Product::getQuantity($id_product);
             return Product::getQuantity($id_product, $id_product_attribute);
+        }
         else
             return parent::getRealQuantity($id_product, $id_product_attribute, $id_warehouse, $id_shop);
     }
