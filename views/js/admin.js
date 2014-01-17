@@ -38,4 +38,25 @@
 		    return false;
 		});
 	});
+	// Reimport Order
+	$('#reimport-order').click(function(e){
+		var url = $(this).data('url');
+		var orderid = $(this).data('orderid');
+		var lengoworderid = $(this).data('lengoworderid');
+		// Show loading div
+		$('#ajax_running').fadeIn(300);
+		$.getJSON(url, {
+			orderid: orderid,
+			lengoworderid: lengoworderid
+		}, function(data) {
+			$('#ajax_running').fadeOut(0);
+			if(data.status == 'success') {
+				window.location.replace(data.new_order_url);
+			} else {
+				alert(data.msg);
+			}
+			
+		});
+		e.preventDefault();
+	});
 });

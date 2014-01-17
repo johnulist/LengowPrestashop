@@ -242,7 +242,7 @@ class Lengow extends Module {
             Db::getInstance()->execute($add_log_table);
             
             // Add Lengow order error status
-            /*$states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state WHERE module_name = \'' . $this->name . '\'');
+            $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state WHERE module_name = \'' . $this->name . '\'');
             if(empty($states)) {
                 $lengow_state = new OrderState();
                 $lengow_state->send_email = false;
@@ -259,7 +259,10 @@ class Lengow extends Module {
                 foreach ($languages as $language)
                     $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
                 $lengow_state->add();
-            }*/
+                Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
+            } else {
+                Configuration::updateValue('LENGOW_STATE_ERROR', $states[0]['id_order_state']);
+            }
 
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
         }
@@ -1439,6 +1442,9 @@ class Lengow extends Module {
             $this->context->controller->addJs($this->_path . 'views/js/admin.js');
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
         }
+        if(Tools::getValue('controller') == 'AdminOrders') {
+            $this->context->controller->addJs($this->_path . 'views/js/admin.js');
+        }
         if (Tools::getValue('controller') == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
             $this->context->controller->addJs($this->_path . 'views/js/chart.min.js');
@@ -1469,13 +1475,7 @@ class Lengow extends Module {
     public function hookAdminOrder($args) {
         $order = new LengowOrder($args['id_order']);
         if (!empty($order->lengow_id_order)) {
-            if(Tools::getValue('action') == 'reImportOrder') {
-                // Case reimport order
-                // Todo check is valid and active order
-                // Todo cancel this order
-                // Todo Reimport order
-                // Todo goto new order
-            } else if(Tools::getValue('action') == 'synchronize') {
+            if(Tools::getValue('action') == 'synchronize') {
                 $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
                 $args = array(
                         'idClient' => LengowCore::getIdCustomer() ,
@@ -1490,7 +1490,7 @@ class Lengow extends Module {
                 $action_reimport = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
                 $action_synchronize = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
             } else {
-                $action_reimport = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
+                $action_reimport = 'index.php?controller=AdminLengow&ajax&action=reimportOrder&token=' . Tools::getAdminTokenLite('AdminLengow');
                 $action_synchronize = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
             }
             $lengow_order_extra = Tools::jsonDecode($order->lengow_extra);
@@ -1502,8 +1502,9 @@ class Lengow extends Module {
                                 'total_paid' => $order->lengow_total_paid,
                                 'carrier' => $order->lengow_carrier,
                                 'message' => $order->lengow_message,
-                                'action_synchronize' => $action_synchronize
-                                /*'action_reimport' => $action_reimport,*/
+                                'action_synchronize' => $action_synchronize,
+                                'action_reimport' => $action_reimport,
+                                'order_id' => $args['id_order']
                              );
 
             if(!is_object($lengow_order_extra->tracking_informations->tracking_method))

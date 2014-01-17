@@ -52,6 +52,7 @@ class LengowImportAbstract {
     public $force_log_output = true;
     public static $import_start = false;
     public static $debug = false;
+    public $single_order = false;
 
     /**
      * Construct the import manager
@@ -104,10 +105,24 @@ class LengowImportAbstract {
         $count_orders_added = 0;
         $lengow = new Lengow();
         $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
-        $orders = $lengow_connector->api('commands', array('dateFrom' => $args['dateFrom'],
-            'dateTo' => $args['dateTo'],
-            'id_group' => LengowCore::getGroupCustomer(),
-            'state' => 'plugin'));
+        
+        if(array_key_exists('id_order_lengow', $args) && $args['id_order_lengow'] != '') {
+            $args_order = array(
+                'orderid' => $args['id_order_lengow'],
+                'id_group' => LengowCore::getGroupCustomer()
+            );
+            $this->force_log_output = -1;
+            $this->single_order = true;
+        } else {
+            $args_order = array(
+                'dateFrom' => $args['dateFrom'],
+                'dateTo' => $args['dateTo'],
+                'id_group' => LengowCore::getGroupCustomer(),
+                'state' => 'plugin'
+            );
+        }
+
+        $orders = $lengow_connector->api('commands', $args_order);
 
         if (!is_object($orders)) {
             LengowCore::log('Error on lengow webservice', $this->force_log_output);
@@ -115,7 +130,7 @@ class LengowImportAbstract {
             die();
         } else {
             $find_count_orders = count($orders->orders->order);
-            LengowCore::log('Find ' . $find_count_orders . ' order' . ($find_count_orders > 1 ? 's' : ''));
+            LengowCore::log('Find ' . $find_count_orders . ' order' . ($find_count_orders > 1 ? 's' : ''), $this->force_log_output);
         }
 
         //LengowCore::debug($orders);
@@ -135,14 +150,14 @@ class LengowImportAbstract {
             /**
              * Log into database order is processing
              */
-            if(LengowCore::isProcessing($lengow_order_id) && self::$debug != true) {
-                LengowCore::log('Order ' . $lengow_order_id . ' : Order is flagged as processing or finished, ignore it');
+            if(LengowCore::isProcessing($lengow_order_id) && self::$debug != true && $this->single_order == false) {
+                LengowCore::log('Order ' . $lengow_order_id . ' : Order is flagged as processing or finished, ignore it', $this->force_log_output);
                 continue;
             }
             LengowCore::startProcessOrder($lengow_order_id, Tools::jsonEncode($lengow_order));
 
             if((int)$lengow_order->tracking_informations->tracking_deliveringByMarketPlace == 1) {
-                LengowCore::log('Order ' . $lengow_order_id . ' : Shipping by ' . (string) $lengow_order->marketplace);
+                LengowCore::log('Order ' . $lengow_order_id . ' : Shipping by ' . (string) $lengow_order->marketplace, $this->force_log_output);
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Shipping by ' . (string) $lengow_order->marketplace);
                 continue;
             }
@@ -151,19 +166,19 @@ class LengowImportAbstract {
             $id_flux = (integer) $lengow_order->idFlux;
             
             if ((string) $lengow_order->order_status->marketplace == '') {
-                LengowCore::log('Order ' . $lengow_order_id . ' : no order\'s status');
+                LengowCore::log('Order ' . $lengow_order_id . ' : no order\'s status', $this->force_log_output);
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'No order status');
                 continue;
             }
             if ((string) $lengow_order->tracking_informations->tracking_deliveringByMarketPlace == '') {
-                LengowCore::log('Order ' . $lengow_order_id . ' : delivery by the marketplace (' . $lengow_order->marketplace . ')');
+                LengowCore::log('Order ' . $lengow_order_id . ' : delivery by the marketplace (' . $lengow_order->marketplace . ')', $this->force_log_output);
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Delivery by the marketplace (' . $lengow_order->marketplace . ')');
                 continue;
             }
 
-            if (LengowOrder::isAlreadyImported($lengow_order_id, $id_flux)) {
+            if (LengowOrder::isAlreadyImported($lengow_order_id, $id_flux) && $this->single_order == false) {
                 
-                LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux), true);
+                LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux), $this->force_log_output);
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux));
                 
                 $id_state_lengow = LengowCore::getOrderState($marketplace->getStateLengow((string) $lengow_order->order_status->marketplace));
@@ -183,7 +198,7 @@ class LengowImportAbstract {
                                 throw new Exception($error);
                             $history->add();
                         } catch (Exception $e) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : Error during add history : ' . $e->getMessage());
+                            LengowCore::log('Order ' . $lengow_order_id . ' : Error during add history : ' . $e->getMessage(), $this->force_log_output);
                         }
                         $tracking_number = (string) $lengow_order->tracking_informations->tracking_number;
                         if ($tracking_number) {
@@ -193,11 +208,11 @@ class LengowImportAbstract {
                                     throw new Exception($error);
                                 $order->update();
                             } catch (Exception $e) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : Error during update state to shipped : ' . $e->getMessage());
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Error during update state to shipped : ' . $e->getMessage(), $this->force_log_output);
                                 continue;
                             }
                         }
-                        LengowCore::log('Order ' . $lengow_order_id . ' : update state to shipped');
+                        LengowCore::log('Order ' . $lengow_order_id . ' : update state to shipped', $this->force_log_output);
                         $count_orders_updated++;
                         // Enable mail
                         LengowCore::enableMail();
@@ -214,10 +229,10 @@ class LengowImportAbstract {
                                 throw new Exception($error);
                             $history->add();
                         } catch (Exception $e) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : Error during update state to cancel');
+                            LengowCore::log('Order ' . $lengow_order_id . ' : Error during update state to cancel', $this->force_log_output);
                             continue;
                         }
-                        LengowCore::log('Order ' . $lengow_order_id . ' : update state to cancel');
+                        LengowCore::log('Order ' . $lengow_order_id . ' : update state to cancel', $this->force_log_output);
                         $count_orders_updated++;
 
                         // Enable mail
@@ -229,14 +244,14 @@ class LengowImportAbstract {
                 $lengow_order_state = (string) $lengow_order->order_status->marketplace;
                 $id_order_presta = (string) $lengow_order->order_external_id;
 
-                if(self::$debug == true)
+                if(self::$debug == true ||  $this->single_order == true)
                     $id_order_presta = false;
                 
                 if (($marketplace->getStateLengow($lengow_order_state) == 'processing' || $marketplace->getStateLengow($lengow_order_state) == 'shipped') && !$id_order_presta) {
                     // Currency
                     $id_currency = (int) Currency::getIdByIsoCode($lengow_order->order_currency);
                     if (!$id_currency) {
-                        LengowCore::log('Order ' . $lengow_order_id . ' : no currency');
+                        LengowCore::log('Order ' . $lengow_order_id . ' : no currency', $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No currency');
                         continue;
                     }
@@ -252,7 +267,7 @@ class LengowImportAbstract {
                     $customer = new Customer();
                     if (empty($email_address)) {
                         $email_address = 'no-mail+' . $lengow_order_id . '@' . LengowCore::getHost();
-                        LengowCore::log('Order ' . $lengow_order_id . ' : no customer email, generate unique : ' . $email_address . ' ');
+                        LengowCore::log('Order ' . $lengow_order_id . ' : no customer email, generate unique : ' . $email_address, $this->force_log_output);
                     }
                     $customer->getByEmail($email_address);
                     if ($customer->id) {
@@ -282,7 +297,7 @@ class LengowImportAbstract {
                             $customer->add();
                             $id_customer = $customer->id;
                         } catch (Exception $e) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : customer creation fail : ' . $e->getMessage());
+                            LengowCore::log('Order ' . $lengow_order_id . ' : customer creation fail : ' . $e->getMessage(), $this->force_log_output);
                             LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Customer creation fail : ' . $e->getMessage());
                             continue;
                         }
@@ -311,10 +326,10 @@ class LengowImportAbstract {
                     $address_iso_country = (string) $lengow_order->billing_address->billing_country_iso;
                     if (empty($address_iso_country)) {
                         $id_country = Context::getContext()->country->id;
-                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no country ISO');
+                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no country ISO', $this->force_log_output);
                     } else if (!$id_country = Country::getByIso((string) $lengow_order->billing_address->billing_country_iso)) {
                         $id_country = Context::getContext()->country->id;
-                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no country ' . (string) $lengow_order->billing_address->billing_country_iso . ' (billing) exist on this PRESTASHOP');
+                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no country ' . (string) $lengow_order->billing_address->billing_country_iso . ' (billing) exist on this PRESTASHOP', $this->force_log_output);
                     }
                     // Billing address
                     if (!$billing_address = LengowAddress::getByHash((string) $lengow_order->billing_address->billing_full_address)) {
@@ -351,7 +366,7 @@ class LengowImportAbstract {
                                 throw new Exception($error);
                             $billing_address->add();
                         } catch (Exception $e) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : Saving error billing address : ' . $e->getMessage());
+                            LengowCore::log('Order ' . $lengow_order_id . ' : Saving error billing address : ' . $e->getMessage(), $this->force_log_output);
                             LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Saving error billing address : ' . $e->getMessage());
                             continue;
                         }
@@ -390,7 +405,7 @@ class LengowImportAbstract {
                                 $shipping_address->lastname = '--';
                             $shipping_address->id_country = $id_country;
                             if (!$country = Country::getByIso((string) $lengow_order->delivery_address->delivery_country_iso)) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : no country ' . (string) $lengow_order->delivery_address->delivery_country_iso . ' (shipping) exist on this PRESTASHOP');
+                                LengowCore::log('Order ' . $lengow_order_id . ' : no country ' . (string) $lengow_order->delivery_address->delivery_country_iso . ' (shipping) exist on this PRESTASHOP', $this->force_log_output);
                                 LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No country ' . (string) $lengow_order->delivery_address->delivery_country_iso . ' (shipping) exist on this PRESTASHOP');
                                 continue;
                             }
@@ -422,7 +437,7 @@ class LengowImportAbstract {
                                     throw new Exception($error);
                                 $shipping_address->add();
                             } catch (Exception $e) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : Saving error shipping address : ' . $e->getMessage());
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Saving error shipping address : ' . $e->getMessage(), $this->force_log_output);
                                 LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Saving error shipping address : ' . $e->getMessage());
                                 continue;
                             }
@@ -453,7 +468,7 @@ class LengowImportAbstract {
                             throw new Exception($error);
                         $cart->add();
                     } catch (Exception $e) {
-                        LengowCore::log('Order ' . $lengow_order_id . ' : Add Cart Exception : ' . $e->getMessage());
+                        LengowCore::log('Order ' . $lengow_order_id . ' : Add Cart Exception : ' . $e->getMessage(), $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Add Cart Exception : ' . $e->getMessage());
                         continue;
                     }
@@ -561,7 +576,7 @@ class LengowImportAbstract {
                             }
                             
                             if ($id_product == 0) {
-                                LengowCore::log('Log - Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku . ' doesn\'t exist');
+                                LengowCore::log('Log - Order ' . $lengow_order_id . ' : product product_sku ' . $product_sku . ' doesn\'t exist', $this->force_log_output);
                                 LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' doesn\'t exist');
                                 unset($lengow_products[$product_sku]);
                                 $cart->delete();
@@ -579,14 +594,14 @@ class LengowImportAbstract {
                         // Test if product is active
                         if($product->active != 1) {
                             if(Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT') != 1) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is disabled in your back office');
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is disabled in your back office', $this->force_log_output);
                                 LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' is disabled in your back office');
                                 continue 2;
                             }
                         }
                         if($product->available_for_order != 1) {
                             if(Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT') != 1) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is not available for order');
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Product ' . $product_sku . ' is not available for order', $this->force_log_output);
                                 LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' is not available for order');
                                 continue 2;
                             }
@@ -656,11 +671,11 @@ class LengowImportAbstract {
                             }
 
                             if(isset($result_add) && $result_add === false) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart');
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart', $this->force_log_output);
                                 continue 2;
                             }
                             if(isset($result_update) && $result_update === false) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart');
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart', $this->force_log_output);
                                 continue 2;
                             }
                         } else {
@@ -668,12 +683,12 @@ class LengowImportAbstract {
                             if ($product->active == 0 || !$cart->updateQty($product_quantity, $id_product, $id_product_attribute)) {
                                 $r = $cart->containsProduct($id_product, $id_product_attribute, false);
                                 if($product->active == 0) {
-                                    LengowCore::log('Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] is disabled');
+                                    LengowCore::log('Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] is disabled', $this->force_log_output);
                                     LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Product ' . $product_sku . ' is disabled in your back office');
                                 }
                                 else {
                                     $msg = 'Order ' . $lengow_order_id . ' : product cart [' . $id_product_complete . '] not enough quantity (' . $product_quantity . ' ordering, ' . LengowProduct::getRealQuantity($id_product, $id_product_attribute) . ' in stock)';
-                                    LengowCore::log($msg);
+                                    LengowCore::log($msg, $this->force_log_output);
                                     LengowCore::endProcessOrder($lengow_order_id, 1, 0, $msg);
                                 }
                                 unset($lengow_products[$product_sku]);
@@ -690,7 +705,7 @@ class LengowImportAbstract {
                     if(_PS_VERSION_ >= '1.5' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1) {
                         foreach($cart->getPackageList() as $key => $value) {
                             if(count($value) > 1) {
-                                LengowCore::log('Order ' . $lengow_order_id . ' : Products are stocked in different warehouse ');
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Products are stocked in different warehouse', $this->force_log_output);
                                 LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order ' . $lengow_order_id . ' : Products are stocked in diferent warehouse.');
                                 continue 2;
                             }
@@ -760,7 +775,7 @@ class LengowImportAbstract {
                     // End SoColissimo
 
                     if (!$lengow_new_order) {
-                        LengowCore::log('No new order to import');
+                        LengowCore::log('No new order to import', $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
                         if (Validate::isLoadedObject($cart))
                             $cart->delete();
@@ -778,6 +793,7 @@ class LengowImportAbstract {
                         $extra = Tools::jsonEncode($lengow_order);
                         LengowOrder::addLengow($id_order, $lengow_order_id, $id_flux, $marketplace, $message, $total_paid, $carrier, $tracking, $extra);
                         $new_lengow_order = new LengowOrder($id_order);
+
                         if (Configuration::get('LENGOW_FORCE_PRICE')) {
                             $current_order = LengowCart::$current_order;
                             // Update order if real amout paid is different from Prestashop calc total pay
@@ -819,10 +835,10 @@ class LengowImportAbstract {
                     LengowCore::enableMail();
                 } else {
                     if ($id_order_presta) {
-                        LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . $id_order_presta);
+                        LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . $id_order_presta, $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Already imported in Prestashop with order ID ' . $id_order_presta);
                     } else {
-                        LengowCore::log('Order ' . $lengow_order_id . ' : order\'s status not available to import');
+                        LengowCore::log('Order ' . $lengow_order_id . ' : order\'s status not available to import', $this->force_log_output);
                         LengowCore::deleteProcessOrder($lengow_order_id);
                     }
                 }
@@ -832,6 +848,12 @@ class LengowImportAbstract {
         }
         self::$import_start = false;
         LengowCore::setImportEnd();
+        if(array_key_exists('id_order_lengow', $args) && $args['id_order_lengow'] != '') {
+            if($new_lengow_order->id != '')
+                return  $new_lengow_order->id;
+            else
+                return false;
+        }
         return array('new' => $count_orders_added,
             'update' => $count_orders_updated);
     }

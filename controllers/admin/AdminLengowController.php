@@ -413,4 +413,40 @@ class AdminLengowController extends ModuleAdminController {
         	echo Tools::jsonEncode(array('return' => false));
         }
 	}
+
+	public function displayAjaxReimportOrder() {
+		@set_time_limit(0);
+		$sep = DIRECTORY_SEPARATOR;
+		require_once _PS_MODULE_DIR_ . 'lengow' . $sep . 'models' . $sep . 'lengow.import.class.php';
+
+		$error = false;
+        $order_id = Tools::getValue('orderid');
+        $order = new LengowOrder($order_id);
+        $lengow_order_id = Tools::getValue('lengoworderid');
+        LengowCore::deleteProcessOrder($lengow_order_id);
+        $import = new LengowImport();
+        $new_lengow_order = $import->exec('commands', array('id_order_lengow' => $lengow_order_id));
+
+        if($new_lengow_order != false) {
+            // Cancel Order
+            $id_state_cancel = Configuration::get('LENGOW_STATE_ERROR');
+            $order->setCurrentState($id_state_cancel, (int) $this->context->employee->id);
+            // Redirect to the new order
+            $new_lengow_order_url = 'index.php?controller=AdminOrders&id_order=' . $new_lengow_order . '&vieworder&token=' . Tools::getAdminTokenLite('AdminOrders');
+            $reimport_message = sprintf($this->l('You can see the new order by clicking here : <a href=\'%s\'>View Order %s</a>'), $new_lengow_order_url, $new_lengow_order);
+        } else {
+        	$error = true;
+            $reimport_message = $this->l('Error during import');
+            $this->context->controller->warnings[] = $this->l('Error during import');
+        }
+
+        $result = array(
+        	'status' => ($error == false) ? 'success' : 'error',
+        	'msg' => $reimport_message,
+        	'new_order_url' => $new_lengow_order_url,
+        	'new_order_id' => $new_lengow_order
+        );
+
+        echo Tools::jsonEncode($result);
+	}
 }
