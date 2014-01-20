@@ -93,7 +93,7 @@ class Lengow extends Module {
         LengowCore::cleanLog();
 
         // Update Process
-        //Configuration::updateValue('LENGOW_VERSION', '');
+        //Configuration::updateValue('LENGOW_VERSION', '2.0.0.0');
         if(Configuration::get('LENGOW_VERSION') == '')
             Configuration::updateValue('LENGOW_VERSION', '2.0.0.0');
 
@@ -210,6 +210,7 @@ class Lengow extends Module {
                 $this->registerHook('paymentTop') && // displayPaymentTop
                 $this->registerHook('addproduct') && // actionProductAdd
                 $this->registerHook('adminOrder') && // displayAdminOrder
+                $this->registerHook('backOfficeHeader') && // Backofficeheader
                 $this->registerHook('newOrder') && // actionValidateOrder
                 //$this->reorderHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
@@ -1488,10 +1489,13 @@ class Lengow extends Module {
 
             if (_PS_VERSION_ < '1.5') {
                 $action_reimport = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
+                $action_reimport = $this->_path . 'v14/ajax.php?';
                 $action_synchronize = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
+                $add_script = true;
             } else {
                 $action_reimport = 'index.php?controller=AdminLengow&ajax&action=reimportOrder&token=' . Tools::getAdminTokenLite('AdminLengow');
                 $action_synchronize = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
+                $add_script = false;
             }
             $lengow_order_extra = Tools::jsonDecode($order->lengow_extra);
 
@@ -1504,7 +1508,9 @@ class Lengow extends Module {
                                 'message' => $order->lengow_message,
                                 'action_synchronize' => $action_synchronize,
                                 'action_reimport' => $action_reimport,
-                                'order_id' => $args['id_order']
+                                'order_id' => $args['id_order'],
+                                'add_script' => $add_script,
+                                'url_script' => $this->_path . 'views/js/admin.js',
                              );
 
             if(!is_object($lengow_order_extra->tracking_informations->tracking_method))

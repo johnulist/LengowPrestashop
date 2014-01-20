@@ -47,7 +47,8 @@
 		$('#ajax_running').fadeIn(300);
 		$.getJSON(url, {
 			orderid: orderid,
-			lengoworderid: lengoworderid
+			lengoworderid: lengoworderid,
+			action: 'reimport_order'
 		}, function(data) {
 			$('#ajax_running').fadeOut(0);
 			if(data.status == 'success') {
@@ -57,6 +58,6 @@
 			}
 			
 		});
-		e.preventDefault();
+		return false;
 	});
 });

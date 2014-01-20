@@ -1,16 +1,6 @@
 <br />
 <fieldset>
 	<legend><img src="../img/admin/tab-stats.gif" /> {l s='Import Lengow'}</legend>
-	{if $reimport_message != ''}
-		<div class="warn">
-			<span style="float:right">
-				<a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png"></a>
-			</span>
-			<ul style="margin-top: 3px">
-				<li>{$reimport_message}</li>
-			</ul>
-		</div>
-	{/if}
 	<h4>{l s='This order has been imported from Lengow'}</h4>
 	<ul>
 		<li>{l s='Lengow order ID'} : <strong>{$id_order_lengow}</strong></li>
@@ -26,3 +16,6 @@
 		<a class="button" href="{$action_synchronize}">{l s='Synchronize ID'}</a>
 	</div>
 </fieldset>
+{if $add_script == true}
+<script type="text/javascript" src="{$url_script}"></script>
+{/if}
