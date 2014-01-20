@@ -423,11 +423,18 @@ class AdminLengowController extends ModuleAdminController {
         $order_id = Tools::getValue('orderid');
         $order = new LengowOrder($order_id);
         $lengow_order_id = Tools::getValue('lengoworderid');
+
+        if($lengow_order_id == '')
+        	return Tools::jsonEncode(array('status' => 'error', 'msg' => 'No Lengow Order Id'));
+
+        if($order == '')
+        	return Tools::jsonEncode(array('status' => 'error', 'msg' => 'No Order Id'));
+        
         LengowCore::deleteProcessOrder($lengow_order_id);
         $import = new LengowImport();
         $new_lengow_order = $import->exec('commands', array('id_order_lengow' => $lengow_order_id));
 
-        if($new_lengow_order != false) {
+        if($new_lengow_order != false && is_numeric($new_lengow_order)) {
             // Cancel Order
             $id_state_cancel = Configuration::get('LENGOW_STATE_ERROR');
             $order->setCurrentState($id_state_cancel, (int) $this->context->employee->id);

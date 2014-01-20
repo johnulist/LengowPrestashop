@@ -1493,7 +1493,7 @@ class Lengow extends Module {
                 $action_synchronize = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
                 $add_script = true;
             } else {
-                $action_reimport = 'index.php?controller=AdminLengow&ajax&action=reimportOrder&token=' . Tools::getAdminTokenLite('AdminLengow');
+                $action_reimport = 'index.php?controller=AdminLengow&action=reimportOrder&ajax&token=' . Tools::getAdminTokenLite('AdminLengow');
                 $action_synchronize = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
                 $add_script = false;
             }
@@ -1511,6 +1511,7 @@ class Lengow extends Module {
                                 'order_id' => $args['id_order'],
                                 'add_script' => $add_script,
                                 'url_script' => $this->_path . 'views/js/admin.js',
+                                'version' => _PS_VERSION_
                              );
 
             if(!is_object($lengow_order_extra->tracking_informations->tracking_method))

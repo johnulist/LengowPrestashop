@@ -166,7 +166,10 @@ class LengowConnectorAbstract {
                 $url = $this->_getUrlService($service, $method, $array);
                 break;
             case 'api' :
-                $url = $this->_getUrlOrders($service, $array);
+                if(array_key_exists('orderid', $array))
+                    $url = $this->_getUrlOrder($service, $array);
+                else
+                    $url = $this->_getUrlOrders($service, $array);
                 break;
             case 'statistics' :
                 $url = $this->_getUrlStatistics($service, $array);
@@ -216,6 +219,26 @@ class LengowConnectorAbstract {
                 . (isset($array['id']) && !empty($array['id']) ? $array['id'] : 'orders')
                 . '/commands/'
                 . (isset($array['state']) && !empty($array['state']) ? $array['state'] . '/' : '');
+        return $url;
+    }
+
+    /**
+     * Makes url to give one commands
+     *
+     * @param string $service The URL to make the request to
+     * @param string $array The array of query parameters
+     *
+     * @return string The url
+     */
+    private function _getUrlOrder($service, $array) {
+        $url = self::$DOMAIN_LENGOW[$service]['protocol']
+                . '://'
+                . self::$DOMAIN_LENGOW[$service]['url'] . '/'
+                . 'v2/'
+                . $this->id_customer . '/'
+                . $array['id_group'] . '/'
+                . 'orderid/'
+                . $array['orderid'] . '/';
         return $url;
     }
 
@@ -279,6 +302,7 @@ class LengowConnectorAbstract {
      * @return string The response text
      */
     protected function _makeRequest($url) {
+        return file_get_contents('/home/romain/Bureau/Commandes/one.xml');
         LengowCore::log('Connector ' . $url, -1);
         $ch = curl_init();
         // Options

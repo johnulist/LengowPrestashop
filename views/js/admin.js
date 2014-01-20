@@ -43,13 +43,18 @@
 		var url = $(this).data('url');
 		var orderid = $(this).data('orderid');
 		var lengoworderid = $(this).data('lengoworderid');
+		var version = $(this).data('version');
+
+		var datas = {};
+		datas['url'] = url;
+		datas['orderid'] = orderid;
+		datas['lengoworderid'] = lengoworderid;
+		if(version < '1.5')
+			datas['action'] = 'reimport_order';
+
 		// Show loading div
 		$('#ajax_running').fadeIn(300);
-		$.getJSON(url, {
-			orderid: orderid,
-			lengoworderid: lengoworderid,
-			action: 'reimport_order'
-		}, function(data) {
+		$.getJSON(url, datas, function(data) {
 			$('#ajax_running').fadeOut(0);
 			if(data.status == 'success') {
 				window.location.replace(data.new_order_url);

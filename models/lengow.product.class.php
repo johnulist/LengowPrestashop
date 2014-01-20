@@ -122,11 +122,10 @@ class LengowProductAbstract extends Product {
         }
         $this->images = $array_images;
         $today = date('Y-m-d H:i:s');
-        if(isset($this->specificPrice)) {
-            if ($this->specificPrice['from'] <= $today && $today <= $this->specificPrice['to']) {
-                $this->is_sale = true;
-            }
-        }
+        if(isset($this->specificPrice))
+            if(array_key_exists('from', $this->specificPrice) && array_key_exists('to', $this->specificPrice))
+                if ($this->specificPrice['from'] <= $today && $today <= $this->specificPrice['to'])
+                    $this->is_sale = true;
         $this->_makeFeatures($context);
         $this->_makeAttributes($context);
     }
@@ -236,10 +235,10 @@ class LengowProductAbstract extends Product {
                 return isset($this->cover) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->cover['id_image'], LengowCore::getImageFormat()) : '';
             case 'price_shipping' :
                 if ($id_product_attribute && $id_product_attribute != null) {
-                    $price = $this->getData('price', $id_product_attribute);
+                    $price = $this->getData('price_sale', $id_product_attribute);
                     $weight = $this->getData('weight', $id_product_attribute);
                 } else {
-                    $price = $this->getData('price');
+                    $price = $this->getData('price_sale');
                     $weight = $this->getData('weight');
                 }
                 $context = Context::getContext();
