@@ -28,7 +28,7 @@ switch ($action) {
             $reimport_message = sprintf('You can see the new order by clicking here : <a href=\'%s\'>View Order %s</a>', $new_lengow_order_url, $new_lengow_order);
         } else {
         	$error = true;
-            $reimport_message = $this->l('Error during import');
+            $reimport_message = 'Error during import';
             $this->context->controller->warnings[] = $this->l('Error during import');
         }
 
