@@ -18,6 +18,10 @@ Version 2.0.4
     - Force carrier is modified by ValidateOrder
     - Fix bug during 1.4.2.5 installation
     - Block commands when product came from different warehouse
+    - Add compatibility with Mondial Relay
+    - Add order action to reimport order
+    - Add order action to synchronize IDs
+    - Fix with tagcapsule
 
 =============================================================
 Version 2.0.3.2
