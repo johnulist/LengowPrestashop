@@ -257,9 +257,9 @@ class LengowExportAbstract {
         switch ($this->format) {
             case 'csv' :
                 foreach ($this->fields as $name) {
-                    $head .= self::$CSV_PROTECTION . $this->_toUpperCase($name) . self::$CSV_PROTECTION . self::$CSV_SEPARATOR;
+                    $head .= static::$CSV_PROTECTION . $this->_toUpperCase($name) . static::$CSV_PROTECTION . static::$CSV_SEPARATOR;
                 }
-                return rtrim($head, self::$CSV_SEPARATOR) . self::$CSV_EOL;
+                return rtrim($head, static::$CSV_SEPARATOR) . static::$CSV_EOL;
             case 'xml' :
                 return '<?xml version="1.0" ?>' . "\r\n"
                         . '<catalog>' . "\r\n";
@@ -378,9 +378,9 @@ class LengowExportAbstract {
      */
     public function setTitle($title) {
         if ($title !== null)
-            self::$full_title = $title;
+            static::$full_title = $title;
         else
-            self::$full_title = Configuration::get('LENGOW_EXPORT_FULLNAME');
+            static::$full_title = Configuration::get('LENGOW_EXPORT_FULLNAME');
     }
 
     /**
@@ -402,7 +402,7 @@ class LengowExportAbstract {
     }
 
     static function isFullName() {
-        return self::$full_title ? true : false;
+        return static::$full_title ? true : false;
     }
 
     /**
@@ -480,10 +480,10 @@ class LengowExportAbstract {
         // Default fieldss
         if (is_array(json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')))) {
             foreach (json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')) as $field) {
-                $array_product[$field] = $product->getData(self::$DEFAULT_FIELDS[$field], $id_product_attribute);
+                $array_product[$field] = $product->getData(static::$DEFAULT_FIELDS[$field], $id_product_attribute);
             }
         } else {
-            foreach (self::$DEFAULT_FIELDS as $field => $value) {
+            foreach (static::$DEFAULT_FIELDS as $field => $value) {
                 $array_product[$field] = $product->getData($value, $id_product_attribute);
             }
         }
@@ -551,9 +551,9 @@ class LengowExportAbstract {
                 switch ($this->format) {
                     case 'csv':
                         foreach ($this->fields as $name) {
-                            $line .= self::$CSV_PROTECTION . str_replace(array(self::$CSV_PROTECTION, '\\'), '', (isset($data[$name]) ? $data[$name] : '')) . self::$CSV_PROTECTION . self::$CSV_SEPARATOR;
+                            $line .= static::$CSV_PROTECTION . str_replace(array(static::$CSV_PROTECTION, '\\'), '', (isset($data[$name]) ? $data[$name] : '')) . static::$CSV_PROTECTION . static::$CSV_SEPARATOR;
                         }
-                        $line = rtrim($line, self::$CSV_SEPARATOR) . self::$CSV_EOL;
+                        $line = rtrim($line, static::$CSV_SEPARATOR) . static::$CSV_EOL;
                         break;
                     case 'xml' :
                         $line .= '<product>' . "\r\n";
@@ -675,7 +675,7 @@ class LengowExportAbstract {
      */
     public static function getDefaultFields() {
         $array_fields = array();
-        foreach (self::$DEFAULT_FIELDS as $fields => $value) {
+        foreach (static::$DEFAULT_FIELDS as $fields => $value) {
             $array_fields[] = new LengowOption($fields, $value);
         }
         return $array_fields;
