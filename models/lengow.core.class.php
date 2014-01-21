@@ -942,6 +942,34 @@ class LengowCoreAbstract {
     }
 
     /**
+     * Check if Mondial Relay is installed, activated and selected as default lengow carrier
+     *
+     * @return boolean true if installed and activated
+     */
+    public static function isMondialRelay() {
+        $module_name = 'mondialrelay';
+        $module_dir = _PS_MODULE_DIR_ . $module_name . DS;
+
+        if(_PS_VERSION_ >= '1.5') {
+            if(Module::isInstalled($module_name) && Module::isEnabled($module_name)) {
+                $carrier = new Carrier(Configuration::get('LENGOW_CARRIER_DEFAULT'));
+                if($carrier->external_module_name == $module_name)
+                    return true;
+                else
+                    return false;
+            }
+        } else {
+            if(Module::isInstalled($module_name)) {
+                $carrier = new Carrier(Configuration::get('LENGOW_CARRIER_DEFAULT'));
+                if($carrier->external_module_name == $module_name)
+                    return true;
+                else
+                    return false;
+            }
+        }
+    }
+
+    /**
      * Check is soColissimo is installed, activated and selected as default lengow carrier
      *
      * @return boolean true if installed and activated

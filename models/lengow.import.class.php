@@ -762,9 +762,8 @@ class LengowImportAbstract {
                     else
                         $validateOrder = 'validateOrder';
 
-                    // SoColissimo
+                    // SoColissimo compatibility
                     if(LengowCore::isColissimo()) {
-                        // Insert into socolissimo_delivery_info
                         $shipping_address_complement = ($lengow_order->delivery_address->delivery_address_complement != '' ? pSQL($lengow_order->delivery_address->delivery_address_complement) : '');
                         $shipping_society = ($lengow_order->delivery_address->delivery_country->delivery_society != '' ? pSQL($lengow_order->delivery_address->delivery_country->delivery_society) : '');
 
@@ -772,7 +771,6 @@ class LengowImportAbstract {
                                 $shipping_address->address1, $shipping_address->address2, $shipping_address->postcode, $shipping_address->city, 
                                 $shipping_address->phone_mobile, $customer->email, $shipping_society);
                     }
-                    // End SoColissimo
 
                     if (!$lengow_new_order) {
                         LengowCore::log('No new order to import', $this->force_log_output);
@@ -805,6 +803,17 @@ class LengowImportAbstract {
                         if(_PS_VERSION_ >= '1.5') {
                             if($new_lengow_order->getIdOrderCarrier() != LengowCore::getDefaultCarrier())
                                 $new_lengow_order->forceCarrier(LengowCore::getDefaultCarrier());
+                        }
+
+                        if(LengowCore::isMondialRelay()) {
+                            if($lengow_order->tracking_informations->tracking_carrier == 'Mondial Relay' &&
+                                $lengow_order->tracking_informations->tracking_relay != '') {
+                                $relay = static::getRelayPoint($lengow_order->tracking_informations->tracking_relay, $cart->id_address_delivery);
+                                if($relay !== false)
+                                    $new_lengow_order->addRelayPoint($relay);
+                                else
+                                    LengowCore::log('Unable to find Relay Point', $this->force_log_output);
+                            }
                         }
 
                         // Update status on lengow if no debug
@@ -965,6 +974,35 @@ class LengowImportAbstract {
             return true;
 
         return false;
+    }
+
+    /**
+     * Get RelayPoint info with Mondial Relay module
+     *
+     * @param string Id Tracking Relay
+     * @param int Id Address Delivery
+     * 
+     * @return boolean|array False if not found, Relay array
+     */
+    public static function getRelayPoint($tracking_relay, $id_address_delivery) {
+        require_once _PS_MODULE_DIR_ . 'mondialrelay' . DS . 'classes' . DS . 'MRRelayDetail.php';
+        $tracking_relay = str_pad($tracking_relay, 6, '0', STR_PAD_LEFT);
+        $params = array(
+            'relayPointNumList' => array($tracking_relay),
+            'id_address_delivery' => $id_address_delivery
+        );
+        $MRRelayDetail = new MRRelayDetail($params, new MondialRelay());
+        $MRRelayDetail->init();
+        $MRRelayDetail->send();
+
+        $result = $MRRelayDetail->getResult();
+
+        if(empty($result['error'][0]) && array_key_exists($tracking_relay, $result['success'])) {
+            $relay = $result['success'][$tracking_relay];
+            return $relay;
+        } else {
+            return false;
+        }
     }
 
 }

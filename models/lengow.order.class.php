@@ -389,6 +389,38 @@ class LengowOrderAbstract extends Order {
                 SELECT `id_order_carrier`
                 FROM `'._DB_PREFIX_.'order_carrier`
                 WHERE `id_order` = '.(int)$this->id);
-    }       
+    }
+
+    /**
+     * Add Relay Point in Mondial Relay table
+     *
+     * @param array $relay informations
+     * @return boolean true if success, false if not
+     */
+    public function addRelayPoint($relay) {
+        if(!is_array($relay) || empty($relay))
+            return false;
+
+        $insert_values = array(
+            'id_customer' => (int) $this->id_customer,
+            'id_method' => (int) $this->id_carrier,
+            'id_cart' => (int) $this->id_cart,
+            'id_order' => (int) $this->id,
+            'MR_Selected_Num' => pSQL($relay['Num']),
+            'MR_Selected_LgAdr1' => pSQL($relay['LgAdr1']),
+            'MR_Selected_LgAdr2' => pSQL($relay['LgAdr2']),
+            'MR_Selected_LgAdr3' => pSQL($relay['LgAdr3']),
+            'MR_Selected_LgAdr4' => pSQL($relay['LgAdr4']),
+            'MR_Selected_CP' => pSQL($relay['CP']),
+            'MR_Selected_Ville' => pSQL($relay['Ville']),
+            'MR_Selected_Pays' => pSQL($relay['Pays'])
+        );
+
+        if(_PS_VERSION_ < '1.5') {
+            return Db::getInstance()->autoExecute(_DB_PREFIX_ . 'mr_selected', $insert_values, 'INSERT');
+        } else {
+            return DB::getInstance()->insert('mr_selected', $insert_values);
+        }
+    }
 }
                                                      
