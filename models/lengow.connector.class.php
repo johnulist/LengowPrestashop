@@ -236,7 +236,7 @@ class LengowConnectorAbstract {
                 . self::$DOMAIN_LENGOW[$service]['url'] . '/'
                 . 'v2/'
                 . $this->id_customer . '/'
-                . $array['id_group'] . '/'
+                . $array['feed_id'] . '/'
                 . 'orderid/'
                 . $array['orderid'] . '/';
         return $url;

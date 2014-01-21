@@ -106,9 +106,10 @@ class LengowImportAbstract {
         $lengow = new Lengow();
         $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
         
-        if(array_key_exists('id_order_lengow', $args) && $args['id_order_lengow'] != '') {
+        if(array_key_exists('id_order_lengow', $args) && $args['id_order_lengow'] != '' && array_key_exists('feed_id', $args) && $args['feed_id'] != '') {
             $args_order = array(
                 'orderid' => $args['id_order_lengow'],
+                'feed_id' => $args['feed_id'],
                 'id_group' => LengowCore::getGroupCustomer()
             );
             $this->force_log_output = -1;
@@ -137,6 +138,7 @@ class LengowImportAbstract {
         $count_orders = (integer) $orders->orders_count->count_total;
         if ($count_orders == 0) {
             LengowCore::log('No orders to import between ' . $args['dateFrom'] . ' and ' . $args['dateTo'], $this->force_log_output);
+            LengowCore::setImportEnd();
             return false;
         }
         foreach ($orders->orders->order as $key => $data) {

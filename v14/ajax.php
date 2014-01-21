@@ -15,9 +15,10 @@ switch ($action) {
         $order_id = Tools::getValue('orderid');
         $order = new LengowOrder($order_id);
         $lengow_order_id = Tools::getValue('lengoworderid');
+        $feed_id = Tools::getValue('feed_id');
         LengowCore::deleteProcessOrder($lengow_order_id);
         $import = new LengowImport();
-        $new_lengow_order = $import->exec('commands', array('id_order_lengow' => $lengow_order_id));
+        $new_lengow_order = $import->exec('commands', array('id_order_lengow' => $lengow_order_id, 'feed_id' => $feed_id));
 
         if($new_lengow_order != false) {
             // Cancel Order

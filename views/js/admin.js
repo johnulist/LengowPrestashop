@@ -43,12 +43,14 @@
 		var url = $(this).data('url');
 		var orderid = $(this).data('orderid');
 		var lengoworderid = $(this).data('lengoworderid');
+		var feed_id = $(this).data('feedid');
 		var version = $(this).data('version');
 
 		var datas = {};
 		datas['url'] = url;
 		datas['orderid'] = orderid;
 		datas['lengoworderid'] = lengoworderid;
+		datas['feed_id'] = feed_id;
 		if(version < '1.5')
 			datas['action'] = 'reimport_order';
 

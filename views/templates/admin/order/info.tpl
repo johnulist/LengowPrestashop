@@ -12,7 +12,7 @@
 	</ul>
 	<br />
 	<div class"button-command-prev-next">
-		<button id="reimport-order" class="button" data-url="{$action_reimport}" data-orderid="{$order_id}" data-lengoworderid="{$id_order_lengow}" data-version='{$version}'>{l s='Cancel and re-import order'}</button>
+		<button id="reimport-order" class="button" data-url="{$action_reimport}" data-orderid="{$order_id}" data-lengoworderid="{$id_order_lengow}" data-feedid="{$id_flux}" data-version='{$version}'>{l s='Cancel and re-import order'}</button>
 		<a class="button" href="{$action_synchronize}">{l s='Synchronize ID'}</a>
 	</div>
 </fieldset>
