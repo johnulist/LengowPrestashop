@@ -1282,7 +1282,7 @@ class Lengow extends Module {
         }
 
         // Product IDS
-        if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_LIST || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE ||  self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
+        if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_LIST || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
             $array_products = array();
             $products = Context::getContext()->smarty->tpl_vars['products']->value;
             if(!empty($products)) {
@@ -1303,10 +1303,9 @@ class Lengow extends Module {
                     $array_products[] = $id_product;
                 }
             }
-            
             self::$_IDS_PRODUCTS = implode($array_products,'|');
         }
-        
+
         // Generate tracker
         if ($tracking_mode == 'simpletag') {
             if (self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CONFIRMATION) {
