@@ -1282,22 +1282,31 @@ class Lengow extends Module {
         }
 
         // Product IDS
-        if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
-            $cart = $this->context->cart;
-            $cart_products = $cart->getProducts();
+        if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_LIST || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE ||  self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
             $array_products = array();
-            if (count($cart_products) > 0) {
-                foreach ($cart_products as $p) {
+            $products = Context::getContext()->smarty->tpl_vars['products']->value;
+            if(!empty($products)) {
+                foreach($products as $p) {
                     if ($p['id_product_attribute'])
                         $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
                     else
                         $id_product = $p['id_product'];
                     $array_products[] = $id_product;
                 }
-                self::$_IDS_PRODUCTS = implode($array_products,'|');
+            } else {
+                $p = Context::getContext()->smarty->tpl_vars['product']->value;
+                if($p instanceof Product) {
+                    if ($p->id_product_attribute)
+                        $id_product = $p->id . '_' . $p->id_product_attribute;
+                    else
+                        $id_product = $p->id;
+                    $array_products[] = $id_product;
+                }
             }
+            
+            self::$_IDS_PRODUCTS = implode($array_products,'|');
         }
-
+        
         // Generate tracker
         if ($tracking_mode == 'simpletag') {
             if (self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CONFIRMATION) {

@@ -810,7 +810,7 @@ class LengowImportAbstract {
                         if(LengowCore::isMondialRelay()) {
                             if($lengow_order->tracking_informations->tracking_carrier == 'Mondial Relay' &&
                                 $lengow_order->tracking_informations->tracking_relay != '') {
-                                $relay = static::getRelayPoint($lengow_order->tracking_informations->tracking_relay, $cart->id_address_delivery);
+                                $relay = self::getRelayPoint($lengow_order->tracking_informations->tracking_relay, $cart->id_address_delivery);
                                 if($relay !== false)
                                     $new_lengow_order->addRelayPoint($relay);
                                 else
