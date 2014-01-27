@@ -978,6 +978,7 @@ class Lengow extends Module {
                     'lengow_method_name' => Configuration::get('LENGOW_IMPORT_METHOD_NAME'),
                     'lengow_import_days' => Configuration::get('LENGOW_IMPORT_DAYS'),
                     'lengow_export_format' => Configuration::get('LENGOW_EXPORT_FORMAT'),
+                    'lengow_import_force_product' => Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT'),
                     'lengow_carrier_default' => Configuration::get('LENGOW_CARRIER_DEFAULT'),
                     'lengow_force_price' => Configuration::get('LENGOW_FORCE_PRICE'),
                     'lengow_debug' => Configuration::get('LENGOW_DEBUG'),
@@ -1454,7 +1455,7 @@ class Lengow extends Module {
         if(Tools::getValue('controller') == 'AdminOrders') {
             $this->context->controller->addJs($this->_path . 'views/js/admin.js');
         }
-        if (Tools::getValue('controller') == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
+        if (strtolower(Tools::getValue('controller')) == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
             $this->context->controller->addJs($this->_path . 'views/js/chart.min.js');
         }
