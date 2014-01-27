@@ -392,7 +392,7 @@ class LengowProductAbstract extends Product {
      *
      * @return varchar IDs product. 
      */
-    public static function exportIds($all = true, $all_product = false) {
+    public static function exportIds($all = true, $all_product = false, $product_ids = null) {
         $context = LengowCore::getContext();
         $id_lang = $context->language->id;
         $id_shop = $context->shop->id;
@@ -435,6 +435,10 @@ class LengowProductAbstract extends Product {
             }
             // Add Lengow selected products
             $query .= $selected_products_sql;
+        }
+
+        if($product_ids != null) {
+            $query .= ' AND p.`id_product` IN (' . implode(',', $product_ids) . ')';
         }
         return Db::getInstance()->executeS($query);
     }

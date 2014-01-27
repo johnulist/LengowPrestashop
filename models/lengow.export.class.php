@@ -192,13 +192,18 @@ class LengowExportAbstract {
     private $limit = null;
 
     /**
+     * Export only specified products
+     */
+    private $product_ids = null;
+
+    /**
      * Construc new Lengow export.
      *
      * @param string $format The format used to export
      *
      * @return Exception Error
      */
-    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null, $export_features = null, $limit = null) {
+    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null, $export_features = null, $limit = null, $product_ids = null) {
         try {
             $this->setFormat($format);
             $this->setFullmode($fullmode);
@@ -208,6 +213,7 @@ class LengowExportAbstract {
             $this->setTitle($full_title);
             $this->setAllProduct($all_product);
             $this->setLimit($limit);
+            $this->setIdsProduct($product_ids);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -401,6 +407,12 @@ class LengowExportAbstract {
         $this->limit = $limit;
     }
 
+    public function setIdsProduct($product_ids) {
+        if(!is_array($product_ids))
+            return;
+        $this->product_ids = $product_ids;
+    }
+
     static function isFullName() {
         return self::$full_title ? true : false;
     }
@@ -427,7 +439,7 @@ class LengowExportAbstract {
             $this->_makeFields();
             // Init fields to export
             $this->_write('header');
-            $products = LengowProduct::exportIds($this->all, $this->all_product);
+            $products = LengowProduct::exportIds($this->all, $this->all_product, $this->product_ids);
             if (!$products) {
                 // Force export all products if no have selected product
                 $products = LengowProduct::exportIds(true);

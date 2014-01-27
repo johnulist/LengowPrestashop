@@ -75,12 +75,20 @@ if (LengowCore::checkIP()) {
     elseif (Tools::getValue('active') && Tools::getValue('active') == 'all')
         $all_product = true;
 
+    // Products ids
+    $product_ids = null;
+    if(Tools::getValue('ids') && Tools::getValue('ids') != '') {
+        $product_ids = explode(',', Tools::getValue('ids'));
+        if(empty($product_ids))
+            $product_ids = null;
+    }
+
     // > Limit
     $limit = null;
     if(Tools::getValue('limit') && Tools::getValue('limit') > 0)
         $limit = Tools::getValue('limit');
 
-    $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product, null, $limit);
+    $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product, null, $limit, $product_ids);
     $export->exec();
 } else {
     die('Unauthorized access');
