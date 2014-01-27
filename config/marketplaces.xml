@@ -51,9 +51,16 @@
             </param>
         </additional_params>
     </marketplace>
-    <marketplace name="fnac.com">
+    <marketplace name="fnac">
         <api>https://wsdl.lengow.com/wsdl/fnac/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml</api>
         <states>
+            <state name="Created">
+                <actions>
+                    <action type="accept">acceptOrder</action>
+                    <action type="refuse">refuseOrder</action>
+                </actions>
+                <lengow>new</lengow>
+            </state>
             <state name="ToAccept">
                 <actions>
                     <action type="accept">acceptOrder</action>
@@ -72,7 +79,7 @@
                 <lengow>processing</lengow>
             </state>
             <state name="Refunded">
-                <lengow>processing</lengow>
+                <lengow>canceled</lengow>
             </state>
             <state name="NotReceived">
                 <lengow>shipped</lengow>
@@ -107,7 +114,7 @@
             <state name="New">
                 <actions>
                     <action type="accept">accept</action>
-                    <action type="accept">acceptOrder</action>
+                    <action type="shipped">acceptOrder</action>
                     <action type="refuse">refuseOrder</action>
                 </actions>
                 <lengow>new</lengow>
@@ -137,8 +144,8 @@
                 <type>carrier</type>
                 <name>Transporteur</name>
                 <accepted_values>
+                    <value default="true">Colissimo</value>
                     <value>So Colissimo</value>
-                    <value>Colissimo</value>
                     <value>CHRONOPOST</value>
                     <value>TNT</value>
                     <value>UPS</value>
@@ -172,6 +179,10 @@
                 <lengow>processing</lengow>
             </state>
             <state name="accepted">
+                <actions>
+                    <action type="accept">accept</action>
+                    <action type="refuse">refuseOrder</action>
+                </actions>
                 <lengow>shipped</lengow>
             </state>
             <state name="shipped">
@@ -209,7 +220,7 @@
             </state>
             <state name="ToShip">
                 <actions>
-                    <action type="shipped">ToOrder</action>
+                    <action type="shipped">shippedOrder</action>
                 </actions>
                 <lengow>processing</lengow>
             </state>
@@ -246,7 +257,7 @@
             <state name="WaitingForShipmentAcceptation">
                 <actions>
                     <action type="shipped">shippedOrder</action>
-                    <action type="refuseshipment">refuseShipment</action>
+                    <action type="refuse">refuseShipment</action>
                 </actions>
                 <lengow>processing</lengow>
             </state>
@@ -539,7 +550,7 @@
         </additional_params>
     </marketplace>
     <marketplace name="brandalley">
-        <api>https://wsdl.lengow.com/wsdl/brandalley/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml?TrackingColis=#TRACKING_COLIS#</api>
+        <api>https://wsdl.lengow.com/wsdl/brandalley/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml</api>
         <states>
             <state name="new">
                 <actions>
@@ -559,7 +570,10 @@
     <marketplace name="pixplace">
         <states>
             <state name="accepted">
-                <lengow>new</lengow>
+                <lengow>processing</lengow>
+            </state>
+            <state name="processing">
+                <lengow>processing</lengow>
             </state>
             <state name="NotReceived">
                 <lengow>processing</lengow>
@@ -589,7 +603,7 @@
         </states>
     </marketplace>
     <marketplace name="lechouchou">
-        <api>https://wsdl.lengow.com/wsdl/lechouchou/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml?TrackingColis=#TRACKING_COLIS#</api>
+        <api>https://wsdl.lengow.com/wsdl/lechouchou/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml</api>
         <states>
             <state name="new">
                 <lengow>new</lengow>
@@ -618,5 +632,84 @@
                 <name>TrackingColis</name>
             </param>
         </additional_params>
+    </marketplace>    
+    <marketplace name="leoo">
+        <states>
+            <state name="Confirmé">
+                <lengow>processing</lengow>
+            </state>
+            <state name="Expédié">
+                <lengow>shipped</lengow>
+            </state>
+            <state name="Annulation">
+                <lengow>canceled</lengow>
+            </state>
+        </states>
     </marketplace>
+    <marketplace name="discounteo">
+        <api>https://wsdl.lengow.com/wsdl/discounteo/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml</api>
+        <states>
+            <state name="new">
+                <lengow>new</lengow>
+            </state>
+            <state name="processing">
+                <actions>
+                    <action type="shipped">shipped</action>
+                    <action type="refuse">refused</action>
+                </actions>
+                <lengow>processing</lengow>
+            </state>
+            <state name="shipped">
+                <lengow>shipped</lengow>
+            </state>
+            <state name="refused">
+                <lengow>canceled</lengow>
+            </state>
+        </states>
+        <additional_params>
+            <param usedby="shipped">
+                <type>tracking</type>
+                <name>TrackingColis</name>
+            </param>
+            <param usedby="shipped">
+                <type>carrier</type>
+                <name>Trasnporteur</name>
+            </param>
+        </additional_params>
+    </marketplace>    
+    <marketplace name="ecopresto">
+        <api>https://wsdl.lengow.com/wsdl/ecopresto/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml</api>
+        <states>
+            <state name="new">
+                <lengow>new</lengow>
+            </state>
+            <state name="processing">
+                <actions>
+                    <action type="shipped">shipped</action>
+                </actions>
+                <lengow>processing</lengow>
+            </state>
+            <state name="shipped">
+                <lengow>shipped</lengow>
+            </state>
+            <state name="refused">
+                <lengow>canceled</lengow>
+            </state>
+        </states>
+        <additional_params>
+            <param usedby="shipped">
+                <type>tracking</type>
+                <name>TrackingColis</name>
+            </param>
+            <param usedby="shipped">
+                <type>carrier</type>
+                <name>TrackingCarrier</name>
+                <accepted_values>
+                    <value label="Divers" default="true">1</value>
+                    <value label="Colissimo">2</value>
+                    <value label="Lettre Max">3</value>
+                 </accepted_values>
+            </param>
+        </additional_params>
+    </marketplace>    
 </marketplaces>

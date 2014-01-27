@@ -27,6 +27,9 @@ require_once 'lengow.connector.class.php';
 class LengowCheck {
 
     static private $_module = '';
+
+    public static $XML_PLUGINS = 'plugins.xml';
+    public static $DOM;
     
     /**
      * Get header table
@@ -41,7 +44,7 @@ class LengowCheck {
      * Get HTML Table content of checklist
      * 
      * @param array $checklist
-     * @return string|nullPS_MAIL_METHOD
+     * @return string|null PS_MAIL_METHOD
      */
     private static function _getAdminContent($checklist = array()) {
 
@@ -260,6 +263,13 @@ class LengowCheck {
             'help' => self::$_module->l('Disabled product are enabled in export, Marketplace order import will not work with this configuration.'),
             'state' => (int) self::isDisabledProduct()
         );
+        $checklist[] = array(
+            'message' => self::$_module->l('Prestashop plugin version'),
+            'help' => self::$_module->l('There is a new version of Lengow Module, please update it.'),
+            'help_link' => 'http://www.lengow.fr/plugin-prestashop.html',
+            'help_label' => self::$_module->l('Download the lastest version'),
+            'state' => (int) self::checkPluginVersion(self::$_module->version)
+        );
 
         if(Configuration::get('LENGOW_DEBUG')) {
             $checklist[] = array(
@@ -292,6 +302,99 @@ class LengowCheck {
      */
     public static function getJsonCheckList() {
         return Tools::jsonEncode(self::_getCheckListArray());
+    }
+
+    /**
+     * Check module version
+     *
+     * @return boolean true if up to date, false if old version currently installed
+     */
+    public static function checkPluginVersion($current_version = null) {
+        if($current_version == null)
+            return false;
+
+        // Load xml
+        if(_PS_MODULE_DIR_)
+            self::$DOM = simplexml_load_file(_PS_MODULE_DIR_ . 'lengow' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . self::$XML_PLUGINS);
+        else
+            self::$DOM = simplexml_load_file(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . self::$XML_PLUGINS);
+
+        // Compare version
+        $object = self::$DOM->xpath('/plugins/plugin[@name=\'prestashop\']');
+        if(!empty($object)) {
+            $plugin = $object[0];
+            if(version_compare($current_version, $plugin->version, '<')) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Show import logs
+     *
+     * @return string Html Content
+     */
+    public static function getHtmlLogs($days = 10, $show_extra = false) {
+        $db = Db::getInstance();
+
+        $sql_logs = 'SELECT * FROM ' . _DB_PREFIX_ . 'lengow_logs_import '
+                  . ' WHERE TO_DAYS(NOW()) - TO_DAYS(date) <= ' . (int) $days
+                  . ' ORDER BY `date` DESC';
+
+        $results = $db->ExecuteS($sql_logs);
+
+        echo '<style type="text/css">
+            table.gridtable {
+                font-family: verdana,arial,sans-serif;
+                font-size:11px;
+                color:#333333;
+                border-width: 1px;
+                border-color: #666666;
+                border-collapse: collapse;
+            }
+            table.gridtable th {
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #666666;
+                background-color: #dedede;
+            }
+            table.gridtable td {
+                border-width: 1px;
+                padding: 8px;
+                border-style: solid;
+                border-color: #666666;
+                background-color: #ffffff;
+            }
+            </style>';
+
+        if(!empty($results)) {
+            echo '<table class="gridtable">';
+            echo '<tr>';
+            echo '<th>Lengow Order ID</th>';
+            echo '<th>Is processing</th>';
+            echo '<th>Is finished</th>';
+            echo '<th>Message</th>';
+            echo '<th>Date</th>';
+            if($show_extra == true)
+                echo '<th>Extra</th>';
+            echo '</tr>';
+            foreach($results as $row) {
+                echo '<tr>';
+                echo '<td>' . $row['lengow_order_id'] . '</td>';
+                echo '<td>' . ($row['is_processing'] == 1 ? 'Yes' : 'No') . '</td>';
+                echo '<td>' . ($row['is_finished'] == 1 ? 'Yes' : 'No') . '</td>';
+                echo '<td>' . $row['message'] . '</td>';
+                echo '<td>' . $row['date'] . '</td>';
+                if($show_extra == true)
+                    echo '<td>' . $row['extra'] . '</td>';
+                echo '</tr>';
+            }
+            echo '</table>';
+        }
     }
 
 }

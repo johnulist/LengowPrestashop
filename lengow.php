@@ -69,7 +69,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.3.2';
+        $this->version = '2.0.4';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
@@ -88,8 +88,16 @@ class Lengow extends Module {
         }
 
         LengowCore::updateMarketPlaceConfiguration();
+        LengowCore::updatePluginsVersion();
         LengowCore::setModule($this);
         LengowCore::cleanLog();
+
+        // Update Process
+        //Configuration::updateValue('LENGOW_VERSION', '2.0.0.0');
+        if(Configuration::get('LENGOW_VERSION') == '')
+            Configuration::updateValue('LENGOW_VERSION', '2.0.0.0');
+
+        LengowCheck::checkPluginVersion();
 
         $this->update();
         $this->_installOverride();
@@ -149,6 +157,7 @@ class Lengow extends Module {
                 Configuration::updateValue('LENGOW_ORDER_ID_SHIPPED', 4) &&
                 Configuration::updateValue('LENGOW_ORDER_ID_CANCEL', 6) &&
                 Configuration::updateValue('LENGOW_IMPORT_METHOD_NAME', false) &&
+                Configuration::updateValue('LENGOW_IMPORT_FORCE_PRODUCT', false) &&
                 Configuration::updateValue('LENGOW_IMPORT_DAYS', 3) &&
                 Configuration::updateValue('LENGOW_FORCE_PRICE', false) &&
                 Configuration::updateValue('LENGOW_CARRIER_DEFAULT', Configuration::get('PS_CARRIER_DEFAULT')) &&
@@ -201,6 +210,7 @@ class Lengow extends Module {
                 $this->registerHook('paymentTop') && // displayPaymentTop
                 $this->registerHook('addproduct') && // actionProductAdd
                 $this->registerHook('adminOrder') && // displayAdminOrder
+                $this->registerHook('backOfficeHeader') && // Backofficeheader
                 $this->registerHook('newOrder') && // actionValidateOrder
                 //$this->reorderHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
@@ -211,10 +221,52 @@ class Lengow extends Module {
 
     /**
      * Update process
+     *
+     * @return void
      */
     public function update() {
         if (Configuration::get('LENGOW_EXPORT_FIELDS') == '')
             Configuration::updateValue('LENGOW_EXPORT_FIELDS', json_encode(LengowCore::$DEFAULT_FIELDS));
+
+        // Update version 2.0.4
+        if(Configuration::get('LENGOW_VERSION') == '2.0.0.0') {
+            // Import log
+            $add_log_table = 'CREATE TABLE IF NOT EXISTS ' . _DB_PREFIX_ . 'lengow_logs_import ('
+                         . ' `lengow_order_id` VARCHAR(32) NOT NULL,'
+                         . ' `is_processing` int(11) DEFAULT 0,'
+                         . ' `is_finished` int(11) NOT NULL,'
+                         . ' `message` varchar(255) DEFAULT NULL,'
+                         . ' `date` datetime DEFAULT NULL,'
+                         . ' `extra` text NOT NULL,'
+                         . ' PRIMARY KEY(lengow_order_id));';
+
+            Db::getInstance()->execute($add_log_table);
+            
+            // Add Lengow order error status
+            $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state WHERE module_name = \'' . $this->name . '\'');
+            if(empty($states)) {
+                $lengow_state = new OrderState();
+                $lengow_state->send_email = false;
+                $lengow_state->module_name = $this->name;
+                $lengow_state->invoice = false;
+                $lengow_state->delivery = false;
+                $lengow_state->shipped = false;
+                $lengow_state->paid = false;
+                $lengow_state->unremovable = false;
+                $lengow_state->logable = false;
+                $lengow_state->color = '#205985';
+                $lengow_state->name[1] = 'Erreur technique - Lengow';
+                $languages = Language::getLanguages(false);
+                foreach ($languages as $language)
+                    $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
+                $lengow_state->add();
+                Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
+            } else {
+                Configuration::updateValue('LENGOW_STATE_ERROR', $states[0]['id_order_state']);
+            }
+
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
+        }
     }
 
     /**
@@ -242,6 +294,7 @@ class Lengow extends Module {
                 !Configuration::deleteByName('LENGOW_IMAGE_TYPE') ||
                 !Configuration::deleteByName('LENGOW_IMAGES_COUNT') ||
                 !Configuration::deleteByName('LENGOW_IMPORT_METHOD_NAME') ||
+                !Configuration::deleteByName('LENGOW_IMPORT_FORCE_PRODUCT') ||
                 !Configuration::deleteByName('LENGOW_IMPORT_DAYS') ||
                 !Configuration::deleteByName('LENGOW_EXPORT_FEATURES') ||
                 !Configuration::deleteByName('LENGOW_EXPORT_FORMAT') ||
@@ -306,6 +359,7 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_IMAGE_TYPE', Tools::getValue('lengow_image_type'));
             Configuration::updateValue('LENGOW_IMAGES_COUNT', Tools::getValue('lengow_images_count'));
             Configuration::updateValue('LENGOW_IMPORT_METHOD_NAME', Tools::getValue('lengow_method_name'));
+            Configuration::updateValue('LENGOW_IMPORT_FORCE_PRODUCT', Tools::getValue('lengow_import_force_product'));
             Configuration::updateValue('LENGOW_IMPORT_DAYS', Tools::getValue('lengow_import_days'));
             Configuration::updateValue('LENGOW_FORCE_PRICE', Tools::getValue('lengow_force_price'));
             Configuration::updateValue('LENGOW_EXPORT_FORMAT', Tools::getValue('lengow_export_format'));
@@ -717,6 +771,26 @@ class Lengow extends Module {
                         ),
                     ),
                     array(
+                        'type' => 'radio',
+                        'label' => $this->l('Force products'),
+                        'desc' => $this->l('Yes if you want to force import of disabled or out of stock product'),
+                        'name' => 'lengow_import_force_product',
+                        'is_bool' => true,
+                        'class' => 't',
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
                         'type' => 'free',
                         'label' => $this->l('Import state'),
                         'name' => 'lengow_is_import',
@@ -826,6 +900,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_image_type'] = Configuration::get('LENGOW_IMAGE_TYPE');
             $helper->fields_value['lengow_images_count'] = Configuration::get('LENGOW_IMAGES_COUNT');
             $helper->fields_value['lengow_method_name'] = Configuration::get('LENGOW_IMPORT_METHOD_NAME');
+            $helper->fields_value['lengow_import_force_product'] = Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT');
             $helper->fields_value['lengow_import_days'] = Configuration::get('LENGOW_IMPORT_DAYS');
             $helper->fields_value['lengow_export_format'] = Configuration::get('LENGOW_EXPORT_FORMAT');
             $helper->fields_value['lengow_carrier_default'] = Configuration::get('LENGOW_CARRIER_DEFAULT');
@@ -856,16 +931,29 @@ class Lengow extends Module {
      * @return varchar form html
      */
     public function displayForm14() {
-        $options = array(
-            'trackers' => LengowCore::getTrackers(),
-            'images' => ImageType::getImagesTypes('products'),
-            'images_count' => LengowCore::getImagesCount(),
-            'formats' => LengowCore::getExportFormats(),
-            'states' => OrderState::getOrderStates((int) $this->context->cookie->id_lang),
-            'shippings' => LengowCore::getShippingName(),
-            'export_fields' => LengowExport::getDefaultFields(),
-            'carriers' => Carrier::getCarriers($this->context->cookie->id_lang, true, false, false, null, Carrier::ALL_CARRIERS),
-        );
+        if(_PS_VERSION_ <= '1.4.3') {
+            $options = array(
+                'trackers' => LengowCore::getTrackers(),
+                'images' => ImageType::getImagesTypes('products'),
+                'images_count' => LengowCore::getImagesCount(),
+                'formats' => LengowCore::getExportFormats(),
+                'states' => OrderState::getOrderStates((int) $this->context->cookie->id_lang),
+                'shippings' => LengowCore::getShippingName(),
+                'export_fields' => LengowExport::getDefaultFields(),
+                'carriers' => Carrier::getCarriers($this->context->cookie->id_lang, true, false, false, null, ALL_CARRIERS),
+            );
+        } else {
+            $options = array(
+                'trackers' => LengowCore::getTrackers(),
+                'images' => ImageType::getImagesTypes('products'),
+                'images_count' => LengowCore::getImagesCount(),
+                'formats' => LengowCore::getExportFormats(),
+                'states' => OrderState::getOrderStates((int) $this->context->cookie->id_lang),
+                'shippings' => LengowCore::getShippingName(),
+                'export_fields' => LengowExport::getDefaultFields(),
+                'carriers' => Carrier::getCarriers($this->context->cookie->id_lang, true, false, false, null, Carrier::ALL_CARRIERS),
+            );
+        }
         $links = $this->_getWebservicesLinks();
         $this->context->smarty->assign(
                 array(
@@ -890,6 +978,7 @@ class Lengow extends Module {
                     'lengow_method_name' => Configuration::get('LENGOW_IMPORT_METHOD_NAME'),
                     'lengow_import_days' => Configuration::get('LENGOW_IMPORT_DAYS'),
                     'lengow_export_format' => Configuration::get('LENGOW_EXPORT_FORMAT'),
+                    'lengow_import_force_product' => Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT'),
                     'lengow_carrier_default' => Configuration::get('LENGOW_CARRIER_DEFAULT'),
                     'lengow_force_price' => Configuration::get('LENGOW_FORCE_PRICE'),
                     'lengow_debug' => Configuration::get('LENGOW_DEBUG'),
@@ -1176,6 +1265,7 @@ class Lengow extends Module {
 
         // Cart
         if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
+            $ids_product = array();
             $cart = $this->context->cart;
             $cart_products = $cart->getProducts();
             if (count($cart_products) > 0) {
@@ -1185,28 +1275,36 @@ class Lengow extends Module {
                         $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
                     else
                         $id_product = $p['id_product'];
-                    self::$_IDS_PRODUCTS_CART .= 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'] . '&';
+                    $products_cart[] = 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'];
                     $i++;
                 }
-                self::$_IDS_PRODUCTS_CART = rtrim(self::$_IDS_PRODUCTS_CART, '&');
+                self::$_IDS_PRODUCTS_CART = implode('&', $products_cart);
             }
         }
 
         // Product IDS
-        if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
-            $cart = $this->context->cart;
-            $cart_products = $cart->getProducts();
+        if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_LIST || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
             $array_products = array();
-            if (count($cart_products) > 0) {
-                foreach ($cart_products as $p) {
+            $products = Context::getContext()->smarty->tpl_vars['products']->value;
+            if(!empty($products)) {
+                foreach($products as $p) {
                     if ($p['id_product_attribute'])
                         $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
                     else
                         $id_product = $p['id_product'];
                     $array_products[] = $id_product;
                 }
-                self::$_IDS_PRODUCTS = implode($array_products,'|');
+            } else {
+                $p = Context::getContext()->smarty->tpl_vars['product']->value;
+                if($p instanceof Product) {
+                    if ($p->id_product_attribute)
+                        $id_product = $p->id . '_' . $p->id_product_attribute;
+                    else
+                        $id_product = $p->id;
+                    $array_products[] = $id_product;
+                }
             }
+            self::$_IDS_PRODUCTS = implode($array_products,'|');
         }
 
         // Generate tracker
@@ -1354,7 +1452,10 @@ class Lengow extends Module {
             $this->context->controller->addJs($this->_path . 'views/js/admin.js');
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
         }
-        if (Tools::getValue('controller') == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
+        if(Tools::getValue('controller') == 'AdminOrders') {
+            $this->context->controller->addJs($this->_path . 'views/js/admin.js');
+        }
+        if (strtolower(Tools::getValue('controller')) == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
             $this->context->controller->addJs($this->_path . 'views/js/chart.min.js');
         }
@@ -1384,15 +1485,26 @@ class Lengow extends Module {
     public function hookAdminOrder($args) {
         $order = new LengowOrder($args['id_order']);
         if (!empty($order->lengow_id_order)) {
-            // Case reimport order
-            // Todo check is valid and active order
-            // Todo cancel this order
-            // Todo Reimport order
-            // Todo goto new order
+            if(Tools::getValue('action') == 'synchronize') {
+                $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
+                $args = array(
+                        'idClient' => LengowCore::getIdCustomer() ,
+                        'idFlux' => $order->lengow_id_flux,
+                        'idGroup' => LengowCore::getGroupCustomer(),
+                        'idCommandeMP' => $order->lengow_id_order,
+                        'idCommandePresta' => $order->id);
+                $lengow_connector->api('updatePrestaInternalOrderId', $args);
+            }
+
             if (_PS_VERSION_ < '1.5') {
                 $action_reimport = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
+                $action_reimport = $this->_path . 'v14/ajax.php?';
+                $action_synchronize = 'index.php?tab=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
+                $add_script = true;
             } else {
-                $action_reimport = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=reImportOrder&token=' . Tools::getAdminTokenLite('AdminOrders') . '';
+                $action_reimport = 'index.php?controller=AdminLengow&action=reimportOrder&ajax&token=' . Tools::getAdminTokenLite('AdminLengow');
+                $action_synchronize = 'index.php?controller=AdminOrders&id_order=' . $order->id . '&vieworder&action=synchronize&token=' . Tools::getAdminTokenLite('AdminOrders');
+                $add_script = false;
             }
             $lengow_order_extra = Tools::jsonDecode($order->lengow_extra);
 
@@ -1403,7 +1515,12 @@ class Lengow extends Module {
                                 'total_paid' => $order->lengow_total_paid,
                                 'carrier' => $order->lengow_carrier,
                                 'message' => $order->lengow_message,
-                                //'action_reimport' => $action_reimport,
+                                'action_synchronize' => $action_synchronize,
+                                'action_reimport' => $action_reimport,
+                                'order_id' => $args['id_order'],
+                                'add_script' => $add_script,
+                                'url_script' => $this->_path . 'views/js/admin.js',
+                                'version' => _PS_VERSION_
                              );
 
             if(!is_object($lengow_order_extra->tracking_informations->tracking_method))
@@ -1573,11 +1690,18 @@ class Lengow extends Module {
      * @return boolean Result of tab uninstallation
      */
     private function _uninstallTab() {
-        if (_PS_VERSION_ < '1.5')
+        if (_PS_VERSION_ < '1.5') {
             $tabName = "AdminLengow14";
-        else
+        } else {
             $tabName = "AdminLengow";
-        $tab = Tab::getInstanceFromClassName($tabName);
+        }
+        if(_PS_VERSION_ >= '1.5') {
+            $tab = Tab::getInstanceFromClassName($tabName);
+        } else {
+            $tab_id = Tab::getIdFromClassName($tabName);
+            $tab = new Tab($tab_id);
+        }
+        
         if ($tab->id != 0) {
             return $tab->delete();
         }

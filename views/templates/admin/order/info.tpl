@@ -10,5 +10,12 @@
 		<li>{l s='Carrier from marketplace'} : <strong>{$carrier}</strong></li>
 		<li>{l s='Message'} : <strong>{$message}</strong></li>
 	</ul>
-	<!--<a href="{$action_reimport}">{l s='Cancel and re-import order'}</a>-->
+	<br />
+	<div class"button-command-prev-next">
+		<button id="reimport-order" class="button" data-url="{$action_reimport}" data-orderid="{$order_id}" data-lengoworderid="{$id_order_lengow}" data-feedid="{$id_flux}" data-version='{$version}'>{l s='Cancel and re-import order'}</button>
+		<a class="button" href="{$action_synchronize}">{l s='Synchronize ID'}</a>
+	</div>
 </fieldset>
+{if $add_script == true}
+<script type="text/javascript" src="{$url_script}"></script>
+{/if}

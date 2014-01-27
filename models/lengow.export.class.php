@@ -187,13 +187,18 @@ class LengowExportAbstract {
     private $export_features = false;
 
     /**
+     * Export limit
+     */
+    private $limit = null;
+
+    /**
      * Construc new Lengow export.
      *
      * @param string $format The format used to export
      *
      * @return Exception Error
      */
-    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null, $export_features = null) {
+    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null, $export_features = null, $limit = null) {
         try {
             $this->setFormat($format);
             $this->setFullmode($fullmode);
@@ -202,6 +207,7 @@ class LengowExportAbstract {
             $this->setStream($stream);
             $this->setTitle($full_title);
             $this->setAllProduct($all_product);
+            $this->setLimit($limit);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -391,6 +397,10 @@ class LengowExportAbstract {
             $this->all_product = LengowCore::exportAllProduct() ? true : false;
     }
 
+    public function setLimit($limit) {
+        $this->limit = $limit;
+    }
+
     static function isFullName() {
         return self::$full_title ? true : false;
     }
@@ -408,8 +418,10 @@ class LengowExportAbstract {
             else
                 $this->max_images = LengowCore::countExportAllImages();
             // Is full export
-            if ($this->full || $this->export_features) {
+            if ($this->full) {
                 $this->attributes = AttributeGroup::getAttributesGroups(LengowCore::getContext()->language->id);
+                $this->features = Feature::getFeatures(LengowCore::getContext()->language->id);
+            } else if($this->export_features) {
                 $this->features = Feature::getFeatures(LengowCore::getContext()->language->id);
             }
             $this->_makeFields();
@@ -441,7 +453,12 @@ class LengowExportAbstract {
                 LengowCache::clear();
                 if (function_exists('gc_collect_cycles'))
                     gc_collect_cycles();
+
                 $i++;
+
+                if($this->limit != null)
+                    if($i >= $this->limit)
+                        break;
             }
             $this->_write('footer');
             LengowCore::log('export : end');

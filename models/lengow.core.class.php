@@ -112,6 +112,7 @@ class LengowCoreAbstract {
         '88.164.17.227',
         '88.164.17.216',
         '109.190.78.5',
+        '95.131.141.168',
         '95.131.141.169',
         '95.131.141.170',
         '95.131.141.171'
@@ -163,6 +164,11 @@ class LengowCoreAbstract {
      */
     public static $MP_CONF_LENGOW = 'http://kml.lengow.com/mp.xml';
     public static $image_type_cache;
+
+    /**
+     * Lengow XML Plugins status
+     */
+    public static $LENGOW_PLUGINS_VERSION = 'http://kml.lengow.com/plugins.xml';
 
     /**
      * Prestashop context.
@@ -376,7 +382,7 @@ class LengowCoreAbstract {
         Configuration::updateValue('LENGOW_MAIL_SMTP_ENCRYPTION', Configuration::get('PS_MAIL_SMTP_ENCRYPTION'));
         Configuration::updateValue('LENGOW_MAIL_SMTP_PORT', Configuration::get('PS_MAIL_SMTP_PORT'));
         if(_PS_VERSION_ < '1.5.4')
-            self::_changeMailConfiguration();
+            LengowCore::_changeMailConfiguration();
         else
             Configuration::updateValue('PS_MAIL_METHOD', 3);
     }
@@ -386,7 +392,7 @@ class LengowCoreAbstract {
      * 
      * @return boolean
      */
-    private function _changeMailConfiguration() {
+    private static function _changeMailConfiguration() {
         if(Configuration::updateValue('PS_MAIL_DOMAIN', 'temp.lengow') &&
            Configuration::updateValue('PS_MAIL_SERVER', 'temp.lengow') &&
            Configuration::updateValue('PS_MAIL_USER', 'temp@lengow.temp') &&
@@ -607,6 +613,7 @@ class LengowCoreAbstract {
         $ips = trim(str_replace(array("\r\n", ',', '-', '|', ' '), ';', $ips), ';');
         $ips = explode(';', $ips);
         $authorized_ips = array_merge($ips, self::$IPS_LENGOW);
+        $authorized_ips[] = $_SERVER['SERVER_ADDR'];
         // Proxy
         /* if(function_exists('apache_request_headers')) {
           $headers = apache_request_headers();
@@ -638,6 +645,24 @@ class LengowCoreAbstract {
                 stream_copy_to_stream($xml, $handle);
                 fclose($handle);
                 Configuration::updateValue('LENGOW_MP_CONF', date('Y-m-d'));
+            }
+        }
+    }
+
+    /**
+     * Check and update xml of plugins version
+     *
+     * @return boolean
+     */
+    public static function updatePluginsVersion() {
+        $sep = DIRECTORY_SEPARATOR;
+        $plg_update = Configuration::get('LENGOW_PLG_CONF');
+        if (!$plg_update || $plg_update != date('Y-m-d')) {
+            if ($xml = fopen(self::$LENGOW_PLUGINS_VERSION, 'r')) {
+                $handle = fopen(dirname(__FILE__) . $sep . '..' . $sep . 'config' . $sep . LengowCheck::$XML_PLUGINS, 'w');
+                stream_copy_to_stream($xml, $handle);
+                fclose($handle);
+                Configuration::updateValue('LENGOW_PLG_CONF', date('Y-m-d'));
             }
         }
     }
@@ -808,5 +833,181 @@ class LengowCoreAbstract {
      */
     public static function setImportEnd() {
         return Configuration::updateValue('LENGOW_IS_IMPORT', 'stopped');
+    }
+
+    /**
+     * Set current flag to 1 for order in process
+     *
+     * @return void
+     */
+    public static function startProcessOrder($lengow_order_id = null, $extra) {
+        if(is_null($lengow_order_id))
+            return false;
+
+        $db = Db::getInstance();
+
+        $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
+                   . 'WHERE `lengow_order_id` = \'' . $lengow_order_id . '\' ';
+
+        $results = $db->ExecuteS($sql_exist);
+        if(empty($results)) {
+            // Insert
+            if (_PS_VERSION_ >= '1.5') {
+                $sql_add = $db->insert('lengow_logs_import', array(
+                    'lengow_order_id' => pSQL($lengow_order_id),
+                    'is_processing' => 1,
+                    'is_finished' => 0,
+                    'extra' => pSQL($extra),
+                    'date' => date("Y-m-d H:i:s")
+                ));
+            } else {
+                $sql_add = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
+                    'lengow_order_id' => pSQL($lengow_order_id),
+                    'is_processing' => 1,
+                    'is_finished' => 0,
+                    'extra' => pSQL($extra),
+                    'date' => date("Y-m-d H:i:s")
+                    ), 'INSERT');
+            }
+        } else {
+            // Update
+            if (_PS_VERSION_ >= '1.5') {
+                $sql_update = $db->update('lengow_logs_import', array(
+                    'is_processing' => 1
+                ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            } else {
+                 $sql_update = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
+                    'is_processing' => 1
+                ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            }
+        }
+    }
+
+    public static function deleteProcessOrder($lengow_order_id = null) {
+        if(is_null($lengow_order_id))
+            return false;
+        $db = Db::getInstance();
+        $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'lengow_logs_import WHERE lengow_order_id = \'' . $lengow_order_id . '\' LIMIT 1';
+        return $db->execute($sql);
+    }
+
+    /**
+     * Set flag to 0 for order in process
+     *
+     * @return void
+     */
+    public static function endProcessOrder($lengow_order_id, $is_processing, $is_finished, $message = null) {
+        $db = Db::getInstance();
+        if (_PS_VERSION_ >= '1.5') {
+            $sql_update = $db->update('lengow_logs_import', array(
+                    'is_processing' => (int) $is_processing,
+                    'is_finished' => (int) $is_finished,
+                    'message' => pSQL($message),
+            ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+        } else {
+            $sql_update = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
+                    'is_processing' => (int) $is_processing,
+                    'is_finished' => (int) $is_finished,
+                    'message' => pSQL($message),
+            ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+        }
+    }
+
+    /**
+     * Check if order is processing or finished
+     *
+     * @return boolean
+     */
+    public static function isProcessing($lengow_order_id = null) {
+        if(is_null($lengow_order_id))
+            return false;
+
+        $db = Db::getInstance();
+
+        $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
+                   . 'WHERE `lengow_order_id` = \'' . $lengow_order_id . '\' ';
+
+        $results = $db->ExecuteS($sql_exist);
+
+        if(empty($results))
+            return false;
+
+        foreach($results as $row) {
+
+            if($row['is_processing'] == 1 || $row['is_finished'] == 1)
+                return true;
+            else
+                return false;
+        }
+    }
+
+    /**
+     * Check if Mondial Relay is installed, activated and selected as default lengow carrier
+     *
+     * @return boolean true if installed and activated
+     */
+    public static function isMondialRelay() {
+        $module_name = 'mondialrelay';
+        $module_dir = _PS_MODULE_DIR_ . $module_name . DS;
+
+        if(_PS_VERSION_ >= '1.5') {
+            if(Module::isInstalled($module_name) && Module::isEnabled($module_name)) {
+                $carrier = new Carrier(Configuration::get('LENGOW_CARRIER_DEFAULT'));
+                if($carrier->external_module_name == $module_name)
+                    return true;
+                else
+                    return false;
+            }
+        } else {
+            if(Module::isInstalled($module_name)) {
+                $carrier = new Carrier(Configuration::get('LENGOW_CARRIER_DEFAULT'));
+                if($carrier->external_module_name == $module_name)
+                    return true;
+                else
+                    return false;
+            }
+        }
+    }
+
+    /**
+     * Check is soColissimo is installed, activated and selected as default lengow carrier
+     *
+     * @return boolean true if installed and activated
+     */
+    public static function isColissimo() {
+        $module_name = 'socolissimo';
+        $supported_version = '2.8.5';
+        $module_dir = _PS_MODULE_DIR_ . $module_name . DS;
+
+        if(_PS_VERSION_ >= '1.5') {
+            if(Module::isInstalled($module_name) 
+                && Module::isEnabled($module_name)
+                && Configuration::get('SOCOLISSIMO_CARRIER_ID') == Configuration::get('LENGOW_CARRIER_DEFAULT')) {
+
+                require_once($module_dir . $module_name . '.php');
+                $soColissimo = new Socolissimo();
+
+                if(version_compare($soColissimo->version, $supported_version, '<')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            if(Module::isInstalled($module_name)
+                && Configuration::get('SOCOLISSIMO_CARRIER_ID') == Configuration::get('LENGOW_CARRIER_DEFAULT')) {
+
+                require_once($module_dir . $module_name . '.php');
+                $soColissimo = new Socolissimo();
+
+                if(version_compare($soColissimo->version, $supported_version, '<')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        
+        return false;
     }
 }
