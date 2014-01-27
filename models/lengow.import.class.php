@@ -318,7 +318,15 @@ class LengowImportAbstract {
                     if (empty($address_cp)) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no zipcode');
                         $address_cp = ' ';
+                    } elseif(!Validate::isZipCodeFormat($address_cp)) {
+                        $address_cp = preg_replace('/[^0-9-]+/', '', $address_cp);
+                        if(!Validate::isZipCodeFormat($address_cp)) {
+                            LengowCore::log('Order ' . $lengow_order_id . ' : ZipCode is not valid', $this->force_log_output);
+                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'ZipCode is not valid -> ' . (string) $lengow_order->billing_address->billing_zipcode);
+                            continue;
+                        }
                     }
+
                     $address_city = (string) $lengow_order->billing_address->billing_city;
                     if (empty($address_city)) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : no city');
