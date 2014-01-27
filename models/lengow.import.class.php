@@ -837,6 +837,13 @@ class LengowImportAbstract {
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : success import on presta (ORDER ' . $id_order . ')', $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Success import on presta (ORDER ' . $id_order . ')');
+
+                        // Custom Hook
+                        Hook::exec('actionValidateLengowOrder', array(
+                            'id_order' => $id_order,
+                            'lengow_order_id' => $lengow_order_id
+                        ));
+
                         $count_orders_added++;
                         if(Tools::getValue('limit') != '' && Tools::getValue('limit') > 0) {
                             if($count_orders_added == (int) Tools::getValue('limit')) {
@@ -844,7 +851,7 @@ class LengowImportAbstract {
                                 LengowCore::enableMail();
                                 die();
                             }
-                        } 
+                        }
                     } else {
                         LengowCore::log('Order ' . $lengow_order_id . ' : fail import on presta', $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Fail import on presta');

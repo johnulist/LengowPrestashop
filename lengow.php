@@ -93,7 +93,6 @@ class Lengow extends Module {
         LengowCore::cleanLog();
 
         // Update Process
-        //Configuration::updateValue('LENGOW_VERSION', '2.0.0.0');
         if(Configuration::get('LENGOW_VERSION') == '')
             Configuration::updateValue('LENGOW_VERSION', '2.0.0.0');
 
@@ -266,6 +265,11 @@ class Lengow extends Module {
             }
 
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
+        }
+
+        // Update version 2.0.4.1
+        if(Configuration::get('LENGOW_VERSION') < '2.0.4.1') {
+            $this->registerHook('actionValidateLengowOrder');
         }
     }
 
@@ -1341,7 +1345,7 @@ class Lengow extends Module {
         }
         return '';
     }
-
+    
     /**
      * Hook before an status' update to synchronize status with lengow.
      *
