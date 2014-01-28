@@ -196,9 +196,10 @@ class LengowProductAbstract extends Product {
                     $price = $this->getPrice($tax = true, $id_product_attribute, $decimals = 2, $divisor = null, $only_reduc = false, $usereduc = false, $quantity = 1);
                     $price_sale = $this->getPrice($tax = true, $id_product_attribute, $decimals = 2, $divisor = null, $only_reduc = true, $usereduc = true, $quantity = 1);
                 } else {
-                    $price = $this->price;
+                    $price = $this->getPrice($tax = true, $id_product_attribute = null, $decimals = 2, $divisor = null, $only_reduc = false, $usereduc = false, $quantity = 1);
                     $price_sale = $this->getPrice($tax = true, $id_product_attribute = null, $decimals = 2, $divisor = null, $only_reduc = true, $usereduc = true, $quantity = 1);
                 }
+
                 if ($price_sale && $price)
                     return LengowCore::formatNumber(($price_sale / $price) * 100);
                 return 0;
