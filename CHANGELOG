@@ -1,4 +1,15 @@
 =============================================================
+Version 2.0.4.1
+=============================================================
+    - Update debug message
+    - Add Hook ValidateLengowOrder
+    - Fix Tagcapsule
+    - Add ZipCode validation
+    - Allow to export only product when specify IDs
+    - Fix publish/Unpublish product in lengow tab
+    - Update webservices log import
+
+=============================================================
 Version 2.0.4
 =============================================================
     - Warning if plugin is outdated
