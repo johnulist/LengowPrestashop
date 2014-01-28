@@ -379,6 +379,7 @@ class LengowCheck {
             echo '<th>Is finished</th>';
             echo '<th>Message</th>';
             echo '<th>Date</th>';
+            echo '<th>Action</th>';
             if($show_extra == true)
                 echo '<th>Extra</th>';
             echo '</tr>';
@@ -391,6 +392,7 @@ class LengowCheck {
                 echo '<td>' . $row['date'] . '</td>';
                 if($show_extra == true)
                     echo '<td>' . $row['extra'] . '</td>';
+                echo '<td><a href="?action=logs&delete=' . $row['lengow_order_id'] . '">Supprimer</a></td>';
                 echo '</tr>';
             }
             echo '</table>';

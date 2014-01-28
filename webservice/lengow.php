@@ -41,6 +41,10 @@ if (LengowCore::checkIP()) {
         $days = 10;
         $show_extra = false;
 
+        if(Tools::getValue('delete') != '') {
+            LengowCore::deleteProcessOrder(Tools::getValue('delete'));
+        }
+
         if(Tools::getValue('days') != '') {
             $days = Tools::getValue('days');
         }
