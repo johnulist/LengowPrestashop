@@ -236,13 +236,21 @@ class LengowExportAbstract {
         //Features
         if ($this->features) {
             foreach ($this->features as $feature) {
-                $this->fields[] = $this->_toFieldname($feature['name']);
+                if(in_array($this->_toFieldname($feature['name']), $this->fields)) {
+                    $this->fields[] = $this->_toFieldname($feature['name']) . '_1';
+                } else {
+                    $this->fields[] = $this->_toFieldname($feature['name']);
+                }
             }
         }
         // Attributes
         if ($this->attributes) {
             foreach ($this->attributes as $attribute) {
-                $this->fields[] = $this->_toFieldname($attribute['name']);
+                if(!in_array( $this->_toFieldname($attribute['name']), $this->fields)) {
+                    $this->fields[] = $this->_toFieldname($attribute['name']);
+                } else {
+                    $this->fields[] = $this->_toFieldname($attribute['name']) . '_2';
+                }
             }
         }
         // Images
@@ -503,16 +511,26 @@ class LengowExportAbstract {
         // Features
         if ($this->features) {
             foreach ($this->features as $feature) {
-                $array_product[$this->_toFieldname($feature['name'])] = $product->getDataFeature($feature['name']);
+                if(in_array($this->_toFieldname($feature['name']), $array_product))
+                    $key = $this->_toFieldname($feature['name']) . '_1';
+                else
+                    $key = $this->_toFieldname($feature['name']);
+                $array_product[$key] = $product->getDataFeature($feature['name']);
             }
         }
         // Attributes
         if ($this->attributes) {
             foreach ($this->attributes as $attribute) {
-                if (!$id_product_attribute)
-                    $array_product[$this->_toFieldname($attribute['name'])] = '';
+                $key = '';
+                if(array_key_exists($this->_toFieldname($attribute['name']), $array_product))
+                    $key = $this->_toFieldname($attribute['name']) . '_2';
                 else
-                    $array_product[$this->_toFieldname($attribute['name'])] = $product->getDataAttribute($id_product_attribute, $attribute['name']);
+                    $key = $this->_toFieldname($attribute['name']);
+
+                if (!$id_product_attribute)
+                    $array_product[$key] = '';
+                else
+                    $array_product[$key] = $product->getDataAttribute($id_product_attribute, $attribute['name']);
             }
         }
         // Is export > 3 images
