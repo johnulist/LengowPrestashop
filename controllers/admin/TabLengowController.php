@@ -51,18 +51,18 @@ class AdminLengow14 extends AdminTab {
             'price' => array('title' => $this->l('Original price'), 'width' => 70, 'price' => true, 'align' => 'right', 'filter_key' => 'a!price'),
             'price_final' => array('title' => $this->l('Final price'), 'width' => 70, 'price' => true, 'align' => 'right', 'havingFilter' => true, 'orderby' => false),
             'quantity' => array('title' => $this->l('Quantity'), 'width' => 30, 'align' => 'right', 'filter_key' => 'a!quantity', 'type' => 'decimal'),
-            'isexport' => array('title' => $this->l('Status'), 'active' => 'status', 'search' => false, 'filter' => false, 'align' => 'center', 'type' => 'bool', 'orderby' => false));
+            'isexport' => array('title' => $this->l('Status'), /*'active' => 'status',*/ 'search' => false, 'filter' => false, 'align' => 'center', /*'type' => 'bool',*/ 'orderby' => false));
 
         /* Join categories table */
         //$this->_category = AdminCatalog::getCurrentCategory();
         $this->_join = '
-		LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
-		LEFT JOIN `' . _DB_PREFIX_ . 'lengow_product` lp ON lp.`id_product` = a.`id_product` 
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON (cp.`id_product` = a.`id_product`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'category` c ON (c.`id_category` = a.`id_category_default`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category`)
-		LEFT JOIN `' . _DB_PREFIX_ . 'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = ' . (int) Country::getDefaultCountryId() . ' AND tr.`id_state` = 0)
-		LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = tr.`id_tax`)';
+        LEFT JOIN `' . _DB_PREFIX_ . 'image` i ON (i.`id_product` = a.`id_product` AND i.`cover` = 1)
+        LEFT JOIN `' . _DB_PREFIX_ . 'lengow_product` lp ON lp.`id_product` = a.`id_product` 
+        LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON (cp.`id_product` = a.`id_product`)
+        LEFT JOIN `' . _DB_PREFIX_ . 'category` c ON (c.`id_category` = a.`id_category_default`)
+        LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category`)
+        LEFT JOIN `' . _DB_PREFIX_ . 'tax_rule` tr ON (a.`id_tax_rules_group` = tr.`id_tax_rules_group` AND tr.`id_country` = ' . (int) Country::getDefaultCountryId() . ' AND tr.`id_state` = 0)
+        LEFT JOIN `' . _DB_PREFIX_ . 'tax` t ON (t.`id_tax` = tr.`id_tax`)';
         //$this->_filter = 'AND cp.`id_category` = '.(int)($this->_category->id);
         $this->_select = 'cp.`position`, cl.`name` as `category`, i.`id_image`, (a.`price` * ((100 + (t.`rate`))/100)) AS `price_final`, IF(lp.`id_product` > 0, 1, 0) AS `isexport`';
         $this->_group = 'GROUP BY a.`id_product`';
@@ -150,6 +150,11 @@ class AdminLengow14 extends AdminTab {
         }
         if (Tools::getValue('unpublishproduct')) {
             $this->processBulkUnpublish();
+        }
+        if(Tools::getValue('lengowunpublishproduct')) {
+            LengowProduct::publish(Tools::getValue('lengowunpublishproduct'), 0);
+        } elseif(Tools::getValue('lengowpublishproduct')) {
+            LengowProduct::publish(Tools::getValue('lengowpublishproduct'));
         }
         if (Tools::getValue('importorder')) {
             @set_time_limit(0);
@@ -243,36 +248,44 @@ class AdminLengow14 extends AdminTab {
             foreach ($this->_list as $tr) {
                 $id = $tr[$this->identifier];
                 echo '<tr' . (array_key_exists($this->identifier, $this->identifiersDnd) ? ' id="tr_' . (($id_category = (int) (Tools::getValue('id_' . ($isCms ? 'cms_' : '') . 'category', '1'))) ? $id_category : '') . '_' . $id . '_' . $tr['position'] . '"' : '') . ($irow++ % 2 ? ' class="alt_row"' : '') . ' ' . ((isset($tr['color']) and $this->colorOnBackground) ? 'style="background-color: ' . $tr['color'] . '"' : '') . '>
-							<td class="center">';
+                            <td class="center">';
                 echo '<input type="checkbox" name="' . $this->table . 'Box[]" value="' . $id . '" class="noborder" />';
                 echo '</td>';
                 foreach ($this->fieldsDisplay as $key => $params) {
                     $tmp = explode('!', $key);
                     $key = isset($tmp[1]) ? $tmp[1] : $tmp[0];
                     echo '
-					<td ' . (isset($params['position']) ? ' id="td_' . (isset($id_category) and $id_category ? $id_category : 0) . '_' . $id . '"' : '') . ' class="' . ((!isset($this->noLink) or !$this->noLink) ? 'pointer' : '') . ((isset($params['position']) and $this->_orderBy == 'position') ? ' dragHandle' : '') . (isset($params['align']) ? ' ' . $params['align'] : '') . '" ';
+                    <td ' . (isset($params['position']) ? ' id="td_' . (isset($id_category) and $id_category ? $id_category : 0) . '_' . $id . '"' : '') . ' class="' . ((!isset($this->noLink) or !$this->noLink) ? 'pointer' : '') . ((isset($params['position']) and $this->_orderBy == 'position') ? ' dragHandle' : '') . (isset($params['align']) ? ' ' . $params['align'] : '') . '" ';
                     if (!isset($params['position']) and (!isset($this->noLink) or !$this->noLink))
                         echo ' onclick="document.location = \'' . $currentIndex . '&' . $this->identifier . '=' . $id . ($this->view ? '&view' : '&update') . $this->table . '&token=' . ($token != null ? $token : $this->token) . '\'">' . (isset($params['prefix']) ? $params['prefix'] : '');
                     else
                         echo '>';
-                    if (isset($params['active']) and isset($tr[$key]))
+                    if($key == 'isexport') {
+                        $token = Tools::getAdminTokenLite('AdminLengow14');
+                        if($tr[$key] == 0) {
+                            echo '<a href="index.php?tab=AdminLengow14&lengowpublishproduct=' . $id . '&token=' . $token . '"><img src="' . _PS_ADMIN_IMG_ . 'disabled.gif" /></a>';
+                        } else {
+                            echo '<a href="index.php?tab=AdminLengow14&lengowunpublishproduct=' . $id. '&token=' . $token . '"><img src="' . _PS_ADMIN_IMG_ . 'enabled.gif" /></a>';
+                        }
+                    }
+                    elseif (isset($params['active']) and isset($tr[$key]))
                         $this->_displayEnableLink($token, $id, $tr[$key], $params['active'], Tools::getValue('id_category'), Tools::getValue('id_product'));
                     elseif (isset($params['activeVisu']) and isset($tr[$key]))
                         echo '<img src="../img/admin/' . ($tr[$key] ? 'enabled.gif' : 'disabled.gif') . '"
-						alt="' . ($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')) . '" title="' . ($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')) . '" />';
+                        alt="' . ($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')) . '" title="' . ($tr[$key] ? $this->l('Enabled') : $this->l('Disabled')) . '" />';
                     elseif (isset($params['position'])) {
                         if ($this->_orderBy == 'position' and $this->_orderWay != 'DESC') {
                             echo '<a' . (!($tr[$key] != $positions[sizeof($positions) - 1]) ? ' style="display: none;"' : '') . ' href="' . $currentIndex .
                             '&' . $keyToGet . '=' . (int) ($id_category) . '&' . $this->identifiersDnd[$this->identifier] . '=' . $id . '
-									&way=1&position=' . (int) ($tr['position'] + 1) . '&token=' . ($token != null ? $token : $this->token) . '">
-									<img src="../img/admin/' . ($this->_orderWay == 'ASC' ? 'down' : 'up') . '.gif"
-									alt="' . $this->l('Down') . '" title="' . $this->l('Down') . '" /></a>';
+                                    &way=1&position=' . (int) ($tr['position'] + 1) . '&token=' . ($token != null ? $token : $this->token) . '">
+                                    <img src="../img/admin/' . ($this->_orderWay == 'ASC' ? 'down' : 'up') . '.gif"
+                                    alt="' . $this->l('Down') . '" title="' . $this->l('Down') . '" /></a>';
 
                             echo '<a' . (!($tr[$key] != $positions[0]) ? ' style="display: none;"' : '') . ' href="' . $currentIndex .
                             '&' . $keyToGet . '=' . (int) ($id_category) . '&' . $this->identifiersDnd[$this->identifier] . '=' . $id . '
-									&way=0&position=' . (int) ($tr['position'] - 1) . '&token=' . ($token != null ? $token : $this->token) . '">
-									<img src="../img/admin/' . ($this->_orderWay == 'ASC' ? 'up' : 'down') . '.gif"
-									alt="' . $this->l('Up') . '" title="' . $this->l('Up') . '" /></a>';
+                                    &way=0&position=' . (int) ($tr['position'] - 1) . '&token=' . ($token != null ? $token : $this->token) . '">
+                                    <img src="../img/admin/' . ($this->_orderWay == 'ASC' ? 'up' : 'down') . '.gif"
+                                    alt="' . $this->l('Up') . '" title="' . $this->l('Up') . '" /></a>';
                         } else
                             echo (int) ($tr[$key] + 1);
                     } elseif (isset($params['image'])) {
@@ -286,8 +299,7 @@ class AdminLengow14 extends AdminTab {
                             $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . $item_id . (isset($tr['id_image']) ? '-' . (int) ($tr['id_image']) : '') . '.' . $this->imageType;
 
                         echo cacheImage($path_to_image, $this->table . '_mini_' . $item_id . '.' . $this->imageType, 45, $this->imageType);
-                    }
-                    elseif (isset($params['icon']) and (isset($params['icon'][$tr[$key]]) or isset($params['icon']['default'])))
+                    } elseif (isset($params['icon']) and (isset($params['icon'][$tr[$key]]) or isset($params['icon']['default'])))
                         echo '<img src="../img/admin/' . (isset($params['icon'][$tr[$key]]) ? $params['icon'][$tr[$key]] : $params['icon']['default'] . '" alt="' . $tr[$key]) . '" title="' . $tr[$key] . '" />';
                     elseif (isset($params['price']))
                         echo Tools::displayPrice($tr[$key], (isset($params['currency']) ? Currency::getCurrencyInstance((int) ($tr['id_currency'])) : $currency), false);
