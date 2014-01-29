@@ -3,6 +3,7 @@ Version 2.0.4.1
 =============================================================
     - Update debug message
     - Add Hook ValidateLengowOrder
+        - public function hookActionValidateLengowOrder
     - Fix Tagcapsule
     - Add ZipCode validation
     - Allow to export only product when specify IDs
