@@ -278,7 +278,7 @@ class LengowExportAbstract {
                 return '<?xml version="1.0" ?>' . "\r\n"
                         . '<catalog>' . "\r\n";
             case 'json' :
-                return '{"catalog":{';
+                return '{"catalog":[';
             case 'yaml' :
                 return '"catalog":' . "\r\n";
         }
@@ -296,7 +296,7 @@ class LengowExportAbstract {
             case 'xml' :
                 return '</catalog>';
             case 'json' :
-                return '}';
+                return ']}';
             case 'yaml' :
                 return '';
         }
@@ -457,11 +457,21 @@ class LengowExportAbstract {
             $i = 0;
             foreach ($products as $p) {
                 $product = new LengowProduct($p['id_product'], LengowCore::getContext()->language->id);
-                $this->_write('data', $this->_make($product));
+
+                if($p['id_product'] == $last['id_product'] && empty($product->getCombinations()))
+                    $is_last = true;
+
+                $this->_write('data', $this->_make($product), $is_last);
                 // Attributes
                 if ($this->full) {
+                    $total = count($product->getCombinations());
+                    $i = 0;
+                    $is_last = false;
                     foreach ($product->getCombinations() as $id_product_attribute => $combination) {
-                        $this->_write('data', $this->_make($product, $id_product_attribute));
+                        $i++;
+                        if($p['id_product'] == $last['id_product'] && $total ==  $i)
+                            $is_last = true;
+                        $this->_write('data', $this->_make($product, $id_product_attribute), $is_last);
                     }
                 }
                 $product = null;
@@ -596,7 +606,7 @@ class LengowExportAbstract {
                         foreach ($this->fields as $name) {
                             $json_array[$name] = $data[$name];
                         }
-                        $line .= '"product":' . Tools::jsonEncode($json_array) . ($last ? ',' : '');
+                        $line .= Tools::jsonEncode($json_array) . (!$last ? ',' : '');
                         break;
                     case 'yaml' :
                         $line .= '  ' . '"product":' . "\r\n";
