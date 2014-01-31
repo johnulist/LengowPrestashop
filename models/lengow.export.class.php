@@ -458,18 +458,19 @@ class LengowExportAbstract {
             foreach ($products as $p) {
                 $product = new LengowProduct($p['id_product'], LengowCore::getContext()->language->id);
 
-                if($p['id_product'] == $last['id_product'] && empty($product->getCombinations()))
+                $combinations = $product->getCombinations();
+                if($p['id_product'] == $last['id_product'] && empty($combinations))
                     $is_last = true;
 
                 $this->_write('data', $this->_make($product), $is_last);
                 // Attributes
                 if ($this->full) {
                     $total = count($product->getCombinations());
-                    $i = 0;
+                    $count = 0;
                     $is_last = false;
                     foreach ($product->getCombinations() as $id_product_attribute => $combination) {
-                        $i++;
-                        if($p['id_product'] == $last['id_product'] && $total ==  $i)
+                        $count++;
+                        if($p['id_product'] == $last['id_product'] && $total ==  $count)
                             $is_last = true;
                         $this->_write('data', $this->_make($product, $id_product_attribute), $is_last);
                     }
