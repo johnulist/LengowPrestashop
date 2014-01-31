@@ -236,13 +236,21 @@ class LengowExportAbstract {
         //Features
         if ($this->features) {
             foreach ($this->features as $feature) {
-                $this->fields[] = $this->_toFieldname($feature['name']);
+                if(in_array($this->_toFieldname($feature['name']), $this->fields)) {
+                    $this->fields[] = $this->_toFieldname($feature['name']) . '_1';
+                } else {
+                    $this->fields[] = $this->_toFieldname($feature['name']);
+                }
             }
         }
         // Attributes
         if ($this->attributes) {
             foreach ($this->attributes as $attribute) {
-                $this->fields[] = $this->_toFieldname($attribute['name']);
+                if(!in_array( $this->_toFieldname($attribute['name']), $this->fields)) {
+                    $this->fields[] = $this->_toFieldname($attribute['name']);
+                } else {
+                    $this->fields[] = $this->_toFieldname($attribute['name']) . '_2';
+                }
             }
         }
         // Images
@@ -270,7 +278,7 @@ class LengowExportAbstract {
                 return '<?xml version="1.0" ?>' . "\r\n"
                         . '<catalog>' . "\r\n";
             case 'json' :
-                return '{"catalog":{';
+                return '{"catalog":[';
             case 'yaml' :
                 return '"catalog":' . "\r\n";
         }
@@ -288,7 +296,7 @@ class LengowExportAbstract {
             case 'xml' :
                 return '</catalog>';
             case 'json' :
-                return '}';
+                return ']}';
             case 'yaml' :
                 return '';
         }
@@ -449,11 +457,21 @@ class LengowExportAbstract {
             $i = 0;
             foreach ($products as $p) {
                 $product = new LengowProduct($p['id_product'], LengowCore::getContext()->language->id);
-                $this->_write('data', $this->_make($product));
+
+                if($p['id_product'] == $last['id_product'] && empty($product->getCombinations()))
+                    $is_last = true;
+
+                $this->_write('data', $this->_make($product), $is_last);
                 // Attributes
                 if ($this->full) {
+                    $total = count($product->getCombinations());
+                    $i = 0;
+                    $is_last = false;
                     foreach ($product->getCombinations() as $id_product_attribute => $combination) {
-                        $this->_write('data', $this->_make($product, $id_product_attribute));
+                        $i++;
+                        if($p['id_product'] == $last['id_product'] && $total ==  $i)
+                            $is_last = true;
+                        $this->_write('data', $this->_make($product, $id_product_attribute), $is_last);
                     }
                 }
                 $product = null;
@@ -503,16 +521,26 @@ class LengowExportAbstract {
         // Features
         if ($this->features) {
             foreach ($this->features as $feature) {
-                $array_product[$this->_toFieldname($feature['name'])] = $product->getDataFeature($feature['name']);
+                if(in_array($this->_toFieldname($feature['name']), $array_product))
+                    $key = $this->_toFieldname($feature['name']) . '_1';
+                else
+                    $key = $this->_toFieldname($feature['name']);
+                $array_product[$key] = $product->getDataFeature($feature['name']);
             }
         }
         // Attributes
         if ($this->attributes) {
             foreach ($this->attributes as $attribute) {
-                if (!$id_product_attribute)
-                    $array_product[$this->_toFieldname($attribute['name'])] = '';
+                $key = '';
+                if(array_key_exists($this->_toFieldname($attribute['name']), $array_product))
+                    $key = $this->_toFieldname($attribute['name']) . '_2';
                 else
-                    $array_product[$this->_toFieldname($attribute['name'])] = $product->getDataAttribute($id_product_attribute, $attribute['name']);
+                    $key = $this->_toFieldname($attribute['name']);
+
+                if (!$id_product_attribute)
+                    $array_product[$key] = '';
+                else
+                    $array_product[$key] = $product->getDataAttribute($id_product_attribute, $attribute['name']);
             }
         }
         // Is export > 3 images
@@ -578,7 +606,7 @@ class LengowExportAbstract {
                         foreach ($this->fields as $name) {
                             $json_array[$name] = $data[$name];
                         }
-                        $line .= '"product":' . Tools::jsonEncode($json_array) . ($last ? ',' : '');
+                        $line .= Tools::jsonEncode($json_array) . (!$last ? ',' : '');
                         break;
                     case 'yaml' :
                         $line .= '  ' . '"product":' . "\r\n";

@@ -273,7 +273,7 @@ class LengowCheck {
 
         if(Configuration::get('LENGOW_DEBUG')) {
             $checklist[] = array(
-                'message' => self::$_module->l('Mail configuration'),
+                'message' => self::$_module->l('Mail configuration (Be carefull, debug mode is activated)'),
                 'help' => self::getMailConfiguration(),
                 'state' => 2
             );
