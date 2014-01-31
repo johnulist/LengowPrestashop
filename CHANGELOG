@@ -1,5 +1,41 @@
 =============================================================
-Version 2.0.3 - 2013-11-06
+Version 2.0.4
+=============================================================
+    - Warning if plugin is outdated
+    - Block import if another is already running
+    - Always show IP Address in checklist configuration
+    - Now save mail settings in database
+    - Skip order if is already imported or stopped during process
+    - Add import log table
+    - logs action in webservice Lengow
+    - Add option to force import disabled product or out of stock
+    - Fix update tracking info on Amazon
+    - Now compatible with soColissimo
+    - Matching API Field for better product search
+    - Prevent Prestashop bug when advanced stock is enabled
+    - Fix bug with tax on invoice details
+    - Fix fatal error when uninstalling module in 1.4 version
+    - Force carrier is modified by ValidateOrder
+    - Fix bug during 1.4.2.5 installation
+    - Block commands when product came from different warehouse
+    - Add compatibility with Mondial Relay
+    - Add order action to reimport order
+    - Add order action to synchronize IDs
+    - Fix with tagcapsule
+
+=============================================================
+Version 2.0.3.2
+=============================================================
+    - Lastname and firstname inverted during import in
+      delivery address
+    - Add try/catch during import
+    - Fix bug with tagcapsule (Confirmation and payment)
+    - Fix Clean phone method during import
+    - Replace DB::getValue by ExecuteS in import
+    - Search product by UPC, SKU, ID, Reference
+
+=============================================================
+Version 2.0.3
 =============================================================
     - Allow override
     - Add check configuration

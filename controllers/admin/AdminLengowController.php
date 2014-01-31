@@ -31,15 +31,16 @@ class AdminLengowController extends ModuleAdminController {
      */
     public function __construct() {
 
-        $this->table 		= 'product';
-        $this->className 	= 'LengowProduct';
-		$this->lang = true;
+        $this->table 		  = 'product';
+        $this->className 	  = 'LengowProduct';
+		$this->lang           = true;
 		$this->explicitSelect = true;
-		$this->list_no_link = true;
+		$this->list_no_link   = true;
+        $this->actions = array('lengowpublish', 'lengowunpublish');
 		
 		require_once _PS_MODULE_DIR_ . 'lengow' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'lengow.product.class.php';
 
-        parent :: __construct();
+        parent::__construct();
 
 		$this->imageType = 'jpg';
 
@@ -102,7 +103,7 @@ class AdminLengowController extends ModuleAdminController {
 		$this->_join .= ($join_category ? 'INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.')' : '').'
 		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
 		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
-		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`, lp.`id_product` as `id_lengow_product`	';
+		$this->_select .= 'cl.name `name_category` '.($join_category ? ', cp.`position`' : '').', '.$alias.'.`price`, 0 AS price_final, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IFNULL(lp.`id_product`, 0) as `id_lengow_product`	';
 
 		$this->_group = 'GROUP BY '.$alias.'.id_product';
 
@@ -170,12 +171,12 @@ class AdminLengowController extends ModuleAdminController {
 		);
 		$this->fields_list['id_lengow_product'] = array(
 			'title' => $this->l('Lengow status'),
-			'width' => 70,
-			'active' => 'status',
+			'width' => 'auto',
+			//'active' => 'status',
 			'filter' => false,
 			'search' => false,
 			'align' => 'center',
-			'type' => 'bool',
+			//'type' => 'bool',
 			'callback' => 'getLengowStatus',
 			'orderby' => false
 		);
@@ -271,6 +272,7 @@ class AdminLengowController extends ModuleAdminController {
 		// Generate category selection tree
 		$helper = new Helper();
 		$this->tpl_list_vars['category_tree'] = $helper->renderCategoryTree(null, array((int)$id_category), 'categoryBox', true, false, array(), false, true);
+        $helper->actions['unpublish'];
 
 		// used to build the new url when changing category
 		$this->tpl_list_vars['base_url'] = preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token;
@@ -287,6 +289,12 @@ class AdminLengowController extends ModuleAdminController {
      * @return boolean Is selected
      */
 	public function getLengowStatus($echo, $row) {
+        $token=Tools::getAdminTokenLite('AdminLengow', Context::getContext());
+        if($row['id_lengow_product'] == 0) {
+            return '<a href="index.php?controller=AdminLengow&publish=' . $row['id_product'] . '&token=' . $token . '"><img src="' . _PS_ADMIN_IMG_ . 'disabled.gif" /></a>';
+        } else {
+            return '<a href="index.php?controller=AdminLengow&unpublish=' . $row['id_product'] . '&token=' . $token . '"><img src="' . _PS_ADMIN_IMG_ . 'enabled.gif" /></a>';
+        }
 		return $row->id_lengow_product > 0 ? true : false;
 	}
 
@@ -299,7 +307,7 @@ class AdminLengowController extends ModuleAdminController {
      * @return boolean Is selected
      */
 	public function renderList() {
-		$this->addRowAction('lengowpublish');
+        $this->addRowAction('lengowunpublish');
 		return parent::renderList();
 	}
 
@@ -334,6 +342,11 @@ class AdminLengowController extends ModuleAdminController {
 	 * @return void
 	 */
 	public function postProcess($token = null) {
+        if(Tools::getValue('unpublish')) {
+            LengowProduct::publish(Tools::getValue('unpublish'), 0);
+        } elseif(Tools::getValue('publish')) {
+            LengowProduct::publish(Tools::getValue('publish'));
+        }
 		if(Tools::getValue('importorder')) {
 			@set_time_limit(0);
 			$sep = DIRECTORY_SEPARATOR;
@@ -366,7 +379,7 @@ class AdminLengowController extends ModuleAdminController {
 		$this->toolbar_btn['importlengow'] = array(
 				'href' => $this->context->link->getAdminLink('AdminLengow', true).'&importorder=1',
 				'desc' => $this->l('Import orders from lengow')
-			);
+			);+
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
@@ -388,8 +401,9 @@ class AdminLengowController extends ModuleAdminController {
 		$params .= '&shop=' . Tools::getValue('shop');
 		$params .= '&cur=' . Tools::getValue('cur');
 		$params .= '&lang=' . Tools::getValue('lang');
+		$is_https =  isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? 's' : '';
 		$shop_url = new ShopUrl((integer) Tools::getValue('shop'));
-		$new_flow = 'http://' . $shop_url->domain . '/modules/lengow/webservice/export.php?' . $params; 
+		$new_flow = 'http' . $is_https . '://' . $shop_url->domain . __PS_BASE_URI__ . 'modules/lengow/webservice/export.php?' . $params; 
 		$args = array('idClient' => LengowCore::getIdCustomer() ,
                	  	  'idGroup' => LengowCore::getGroupCustomer() , 
                 	  'urlFlux' => $new_flow);
@@ -411,5 +425,49 @@ class AdminLengowController extends ModuleAdminController {
         } else {
         	echo Tools::jsonEncode(array('return' => false));
         }
+	}
+
+	public function displayAjaxReimportOrder() {
+		@set_time_limit(0);
+		$sep = DIRECTORY_SEPARATOR;
+		require_once _PS_MODULE_DIR_ . 'lengow' . $sep . 'models' . $sep . 'lengow.import.class.php';
+
+		$error = false;
+        $order_id = Tools::getValue('orderid');
+        $order = new LengowOrder($order_id);
+        $lengow_order_id = Tools::getValue('lengoworderid');
+        $feed_id = Tools::getValue('feed_id');
+
+        if($lengow_order_id == '')
+        	return Tools::jsonEncode(array('status' => 'error', 'msg' => 'No Lengow Order Id'));
+
+        if($order == '')
+        	return Tools::jsonEncode(array('status' => 'error', 'msg' => 'No Order Id'));
+        
+        LengowCore::deleteProcessOrder($lengow_order_id);
+        $import = new LengowImport();
+        $new_lengow_order = $import->exec('commands', array('id_order_lengow' => $lengow_order_id, 'feed_id' => $feed_id));
+
+        if($new_lengow_order != false && is_numeric($new_lengow_order)) {
+            // Cancel Order
+            $id_state_cancel = Configuration::get('LENGOW_STATE_ERROR');
+            $order->setCurrentState($id_state_cancel, (int) $this->context->employee->id);
+            // Redirect to the new order
+            $new_lengow_order_url = 'index.php?controller=AdminOrders&id_order=' . $new_lengow_order . '&vieworder&token=' . Tools::getAdminTokenLite('AdminOrders');
+            $reimport_message = sprintf($this->l('You can see the new order by clicking here : <a href=\'%s\'>View Order %s</a>'), $new_lengow_order_url, $new_lengow_order);
+        } else {
+        	$error = true;
+            $reimport_message = $this->l('Error during import');
+            $this->context->controller->warnings[] = $this->l('Error during import');
+        }
+
+        $result = array(
+        	'status' => ($error == false) ? 'success' : 'error',
+        	'msg' => $reimport_message,
+        	'new_order_url' => $new_lengow_order_url,
+        	'new_order_id' => $new_lengow_order
+        );
+
+        echo Tools::jsonEncode($result);
 	}
 }

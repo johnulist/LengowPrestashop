@@ -70,6 +70,11 @@ class LengowOrderAbstract extends Order {
     public $lengow_extra;
 
     /**
+     * Is importing, prevent multiple import
+     */
+    public $is_import;
+
+    /**
      * Construc a Prestashop product with Lengow fields.
      *
      * @param integer $id The ID of product
@@ -284,6 +289,7 @@ class LengowOrderAbstract extends Order {
                 $this->rebuildOrderPayment();
                 $this->rebuildOrderInvoice();
                 $this->rebuildOrderCarrier();
+                $this->rebuildOrderDetailTax();
             }
         }
     }
@@ -341,6 +347,79 @@ class LengowOrderAbstract extends Order {
             $order_carrier->shipping_cost_tax_exc = $this->total_shipping_tax_excl;
             $order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
             $order_carrier->update();
+        }
+    }
+
+    /**
+     * Rebuild OrderDetailTax
+     *
+     * @return void
+     */
+    public function rebuildOrderDetailTax() {
+        $detail_list = OrderDetail::getList($this->id);
+        foreach($detail_list as $detail) {
+            $order_detail = new OrderDetail($detail['id_order_detail']);
+            $order_detail->updateTaxAmount($this);
+        }
+    }
+
+    /**
+     * Rebuild OrderCarrier after validateOrder
+     *
+     * @param int $id_carrier 
+     * @return void
+     */
+    public function forceCarrier($id_carrier) {
+        if($id_carrier == '')
+            return null;
+        
+        $this->id_carrier = $id_carrier;
+        $this->update();
+
+        if($this->getIdOrderCarrier() != '') {
+            $order_carrier = new OrderCarrier($this->getIdOrderCarrier());
+            $order_carrier->id_carrier = $id_carrier;
+            $order_carrier->update();
+        }
+    }
+
+    public function getIdOrderCarrier() 
+    {
+        return (int)Db::getInstance()->getValue('
+                SELECT `id_order_carrier`
+                FROM `'._DB_PREFIX_.'order_carrier`
+                WHERE `id_order` = '.(int)$this->id);
+    }
+
+    /**
+     * Add Relay Point in Mondial Relay table
+     *
+     * @param array $relay informations
+     * @return boolean true if success, false if not
+     */
+    public function addRelayPoint($relay) {
+        if(!is_array($relay) || empty($relay))
+            return false;
+
+        $insert_values = array(
+            'id_customer' => (int) $this->id_customer,
+            'id_method' => (int) $this->id_carrier,
+            'id_cart' => (int) $this->id_cart,
+            'id_order' => (int) $this->id,
+            'MR_Selected_Num' => pSQL($relay['Num']),
+            'MR_Selected_LgAdr1' => pSQL($relay['LgAdr1']),
+            'MR_Selected_LgAdr2' => pSQL($relay['LgAdr2']),
+            'MR_Selected_LgAdr3' => pSQL($relay['LgAdr3']),
+            'MR_Selected_LgAdr4' => pSQL($relay['LgAdr4']),
+            'MR_Selected_CP' => pSQL($relay['CP']),
+            'MR_Selected_Ville' => pSQL($relay['Ville']),
+            'MR_Selected_Pays' => pSQL($relay['Pays'])
+        );
+
+        if(_PS_VERSION_ < '1.5') {
+            return Db::getInstance()->autoExecute(_DB_PREFIX_ . 'mr_selected', $insert_values, 'INSERT');
+        } else {
+            return DB::getInstance()->insert('mr_selected', $insert_values);
         }
     }
 }
