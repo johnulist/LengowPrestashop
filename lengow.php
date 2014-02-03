@@ -61,6 +61,11 @@ class Lengow extends Module {
     static private $_CRON_SELECT = array(5, 10, 15, 30);
     static private $_BUFFER_STATE = '';
     static private $_LENGOW_ORDER_STATE = array();
+    static private $_TABS = array(
+        'Lengow' => array('AdminLengow', 'AdminLengow14'),
+        'Lengow logs' => array('AdminLengowLog', 'AdminLengowLog14'),
+    );
+
     protected $context;
 
     /**
@@ -211,7 +216,6 @@ class Lengow extends Module {
                 $this->registerHook('adminOrder') && // displayAdminOrder
                 $this->registerHook('backOfficeHeader') && // Backofficeheader
                 $this->registerHook('newOrder') && // actionValidateOrder
-                //$this->reorderHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayAdminHomeStatistics') : true) &&
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('actionAdminControllerSetMedia') : true) &&
@@ -1665,27 +1669,33 @@ class Lengow extends Module {
      * @return boolean Result of add tab on database.
      */
     private function _createTab() {
-        if (_PS_VERSION_ < '1.5')
-            $tabName = "AdminLengow14";
-        else
-            $tabName = "AdminLengow";
+        foreach(self::$_TABS as $name => $value) {
+            if (_PS_VERSION_ < '1.5')
+                $tabName = $value[1];
+            else
+                $tabName = $value[0];
 
-        if(Tab::getIdFromClassName($tabName) !== false)
-            return;
+            if(Tab::getIdFromClassName($tabName) !== false)
+                continue;
 
-        $tab = new Tab();
-        if (_PS_VERSION_ < '1.5') {
-            $tab->class_name = 'AdminLengow14';
-            $tab->position = 10;
-            $tab->id_parent = 1;
-        } else {
-            $tab->class_name = 'AdminLengow';
-            $tab->position = 1;
-            $tab->id_parent = 9;
+            $tab = new Tab();
+            if (_PS_VERSION_ < '1.5') {
+                $tab->class_name = $value[1];
+                $tab->position = 10;
+                $tab->id_parent = 1;
+            } else {
+                $tab->class_name = $value[0];
+                $tab->position = 1;
+                $tab->id_parent = 9;
+            }
+
+            $tab->module = $this->name;
+            $tab->name[Configuration::get('PS_LANG_DEFAULT')] = $this->l($name);
+
+            $tab->add();
         }
-        $tab->module = $this->name;
-        $tab->name[Configuration::get('PS_LANG_DEFAULT')] = $this->l('Lengow');
-        return $tab->add();
+
+        return true;
     }
 
     /**
@@ -1694,22 +1704,25 @@ class Lengow extends Module {
      * @return boolean Result of tab uninstallation
      */
     private function _uninstallTab() {
-        if (_PS_VERSION_ < '1.5') {
-            $tabName = "AdminLengow14";
-        } else {
-            $tabName = "AdminLengow";
+        foreach(self::$_TABS as $name => $value) {
+            if (_PS_VERSION_ < '1.5') {
+                $tabName = $value[1];
+            } else {
+                $tabName = $value[0];
+            }
+
+            if(_PS_VERSION_ >= '1.5') {
+                $tab = Tab::getInstanceFromClassName($tabName);
+            } else {
+                $tab_id = Tab::getIdFromClassName($tabName);
+                $tab = new Tab($tab_id);
+            }
+            
+            if ($tab->id != 0) {
+                $tab->delete();
+            }
         }
-        if(_PS_VERSION_ >= '1.5') {
-            $tab = Tab::getInstanceFromClassName($tabName);
-        } else {
-            $tab_id = Tab::getIdFromClassName($tabName);
-            $tab = new Tab($tab_id);
-        }
-        
-        if ($tab->id != 0) {
-            return $tab->delete();
-        }
-        return false;
+        return true;
     }
 
     /**
