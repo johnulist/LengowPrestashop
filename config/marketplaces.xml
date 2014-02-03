@@ -673,7 +673,7 @@
             </param>
             <param usedby="shipped">
                 <type>carrier</type>
-                <name>Trasnporteur</name>
+                <name>Transporteur</name>
             </param>
         </additional_params>
     </marketplace>    
