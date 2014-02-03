@@ -31,7 +31,6 @@ else
 if (_PS_VERSION_ <= '1.4.4')
     $path = $_SERVER['DOCUMENT_ROOT'] . $sep . 'modules' . $sep . 'lengow' . $sep;
 
-
 require_once $path . _LENGOW_CLASS_FOLDER_ . $sep . 'lengow.core.class.php';
 require_once $path . 'models' . $sep . 'lengow.check.class.php';
 require_once $path . _LENGOW_CLASS_FOLDER_ . $sep . 'lengow.order.class.php';
@@ -1722,7 +1721,7 @@ class Lengow extends Module {
                 $tab->delete();
             }
         }
-        return true;
+        return false;
     }
 
     /**
