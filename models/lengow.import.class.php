@@ -93,6 +93,8 @@ class LengowImportAbstract {
 
         if (array_key_exists('debug', $args) && $args['debug'] == true)
             self::$debug = true;
+        elseif(Configuration::get('LENGOW_DEBUG'))
+            self::$debug = true;
 
         if(Configuration::get('LENGOW_IS_IMPORT') === 'processing' && self::$debug != true)
             die('An import process seems already running. You can reset it on the module page configuration.');
@@ -183,6 +185,9 @@ class LengowImportAbstract {
                 LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux), $this->force_log_output);
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux));
                 
+                if(self::$debug)
+                    continue;
+
                 $id_state_lengow = LengowCore::getOrderState($marketplace->getStateLengow((string) $lengow_order->order_status->marketplace));
                 $order = LengowOrder::getByOrderIDFlux($lengow_order_id, $id_flux);
                 // Update status' order only if in process or shipped
@@ -806,7 +811,7 @@ class LengowImportAbstract {
                         $id_order = $payment->currentOrder;
                         $id_flux = (integer) $lengow_order->idFlux;
                         $marketplace = (string) $lengow_order->marketplace;
-                        $lengow_order_id = (string) $lengow_order->order_id;
+                        //$lengow_order_id = (string) $lengow_order->order_id;
                         $message = (string) $lengow_order->order_comments;
                         $total_paid = (float) $lengow_order->order_amount;
                         $carrier = (string) $lengow_order->order_shipping;

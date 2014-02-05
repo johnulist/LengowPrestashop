@@ -847,14 +847,16 @@ class LengowCoreAbstract {
         $db = Db::getInstance();
 
         $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
-                   . 'WHERE `lengow_order_id` = \'' . $lengow_order_id . '\' ';
+                   . 'WHERE `lengow_order_id` = \'' . substr($lengow_order_id, 0, 32) . '\' ';
 
+        LengowCore::log($sql_exist);
         $results = $db->ExecuteS($sql_exist);
         if(empty($results)) {
+            LengowCore::log('INSERT => ' . substr($lengow_order_id, 0, 32));
             // Insert
             if (_PS_VERSION_ >= '1.5') {
                 $sql_add = $db->insert('lengow_logs_import', array(
-                    'lengow_order_id' => pSQL($lengow_order_id),
+                    'lengow_order_id' => pSQL(substr($lengow_order_id, 0, 32)),
                     'is_processing' => 1,
                     'is_finished' => 0,
                     'extra' => pSQL($extra),
@@ -862,7 +864,7 @@ class LengowCoreAbstract {
                 ));
             } else {
                 $sql_add = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
-                    'lengow_order_id' => pSQL($lengow_order_id),
+                    'lengow_order_id' => pSQL(substr($lengow_order_id, 0, 32)),
                     'is_processing' => 1,
                     'is_finished' => 0,
                     'extra' => pSQL($extra),
@@ -874,11 +876,11 @@ class LengowCoreAbstract {
             if (_PS_VERSION_ >= '1.5') {
                 $sql_update = $db->update('lengow_logs_import', array(
                     'is_processing' => 1
-                ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+                ), '`lengow_order_id` = \'' . pSQL(substr($lengow_order_id, 0, 32)) . '\'', 1);
             } else {
                  $sql_update = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
                     'is_processing' => 1
-                ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+                ), 'UPDATE', '`lengow_order_id` = \'' . pSQL(substr($lengow_order_id, 0, 32)) . '\'', 1);
             }
         }
     }
@@ -887,7 +889,7 @@ class LengowCoreAbstract {
         if(is_null($lengow_order_id))
             return false;
         $db = Db::getInstance();
-        $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'lengow_logs_import WHERE lengow_order_id = \'' . $lengow_order_id . '\' LIMIT 1';
+        $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'lengow_logs_import WHERE lengow_order_id = \'' . substr($lengow_order_id, 0, 32) . '\' LIMIT 1';
         return $db->execute($sql);
     }
 
@@ -903,13 +905,13 @@ class LengowCoreAbstract {
                     'is_processing' => (int) $is_processing,
                     'is_finished' => (int) $is_finished,
                     'message' => pSQL($message),
-            ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            ), '`lengow_order_id` = \'' . pSQL(substr($lengow_order_id, 0, 32)) . '\'', 1);
         } else {
             $sql_update = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
                     'is_processing' => (int) $is_processing,
                     'is_finished' => (int) $is_finished,
                     'message' => pSQL($message),
-            ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            ), 'UPDATE', '`lengow_order_id` = \'' . pSQL(substr($lengow_order_id, 0, 32)) . '\'', 1);
         }
     }
 
@@ -925,7 +927,7 @@ class LengowCoreAbstract {
         $db = Db::getInstance();
 
         $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
-                   . 'WHERE `lengow_order_id` = \'' . $lengow_order_id . '\' ';
+                   . 'WHERE `lengow_order_id` = \'' . substr($lengow_order_id, 0, 32) . '\' ';
 
         $results = $db->ExecuteS($sql_exist);
 
