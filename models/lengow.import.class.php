@@ -857,10 +857,12 @@ class LengowImportAbstract {
                         LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Success import on presta (ORDER ' . $id_order . ')');
 
                         // Custom Hook
-                        Hook::exec('actionValidateLengowOrder', array(
-                            'id_order' => $id_order,
-                            'lengow_order_id' => $lengow_order_id
-                        ));
+                        if(_PS_VERSION_ >= '1.5') {
+                            Hook::exec('actionValidateLengowOrder', array(
+                                'id_order' => $id_order,
+                                'lengow_order_id' => $lengow_order_id
+                            ));
+                        }
 
                         $count_orders_added++;
                         if(Tools::getValue('limit') != '' && Tools::getValue('limit') > 0) {

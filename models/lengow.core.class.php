@@ -849,10 +849,8 @@ class LengowCoreAbstract {
         $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
                    . 'WHERE `lengow_order_id` = \'' . substr($lengow_order_id, 0, 32) . '\' ';
 
-        LengowCore::log($sql_exist);
         $results = $db->ExecuteS($sql_exist);
         if(empty($results)) {
-            LengowCore::log('INSERT => ' . substr($lengow_order_id, 0, 32));
             // Insert
             if (_PS_VERSION_ >= '1.5') {
                 $sql_add = $db->insert('lengow_logs_import', array(
