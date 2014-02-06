@@ -28,7 +28,7 @@ if (file_exists(dirname(__FILE__) . $sep . 'override'))
 else
     define('_LENGOW_CLASS_FOLDER_', 'install');
 
-if (_PS_VERSION_ <= '1.4.4')
+if (_PS_VERSION_ <= '1.4.4.0')
     $path = $_SERVER['DOCUMENT_ROOT'] . $sep . 'modules' . $sep . 'lengow' . $sep;
 
 require_once $path . _LENGOW_CLASS_FOLDER_ . $sep . 'lengow.core.class.php';
@@ -273,6 +273,13 @@ class Lengow extends Module {
         // Update version 2.0.4.1
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.1') {
             $this->registerHook('actionValidateLengowOrder');
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.1');
+        }
+
+        // Update version 2.0.4.2
+        if(Configuration::get('LENGOW_VERSION') < '2.0.4.2') {
+            $this->_createTab();
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.2');
         }
     }
 
@@ -938,7 +945,7 @@ class Lengow extends Module {
      * @return varchar form html
      */
     public function displayForm14() {
-        if(_PS_VERSION_ <= '1.4.3') {
+        if(_PS_VERSION_ <= '1.4.4.0') {
             $options = array(
                 'trackers' => LengowCore::getTrackers(),
                 'images' => ImageType::getImagesTypes('products'),

@@ -522,7 +522,7 @@ class LengowExportAbstract {
         // Features
         if ($this->features) {
             foreach ($this->features as $feature) {
-                if(in_array($this->_toFieldname($feature['name']), $array_product))
+                if(array_key_exists($this->_toFieldname($feature['name']), $array_product))
                     $key = $this->_toFieldname($feature['name']) . '_1';
                 else
                     $key = $this->_toFieldname($feature['name']);
