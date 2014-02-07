@@ -1010,4 +1010,16 @@ class LengowCoreAbstract {
         
         return false;
     }
+
+    /**
+     * Check zipcode
+     *
+     * @return boolean
+     */
+    public static function isZipCodeFormat($zip_code) {
+        if (!empty($zip_code))
+            return preg_match('/^[NLCnlc 0-9-]+$/', $zip_code);
+
+        return true;
+    }
 }
