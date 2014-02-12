@@ -166,14 +166,14 @@ class LengowMarketplaceAbstract {
                             case 'tracking' :
                                 $gets[$param['name']] = array(
                                             'value' => $order->shipping_number,
-                                            'require' => explode(' ', $param['require'])
+                                            'require' => (array_key_exists('require', $param) ? explode(' ', $param['require']) : array())
                                           );
                                 break;
                             case 'carrier' :
                                 $carrier = new Carrier($order->id_carrier);
                                 $gets[$param['name']] = array(
                                             'value' => $carrier->name,
-                                            'require' => explode(' ', $param['require'])
+                                            'require' => (array_key_exists('require', $param) ? explode(' ', $param['require']) : array())
                                           );
                                 break;
                             case 'tracking_url' :
@@ -181,7 +181,7 @@ class LengowMarketplaceAbstract {
                             case 'shipping_price' :
                                 $gets[$param['name']] = array(
                                             'value' => $order->total_shipping,
-                                            'require' => explode(' ', $param['require'])
+                                            'require' => (array_key_exists('require', $param) ? explode(' ', $param['require']) : array())
                                           );
                                 break;
                         }

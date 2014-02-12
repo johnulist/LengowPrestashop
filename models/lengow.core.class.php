@@ -744,7 +744,7 @@ class LengowCoreAbstract {
         if(Validate::isPhoneNumber($phone))
             return $phone;
         else
-            return preg_replace('/^[+0-9\. ()-]*$/', '', $phone);
+            return preg_replace('/[^0-9]*/', '', $phone);
     }
     
     /**

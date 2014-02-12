@@ -678,14 +678,21 @@ class LengowImportAbstract {
                         if(Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT') == true) {
                             // Force disabled or out of stock product
                             if($cart->containsProduct($id_product, $id_product_attribute)) {
-                                $result_update = Db::getInstance()->execute('
-                                    UPDATE `'._DB_PREFIX_.'cart_product`
-                                    SET `quantity` = `quantity` + '.(int)$product_quantity.', `date_add` = NOW()
-                                    WHERE `id_product` = '.(int)$id_product.
-                                    (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-                                    AND `id_cart` = '.(int)$cart->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $cart->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$shipping_address->id : '').'
-                                    LIMIT 1'
-                                );
+                                if(_PS_VERSION_ >= '1.5') {
+                                    $result_update = Db::getInstance()->execute('
+                                        UPDATE `'._DB_PREFIX_.'cart_product`
+                                        SET `quantity` = `quantity` + '.(int)$product_quantity.', `date_add` = NOW()
+                                        WHERE `id_product` = '.(int)$id_product.
+                                        (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+                                        AND `id_cart` = '.(int)$cart->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $cart->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$shipping_address->id : '').'
+                                        LIMIT 1'
+                                    );
+                                } else {
+                                    $result_update = Db::getInstance()->autoExecute(_DB_PREFIX_ . 'cart_product', array(
+                                        'quantity' => '`quantity` + ' . (int)$product_quantity,
+                                        'date_add' => date('Y-m-d H:i:s')
+                                    ), 'UPDATE', '`id_product` = ' . (int)$id_product);
+                                }
                             } else {
                                 if(_PS_VERSION_ >= '1.5') {
                                     $result_add = Db::getInstance()->insert('cart_product', array(
@@ -702,8 +709,6 @@ class LengowImportAbstract {
                                         'id_product' => (int)$id_product,
                                         'id_product_attribute' => (int)$id_product_attribute,
                                         'id_cart' => (int)$cart->id,
-                                        'id_address_delivery' => (int)$shipping_address->id,
-                                        'id_shop' => $this->context->shop->id,
                                         'quantity' => (int)$product_quantity,
                                         'date_add' => date('Y-m-d H:i:s')
                                     ), 'INSERT');
@@ -712,10 +717,12 @@ class LengowImportAbstract {
 
                             if(isset($result_add) && $result_add === false) {
                                 LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart', $this->force_log_output);
+                                LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Error to add product [' . $id_product_complete . '] on cart');
                                 continue 2;
                             }
                             if(isset($result_update) && $result_update === false) {
                                 LengowCore::log('Order ' . $lengow_order_id . ' : Error to add product [' . $id_product_complete . '] on cart', $this->force_log_output);
+                                LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Error to add product [' . $id_product_complete . '] on cart');
                                 continue 2;
                             }
                         } else {
