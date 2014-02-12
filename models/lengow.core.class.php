@@ -977,7 +977,8 @@ class LengowCoreAbstract {
     public static function isColissimo() {
         $module_name = 'socolissimo';
         $supported_version = '2.8.5';
-        $module_dir = _PS_MODULE_DIR_ . $module_name . DS;
+        $sep = DIRECTORY_SEPARATOR;
+        $module_dir = _PS_MODULE_DIR_ . $module_name . $sep;
 
         if(_PS_VERSION_ >= '1.5') {
             if(Module::isInstalled($module_name) 
