@@ -162,7 +162,7 @@ class Lengow extends Module {
                 Configuration::updateValue('LENGOW_IMPORT_METHOD_NAME', false) &&
                 Configuration::updateValue('LENGOW_IMPORT_FORCE_PRODUCT', false) &&
                 Configuration::updateValue('LENGOW_IMPORT_DAYS', 3) &&
-                Configuration::updateValue('LENGOW_FORCE_PRICE', false) &&
+                Configuration::updateValue('LENGOW_FORCE_PRICE', true) &&
                 Configuration::updateValue('LENGOW_CARRIER_DEFAULT', Configuration::get('PS_CARRIER_DEFAULT')) &&
                 Configuration::updateValue('LENGOW_FLOW_DATA', '') &&
                 Configuration::updateValue('LENGOW_MIGRATE', false) &&
