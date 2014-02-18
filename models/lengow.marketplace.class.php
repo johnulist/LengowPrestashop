@@ -70,8 +70,12 @@ class LengowMarketplaceAbstract {
                               foreach($param->attributes() as $key => $value) {
                                 $this->actions[(string) $action['type']]['params'][(string) $param->type][$key] = (string) $value;
                               }
-                              if(isset($param->accepted_values))
+                              if(isset($param->accepted_values)) {
                                   $this->actions[(string) $action['type']]['params'][(string) $param->type]['accepted_values'] = $param->accepted_values->value;
+                                  $default = self::$DOM->xpath('/marketplaces/marketplace[@name=\'' . $this->name . '\']/additional_params/param[@usedby=\'' . (string) $action['type']. '\']/accepted_values/value[@default=\'true\']');
+                                  if($default)
+                                      $this->actions[(string) $action['type']]['params'][(string) $param->type]['accepted_values_default'] = (string) $default[0];
+                              }
                           }
                         }
                     }
@@ -172,7 +176,7 @@ class LengowMarketplaceAbstract {
                             case 'carrier' :
                                 $carrier = new Carrier($order->id_carrier);
                                 $gets[$param['name']] = array(
-                                            'value' => $carrier->name,
+                                            'value' => $this->_matchCarrier($param, $carrier->name),
                                             'require' => (array_key_exists('require', $param) ? explode(' ', $param['require']) : array())
                                           );
                                 break;
@@ -189,7 +193,7 @@ class LengowMarketplaceAbstract {
                     // Check dependencies in parameters
                     if(count($gets) > 0) {
                       foreach($gets as $key => $get) {
-                        if(array_key_exists('require', $get)) {
+                        if(array_key_exists('require', $get) && !empty($get['require'])) {
                           foreach($get['require'] as $require) {
                             if($gets[$require]['value'] == '') {
                               unset($gets[$require]);
@@ -244,6 +248,35 @@ class LengowMarketplaceAbstract {
             LengowCore::log('Order ' . $order->id . ' : call error WSDL ' . $call_url, -1);
             LengowCore::log('Order ' . $order->id . ' : exception ' . $e->getMessage(), -1);
         }
+    }
+
+    /**
+      * Match carrier's name with accepted values
+      *
+      * @param Simple_Xml_Element $param The node parameters
+      * @param string             $name  The carrier name
+      *
+      * @return string The matching carrier name
+      */
+    private function _matchCarrier($param, $name) {
+        // No match
+        if(!isset($param['accepted_values']))
+            return $name;
+        // Exact match
+        foreach($param['accepted_values'] as $value) {
+            $value = (string) $value;
+            if(preg_match('`' . $value . '`i', trim($name)))
+                return $value;
+
+        }
+        // Approximately match
+        foreach($param['accepted_values'] as $value) {
+            $value = (string) $value;
+            if(preg_match('`.*?(' . $name . ').*?`i', $name))
+                return $value;
+
+        }
+        return $param['accepted_values_default'];
     }
 
     /**
