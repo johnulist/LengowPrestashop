@@ -1023,4 +1023,14 @@ class LengowCoreAbstract {
 
         return true;
     }
+
+    public static function getOrgerLog($lengow_order_id) {
+        if(is_null($lengow_order_id))
+            return false;
+        $db = Db::getInstance();
+        $sql = 'SELECT `message` FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
+                   . 'WHERE `lengow_order_id` = \'' . substr($lengow_order_id, 0, 32) . '\' ';
+        $row = $db->getRow($sql);
+        return $row['message'];
+    }
 }

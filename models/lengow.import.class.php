@@ -155,7 +155,11 @@ class LengowImportAbstract {
              * Log into database order is processing
              */
             if(LengowCore::isProcessing($lengow_order_id) && self::$debug != true && $this->single_order == false) {
-                LengowCore::log('Order ' . $lengow_order_id . ' : Order is flagged as processing or finished, ignore it', $this->force_log_output);
+                $msg = LengowCore::getOrgerLog($lengow_oerder_id);
+                if($msg != '')
+                    LengowCore::log('Order ' . $lengow_order_id . ' : ' . $msg, $this->force_log_output);
+                else
+                    LengowCore::log('Order ' . $lengow_order_id . ' : Order is flagged as processing or finished, ignore it', $this->force_log_output);
                 continue;
             }
             LengowCore::startProcessOrder($lengow_order_id, Tools::jsonEncode($lengow_order));
