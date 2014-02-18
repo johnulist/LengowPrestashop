@@ -92,6 +92,13 @@ class LengowCoreAbstract {
         'simpletag' => 'SimpleTag',
     );
 
+    public static $TRACKER_CHOICE_ID = array(
+        'id' => 'Product ID',
+        'ean' => 'Product EAN',
+        'upc' => 'Product UPC',
+        'ref' => 'Product Reference',
+    );
+
     /**
      * Lengow shipping name.
      */
@@ -466,6 +473,14 @@ class LengowCoreAbstract {
             $array_tracker[] = new LengowOption($name, $value);
         }
         return $array_tracker;
+    }
+
+    public static function getTrackerChoiceId() {
+        $array_choice_id = array();
+        foreach(self::$TRACKER_CHOICE_ID as $name => $value) {
+            $array_choice_id[] = new LengowOption($name, $value);
+        }
+        return $array_choice_id;
     }
 
     /**
