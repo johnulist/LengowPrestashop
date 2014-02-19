@@ -1,4 +1,12 @@
 =============================================================
+Version 2.0.4.3
+=============================================================
+    - Display message when order is already processing
+    - Choose ID Product for tagcapsule
+    - Traductions
+    - Matching carrier
+
+=============================================================
 Version 2.0.4.2
 =============================================================
     - Add logs tab in B.O
