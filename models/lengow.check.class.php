@@ -154,13 +154,10 @@ class LengowCheck {
         if (!self::isCurlActivated())
             return false;
 
-        $id_customer = Configuration::get('LENGOW_ID_CUSTOMER');
-        $id_group = Configuration::get('LENGOW_ID_GROUP');
+        $id_customer = (int) Configuration::get('LENGOW_ID_CUSTOMER');
         $token = Configuration::get('LENGOW_TOKEN');
-
-        $connector = new LengowConnector((int) $id_customer, $token);
+        $connector = new LengowConnector($id_customer, $token);
         $result = $connector->api('authentification');
-
         if ($result['return'] == 'Ok')
             return true;
         else
@@ -177,7 +174,7 @@ class LengowCheck {
             return false;
 
         // Fake customer id to force API to return IP
-        $id_customer = Configuration::get('LENGOW_ID_CUSTOMER') + 9;
+        $id_customer = 0;
         $id_group = Configuration::get('LENGOW_ID_GROUP');
         $token = Configuration::get('LENGOW_TOKEN');
 
