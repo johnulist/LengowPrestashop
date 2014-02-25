@@ -392,6 +392,14 @@ class LengowCoreAbstract {
             LengowCore::_changeMailConfiguration();
         else
             Configuration::updateValue('PS_MAIL_METHOD', 3);
+        Configuration::updateValue('LENGOW_IS_MAIL_TEMP', true);
+    }
+
+    public static function checkMail() {
+        if(Configuration::get('LENGOW_IS_MAIL_TEMP') == true) {
+            self::enableMail();
+            Configuration::updateValue('LENGOW_IS_MAIL_TEMP', false);
+        }
     }
     
     /**
@@ -423,6 +431,7 @@ class LengowCoreAbstract {
         Configuration::updateValue('PS_MAIL_PASSWD', Configuration::get('LENGOW_MAIL_PASSWD'));
         Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', Configuration::get('LENGOW_MAIL_SMTP_ENCRYPTION'));
         Configuration::updateValue('PS_MAIL_SMTP_PORT', Configuration::get('LENGOW_MAIL_SMTP_PORT'));
+        Configuration::updateValue('LENGOW_IS_MAIL_TEMP', false);
     }
 
     /**

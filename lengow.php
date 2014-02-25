@@ -95,6 +95,7 @@ class Lengow extends Module {
         LengowCore::updatePluginsVersion();
         LengowCore::setModule($this);
         LengowCore::cleanLog();
+        LengowCore::checkMail();
 
         // Update Process
         if(Configuration::get('LENGOW_VERSION') == '')
