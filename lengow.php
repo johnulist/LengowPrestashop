@@ -1473,18 +1473,15 @@ class Lengow extends Module {
         $i = 0;
         foreach ($products_list as $p) {
             $i++;
-            echo '<pre>';
-            print_r($p);
-            echo '</pre>';
             switch (Configuration::get('LENGOW_TRACKING_ID')) {
                 case 'upc':
-                    # code...
+                    $id_product = $p['upc'];
                     break;
                 case 'ean':
-                    # code...
+                    $id_product = $p['ean13'];
                     break;
                 case 'ref':
-                    # code...
+                    $id_product = $p['reference'];
                     break;
                 default:
                     if ($p['product_attribute_id'])
@@ -1493,11 +1490,6 @@ class Lengow extends Module {
                         $id_product = $p['product_id'];
                     break;
             }
-            /*if ($p['product_attribute_id'])
-                $id_product = $p['product_id'] . '_' . $p['product_attribute_id'];
-            else
-                $id_product = $p['product_id'];*/
-
             // Ids Product
             $ids_products[] = $id_product;
 

@@ -155,7 +155,7 @@ class LengowImportAbstract {
              * Log into database order is processing
              */
             if(LengowCore::isProcessing($lengow_order_id) && self::$debug != true && $this->single_order == false) {
-                $msg = LengowCore::getOrgerLog($lengow_oerder_id);
+                $msg = LengowCore::getOrgerLog($lengow_order_id);
                 if($msg != '')
                     LengowCore::log('Order ' . $lengow_order_id . ' : ' . $msg, $this->force_log_output);
                 else
