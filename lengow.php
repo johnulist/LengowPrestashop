@@ -214,6 +214,7 @@ class Lengow extends Module {
                 $this->registerHook('paymentTop') && // displayPaymentTop
                 $this->registerHook('addproduct') && // actionProductAdd
                 $this->registerHook('adminOrder') && // displayAdminOrder
+                $this->registerHook('home') && // hookHome
                 $this->registerHook('backOfficeHeader') && // Backofficeheader
                 $this->registerHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
@@ -287,6 +288,12 @@ class Lengow extends Module {
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.3') {
             Configuration::updateValue('LENGOW_TRACKING_ID', 'id');
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.3');
+        }
+
+        // Update version 2.0.4.3
+        if(Configuration::get('LENGOW_VERSION') < '2.0.4.4') {
+            $this->registerHook('home') && // hookHome
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.4');
         }
     }
 
@@ -1245,6 +1252,10 @@ class Lengow extends Module {
             }
         }
         return '';
+    }
+
+    public function hookHome() {
+        self::$_CURRENT_PAGE_TYPE = self::LENGOW_TRACK_HOMEPAGE;
     }
 
     /**
