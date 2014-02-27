@@ -456,6 +456,7 @@ class LengowExportAbstract {
             LengowCore::log('export : find ' . count($products) . ' products');
             $i = 0;
             foreach ($products as $p) {
+                $is_last = false;
                 $product = new LengowProduct($p['id_product'], LengowCore::getContext()->language->id);
 
                 $combinations = $product->getCombinations();
