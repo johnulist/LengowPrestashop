@@ -506,7 +506,7 @@ class LengowImportAbstract {
                     $lengow_products = array();
                     $lengow_products_order = $lengow_order->cart->products->product;
                     foreach ($lengow_products_order as $lengow_product) {
-                        if((string) $lengow_product->status != '' && $marketplace->getStateLengow((string) $lengow_product->status) == 'cancelled')
+                        if((string) $lengow_product->status != '' && $marketplace->getStateLengow((string) $lengow_product->status) == 'canceled')
                             continue;
                         $product_name = (string) $lengow_product->title;
                         $product_quantity = (integer) $lengow_product->quantity;
