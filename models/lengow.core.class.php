@@ -92,6 +92,13 @@ class LengowCoreAbstract {
         'simpletag' => 'SimpleTag',
     );
 
+    public static $TRACKER_CHOICE_ID = array(
+        'id' => 'Product ID',
+        'ean' => 'Product EAN',
+        'upc' => 'Product UPC',
+        'ref' => 'Product Reference',
+    );
+
     /**
      * Lengow shipping name.
      */
@@ -385,6 +392,14 @@ class LengowCoreAbstract {
             LengowCore::_changeMailConfiguration();
         else
             Configuration::updateValue('PS_MAIL_METHOD', 3);
+        Configuration::updateValue('LENGOW_IS_MAIL_TEMP', true);
+    }
+
+    public static function checkMail() {
+        if(Configuration::get('LENGOW_IS_MAIL_TEMP') == true) {
+            self::enableMail();
+            Configuration::updateValue('LENGOW_IS_MAIL_TEMP', false);
+        }
     }
     
     /**
@@ -416,6 +431,7 @@ class LengowCoreAbstract {
         Configuration::updateValue('PS_MAIL_PASSWD', Configuration::get('LENGOW_MAIL_PASSWD'));
         Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', Configuration::get('LENGOW_MAIL_SMTP_ENCRYPTION'));
         Configuration::updateValue('PS_MAIL_SMTP_PORT', Configuration::get('LENGOW_MAIL_SMTP_PORT'));
+        Configuration::updateValue('LENGOW_IS_MAIL_TEMP', false);
     }
 
     /**
@@ -466,6 +482,14 @@ class LengowCoreAbstract {
             $array_tracker[] = new LengowOption($name, $value);
         }
         return $array_tracker;
+    }
+
+    public static function getTrackerChoiceId() {
+        $array_choice_id = array();
+        foreach(self::$TRACKER_CHOICE_ID as $name => $value) {
+            $array_choice_id[] = new LengowOption($name, $value);
+        }
+        return $array_choice_id;
     }
 
     /**
@@ -744,7 +768,7 @@ class LengowCoreAbstract {
         if(Validate::isPhoneNumber($phone))
             return $phone;
         else
-            return preg_replace('/^[+0-9\. ()-]*$/', '', $phone);
+            return preg_replace('/[^0-9]*/', '', $phone);
     }
     
     /**
@@ -847,14 +871,14 @@ class LengowCoreAbstract {
         $db = Db::getInstance();
 
         $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
-                   . 'WHERE `lengow_order_id` = \'' . $lengow_order_id . '\' ';
+                   . 'WHERE `lengow_order_id` = \'' . substr($lengow_order_id, 0, 32) . '\' ';
 
         $results = $db->ExecuteS($sql_exist);
         if(empty($results)) {
             // Insert
             if (_PS_VERSION_ >= '1.5') {
                 $sql_add = $db->insert('lengow_logs_import', array(
-                    'lengow_order_id' => pSQL($lengow_order_id),
+                    'lengow_order_id' => pSQL(substr($lengow_order_id, 0, 32)),
                     'is_processing' => 1,
                     'is_finished' => 0,
                     'extra' => pSQL($extra),
@@ -862,7 +886,7 @@ class LengowCoreAbstract {
                 ));
             } else {
                 $sql_add = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
-                    'lengow_order_id' => pSQL($lengow_order_id),
+                    'lengow_order_id' => pSQL(substr($lengow_order_id, 0, 32)),
                     'is_processing' => 1,
                     'is_finished' => 0,
                     'extra' => pSQL($extra),
@@ -874,11 +898,11 @@ class LengowCoreAbstract {
             if (_PS_VERSION_ >= '1.5') {
                 $sql_update = $db->update('lengow_logs_import', array(
                     'is_processing' => 1
-                ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+                ), '`lengow_order_id` = \'' . pSQL(substr($lengow_order_id, 0, 32)) . '\'', 1);
             } else {
                  $sql_update = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
                     'is_processing' => 1
-                ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+                ), 'UPDATE', '`lengow_order_id` = \'' . pSQL(substr($lengow_order_id, 0, 32)) . '\'', 1);
             }
         }
     }
@@ -887,7 +911,7 @@ class LengowCoreAbstract {
         if(is_null($lengow_order_id))
             return false;
         $db = Db::getInstance();
-        $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'lengow_logs_import WHERE lengow_order_id = \'' . $lengow_order_id . '\' LIMIT 1';
+        $sql = 'DELETE FROM ' . _DB_PREFIX_ . 'lengow_logs_import WHERE lengow_order_id = \'' . substr($lengow_order_id, 0, 32) . '\' LIMIT 1';
         return $db->execute($sql);
     }
 
@@ -903,13 +927,13 @@ class LengowCoreAbstract {
                     'is_processing' => (int) $is_processing,
                     'is_finished' => (int) $is_finished,
                     'message' => pSQL($message),
-            ), '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            ), '`lengow_order_id` = \'' . pSQL(substr($lengow_order_id, 0, 32)) . '\'', 1);
         } else {
             $sql_update = $db->autoExecute(_DB_PREFIX_ . 'lengow_logs_import', array(
                     'is_processing' => (int) $is_processing,
                     'is_finished' => (int) $is_finished,
                     'message' => pSQL($message),
-            ), 'UPDATE', '`lengow_order_id` = \'' . pSQL($lengow_order_id) . '\'', 1);
+            ), 'UPDATE', '`lengow_order_id` = \'' . pSQL(substr($lengow_order_id, 0, 32)) . '\'', 1);
         }
     }
 
@@ -925,7 +949,7 @@ class LengowCoreAbstract {
         $db = Db::getInstance();
 
         $sql_exist = 'SELECT * FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
-                   . 'WHERE `lengow_order_id` = \'' . $lengow_order_id . '\' ';
+                   . 'WHERE `lengow_order_id` = \'' . substr($lengow_order_id, 0, 32) . '\' ';
 
         $results = $db->ExecuteS($sql_exist);
 
@@ -977,7 +1001,8 @@ class LengowCoreAbstract {
     public static function isColissimo() {
         $module_name = 'socolissimo';
         $supported_version = '2.8.5';
-        $module_dir = _PS_MODULE_DIR_ . $module_name . DS;
+        $sep = DIRECTORY_SEPARATOR;
+        $module_dir = _PS_MODULE_DIR_ . $module_name . $sep;
 
         if(_PS_VERSION_ >= '1.5') {
             if(Module::isInstalled($module_name) 
@@ -1009,5 +1034,27 @@ class LengowCoreAbstract {
         }
         
         return false;
+    }
+
+    /**
+     * Check zipcode
+     *
+     * @return boolean
+     */
+    public static function isZipCodeFormat($zip_code) {
+        if (!empty($zip_code))
+            return preg_match('/^[NLCnlc 0-9-]+$/', $zip_code);
+
+        return true;
+    }
+
+    public static function getOrgerLog($lengow_order_id) {
+        if(is_null($lengow_order_id))
+            return false;
+        $db = Db::getInstance();
+        $sql = 'SELECT `message` FROM `' . _DB_PREFIX_ . 'lengow_logs_import` '
+                   . 'WHERE `lengow_order_id` = \'' . substr($lengow_order_id, 0, 32) . '\' ';
+        $row = $db->getRow($sql);
+        return $row['message'];
     }
 }

@@ -456,20 +456,22 @@ class LengowExportAbstract {
             LengowCore::log('export : find ' . count($products) . ' products');
             $i = 0;
             foreach ($products as $p) {
+                $is_last = false;
                 $product = new LengowProduct($p['id_product'], LengowCore::getContext()->language->id);
 
-                if($p['id_product'] == $last['id_product'] && empty($product->getCombinations()))
+                $combinations = $product->getCombinations();
+                if($p['id_product'] == $last['id_product'] && empty($combinations))
                     $is_last = true;
 
                 $this->_write('data', $this->_make($product), $is_last);
                 // Attributes
                 if ($this->full) {
                     $total = count($product->getCombinations());
-                    $i = 0;
+                    $count = 0;
                     $is_last = false;
                     foreach ($product->getCombinations() as $id_product_attribute => $combination) {
-                        $i++;
-                        if($p['id_product'] == $last['id_product'] && $total ==  $i)
+                        $count++;
+                        if($p['id_product'] == $last['id_product'] && $total ==  $count)
                             $is_last = true;
                         $this->_write('data', $this->_make($product, $id_product_attribute), $is_last);
                     }
@@ -521,7 +523,7 @@ class LengowExportAbstract {
         // Features
         if ($this->features) {
             foreach ($this->features as $feature) {
-                if(in_array($this->_toFieldname($feature['name']), $array_product))
+                if(array_key_exists($this->_toFieldname($feature['name']), $array_product))
                     $key = $this->_toFieldname($feature['name']) . '_1';
                 else
                     $key = $this->_toFieldname($feature['name']);

@@ -570,7 +570,7 @@
     <marketplace name="pixplace">
         <states>
             <state name="accepted">
-                <lengow>processing</lengow>
+                <lengow>shipped</lengow>
             </state>
             <state name="processing">
                 <lengow>processing</lengow>
@@ -673,7 +673,7 @@
             </param>
             <param usedby="shipped">
                 <type>carrier</type>
-                <name>Trasnporteur</name>
+                <name>Transporteur</name>
             </param>
         </additional_params>
     </marketplace>    
@@ -711,5 +711,15 @@
                  </accepted_values>
             </param>
         </additional_params>
-    </marketplace>    
+    </marketplace>       
+    <marketplace name="ecitizen">
+        <states>
+            <state name="processing">
+                <lengow>processing</lengow>
+            </state>
+            <state name="shipped">
+                <lengow>shipped</lengow>
+            </state>
+        </states>
+    </marketplace>
 </marketplaces>

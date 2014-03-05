@@ -28,9 +28,8 @@ if (file_exists(dirname(__FILE__) . $sep . 'override'))
 else
     define('_LENGOW_CLASS_FOLDER_', 'install');
 
-if (_PS_VERSION_ <= '1.4.4')
+if (_PS_VERSION_ <= '1.4.4.0')
     $path = $_SERVER['DOCUMENT_ROOT'] . $sep . 'modules' . $sep . 'lengow' . $sep;
-
 
 require_once $path . _LENGOW_CLASS_FOLDER_ . $sep . 'lengow.core.class.php';
 require_once $path . 'models' . $sep . 'lengow.check.class.php';
@@ -61,6 +60,11 @@ class Lengow extends Module {
     static private $_CRON_SELECT = array(5, 10, 15, 30);
     static private $_BUFFER_STATE = '';
     static private $_LENGOW_ORDER_STATE = array();
+    static private $_TABS = array(
+        'Lengow' => array('AdminLengow', 'AdminLengow14'),
+        'Lengow logs' => array('AdminLengowLog', 'AdminLengowLog14'),
+    );
+
     protected $context;
 
     /**
@@ -69,7 +73,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.4.1';
+        $this->version = '2.0.4.3';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
@@ -91,6 +95,7 @@ class Lengow extends Module {
         LengowCore::updatePluginsVersion();
         LengowCore::setModule($this);
         LengowCore::cleanLog();
+        LengowCore::checkMail();
 
         // Update Process
         if(Configuration::get('LENGOW_VERSION') == '')
@@ -158,7 +163,7 @@ class Lengow extends Module {
                 Configuration::updateValue('LENGOW_IMPORT_METHOD_NAME', false) &&
                 Configuration::updateValue('LENGOW_IMPORT_FORCE_PRODUCT', false) &&
                 Configuration::updateValue('LENGOW_IMPORT_DAYS', 3) &&
-                Configuration::updateValue('LENGOW_FORCE_PRICE', false) &&
+                Configuration::updateValue('LENGOW_FORCE_PRICE', true) &&
                 Configuration::updateValue('LENGOW_CARRIER_DEFAULT', Configuration::get('PS_CARRIER_DEFAULT')) &&
                 Configuration::updateValue('LENGOW_FLOW_DATA', '') &&
                 Configuration::updateValue('LENGOW_MIGRATE', false) &&
@@ -209,9 +214,9 @@ class Lengow extends Module {
                 $this->registerHook('paymentTop') && // displayPaymentTop
                 $this->registerHook('addproduct') && // actionProductAdd
                 $this->registerHook('adminOrder') && // displayAdminOrder
+                $this->registerHook('home') && // hookHome
                 $this->registerHook('backOfficeHeader') && // Backofficeheader
                 $this->registerHook('newOrder') && // actionValidateOrder
-                //$this->reorderHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayAdminHomeStatistics') : true) &&
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('actionAdminControllerSetMedia') : true) &&
@@ -270,6 +275,25 @@ class Lengow extends Module {
         // Update version 2.0.4.1
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.1') {
             $this->registerHook('actionValidateLengowOrder');
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.1');
+        }
+
+        // Update version 2.0.4.2
+        if(Configuration::get('LENGOW_VERSION') < '2.0.4.2') {
+            $this->_createTab();
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.2');
+        }
+
+        // Update version 2.0.4.3
+        if(Configuration::get('LENGOW_VERSION') < '2.0.4.3') {
+            Configuration::updateValue('LENGOW_TRACKING_ID', 'id');
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.3');
+        }
+
+        // Update version 2.0.4.3
+        if(Configuration::get('LENGOW_VERSION') < '2.0.4.4') {
+            $this->registerHook('home') && // hookHome
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.4');
         }
     }
 
@@ -348,6 +372,7 @@ class Lengow extends Module {
         if (isset($_POST['submit' . $this->name])) {
             Configuration::updateValue('LENGOW_AUTHORIZED_IP', Tools::getValue('lengow_authorized_ip'));
             Configuration::updateValue('LENGOW_TRACKING', Tools::getValue('lengow_tracking'));
+            Configuration::updateValue('LENGOW_TRACKING_ID', Tools::getValue('lengow_tracking_id'));
             Configuration::updateValue('LENGOW_ID_CUSTOMER', Tools::getValue('lengow_customer_id'));
             Configuration::updateValue('LENGOW_ID_GROUP', Tools::getValue('lengow_group_id'));
             Configuration::updateValue('LENGOW_TOKEN', Tools::getValue('lengow_token'));
@@ -471,6 +496,16 @@ class Lengow extends Module {
                         'name' => 'lengow_tracking',
                         'options' => array(
                             'query' => LengowCore::getTrackers(),
+                            'id' => 'id',
+                            'name' => 'name',
+                        ),
+                    ),
+                    array(
+                        'type' => 'select',
+                        'label' => $this->l('Product ID for tag'),
+                        'name' => 'lengow_tracking_id',
+                        'options' => array(
+                            'query' => LengowCore::getTrackerChoiceId(),
                             'id' => 'id',
                             'name' => 'name',
                         ),
@@ -898,6 +933,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_export_file'] = Configuration::get('LENGOW_EXPORT_FILE');
             $helper->fields_value['lengow_export_fields[]'] = json_decode(Configuration::get('LENGOW_EXPORT_FIELDS'));
             $helper->fields_value['lengow_tracking'] = Configuration::get('LENGOW_TRACKING');
+            $helper->fields_value['lengow_tracking_id'] = Configuration::get('LENGOW_TRACKING_ID');
             $helper->fields_value['lengow_order_process'] = Configuration::get('LENGOW_ORDER_ID_PROCESS');
             $helper->fields_value['lengow_order_shipped'] = Configuration::get('LENGOW_ORDER_ID_SHIPPED');
             $helper->fields_value['lengow_order_cancel'] = Configuration::get('LENGOW_ORDER_ID_CANCEL');
@@ -935,7 +971,7 @@ class Lengow extends Module {
      * @return varchar form html
      */
     public function displayForm14() {
-        if(_PS_VERSION_ <= '1.4.3') {
+        if(_PS_VERSION_ <= '1.4.4.0') {
             $options = array(
                 'trackers' => LengowCore::getTrackers(),
                 'images' => ImageType::getImagesTypes('products'),
@@ -974,6 +1010,7 @@ class Lengow extends Module {
                     'lengow_export_file' => Configuration::get('LENGOW_EXPORT_FILE'),
                     'lengow_export_fields' => json_decode(Configuration::get('LENGOW_EXPORT_FIELDS')),
                     'lengow_tracking' => Configuration::get('LENGOW_TRACKING'),
+                    'lengow_tracking_id' => Configuration::get('LENGOW_TRACKING_ID'),
                     'lengow_order_process' => Configuration::get('LENGOW_ORDER_ID_PROCESS'),
                     'lengow_order_shipped' => Configuration::get('LENGOW_ORDER_ID_SHIPPED'),
                     'lengow_order_cancel' => Configuration::get('LENGOW_ORDER_ID_CANCEL'),
@@ -1217,6 +1254,10 @@ class Lengow extends Module {
         return '';
     }
 
+    public function hookHome() {
+        self::$_CURRENT_PAGE_TYPE = self::LENGOW_TRACK_HOMEPAGE;
+    }
+
     /**
      * Generate tracker on footer.
      *
@@ -1275,10 +1316,23 @@ class Lengow extends Module {
             if (count($cart_products) > 0) {
                 $i = 1;
                 foreach ($cart_products as $p) {
-                    if ($p['id_product_attribute'])
-                        $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
-                    else
-                        $id_product = $p['id_product'];
+                    switch (Configuration::get('LENGOW_TRACKING_ID')) {
+                        case 'upc':
+                            $id_product = $p['upc'];
+                            break;
+                        case 'ean':
+                            $id_product = $p['ean13'];
+                            break;
+                        case 'ref':
+                            $id_product = $p['reference'];
+                            break;
+                        default:
+                            if ($p['product_attribute_id'])
+                                $id_product = $p['product_id'] . '_' . $p['product_attribute_id'];
+                            else
+                                $id_product = $p['product_id'];
+                            break;
+                    }
                     $products_cart[] = 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'];
                     $i++;
                 }
@@ -1292,19 +1346,45 @@ class Lengow extends Module {
             $products = Context::getContext()->smarty->tpl_vars['products']->value;
             if(!empty($products)) {
                 foreach($products as $p) {
-                    if ($p['id_product_attribute'])
-                        $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
-                    else
-                        $id_product = $p['id_product'];
+                    switch (Configuration::get('LENGOW_TRACKING_ID')) {
+                        case 'upc':
+                            $id_product = $p['upc'];
+                            break;
+                        case 'ean':
+                            $id_product = $p['ean13'];
+                            break;
+                        case 'ref':
+                            $id_product = $p['reference'];
+                            break;
+                        default:
+                            if ($p['product_attribute_id'])
+                                $id_product = $p['product_id'] . '_' . $p['product_attribute_id'];
+                            else
+                                $id_product = $p['product_id'];
+                            break;
+                    }
                     $array_products[] = $id_product;
                 }
             } else {
                 $p = Context::getContext()->smarty->tpl_vars['product']->value;
                 if($p instanceof Product) {
-                    if ($p->id_product_attribute)
-                        $id_product = $p->id . '_' . $p->id_product_attribute;
-                    else
-                        $id_product = $p->id;
+                    switch (Configuration::get('LENGOW_TRACKING_ID')) {
+                        case 'upc':
+                            $id_product =  $p->upc;
+                            break;
+                        case 'ean':
+                            $id_product =  $p->ean13;
+                            break;
+                        case 'ref':
+                            $id_product =  $p->reference;
+                            break;
+                        default:
+                            if ($p->product_attribute_id)
+                                $id_product =  $p->product_id . '_' .  $p->product_attribute_id;
+                            else
+                                $id_product =  $p->product_id;
+                            break;
+                    }
                     $array_products[] = $id_product;
                 }
             }
@@ -1405,12 +1485,23 @@ class Lengow extends Module {
         $i = 0;
         foreach ($products_list as $p) {
             $i++;
-
-            if ($p['product_attribute_id'])
-                $id_product = $p['product_id'] . '_' . $p['product_attribute_id'];
-            else
-                $id_product = $p['product_id'];
-
+            switch (Configuration::get('LENGOW_TRACKING_ID')) {
+                case 'upc':
+                    $id_product = $p['upc'];
+                    break;
+                case 'ean':
+                    $id_product = $p['ean13'];
+                    break;
+                case 'ref':
+                    $id_product = $p['reference'];
+                    break;
+                default:
+                    if ($p['product_attribute_id'])
+                        $id_product = $p['product_id'] . '_' . $p['product_attribute_id'];
+                    else
+                        $id_product = $p['product_id'];
+                    break;
+            }
             // Ids Product
             $ids_products[] = $id_product;
 
@@ -1665,27 +1756,33 @@ class Lengow extends Module {
      * @return boolean Result of add tab on database.
      */
     private function _createTab() {
-        if (_PS_VERSION_ < '1.5')
-            $tabName = "AdminLengow14";
-        else
-            $tabName = "AdminLengow";
+        foreach(self::$_TABS as $name => $value) {
+            if (_PS_VERSION_ < '1.5')
+                $tabName = $value[1];
+            else
+                $tabName = $value[0];
 
-        if(Tab::getIdFromClassName($tabName) !== false)
-            return;
+            if(Tab::getIdFromClassName($tabName) !== false)
+                continue;
 
-        $tab = new Tab();
-        if (_PS_VERSION_ < '1.5') {
-            $tab->class_name = 'AdminLengow14';
-            $tab->position = 10;
-            $tab->id_parent = 1;
-        } else {
-            $tab->class_name = 'AdminLengow';
-            $tab->position = 1;
-            $tab->id_parent = 9;
+            $tab = new Tab();
+            if (_PS_VERSION_ < '1.5') {
+                $tab->class_name = $value[1];
+                $tab->position = 10;
+                $tab->id_parent = 1;
+            } else {
+                $tab->class_name = $value[0];
+                $tab->position = 1;
+                $tab->id_parent = 9;
+            }
+
+            $tab->module = $this->name;
+            $tab->name[Configuration::get('PS_LANG_DEFAULT')] = $this->l($name);
+
+            $tab->add();
         }
-        $tab->module = $this->name;
-        $tab->name[Configuration::get('PS_LANG_DEFAULT')] = $this->l('Lengow');
-        return $tab->add();
+
+        return true;
     }
 
     /**
@@ -1694,20 +1791,23 @@ class Lengow extends Module {
      * @return boolean Result of tab uninstallation
      */
     private function _uninstallTab() {
-        if (_PS_VERSION_ < '1.5') {
-            $tabName = "AdminLengow14";
-        } else {
-            $tabName = "AdminLengow";
-        }
-        if(_PS_VERSION_ >= '1.5') {
-            $tab = Tab::getInstanceFromClassName($tabName);
-        } else {
-            $tab_id = Tab::getIdFromClassName($tabName);
-            $tab = new Tab($tab_id);
-        }
-        
-        if ($tab->id != 0) {
-            return $tab->delete();
+        foreach(self::$_TABS as $name => $value) {
+            if (_PS_VERSION_ < '1.5') {
+                $tabName = $value[1];
+            } else {
+                $tabName = $value[0];
+            }
+
+            if(_PS_VERSION_ >= '1.5') {
+                $tab = Tab::getInstanceFromClassName($tabName);
+            } else {
+                $tab_id = Tab::getIdFromClassName($tabName);
+                $tab = new Tab($tab_id);
+            }
+            
+            if ($tab->id != 0) {
+                $tab->delete();
+            }
         }
         return false;
     }

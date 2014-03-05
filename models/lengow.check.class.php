@@ -98,13 +98,13 @@ class LengowCheck {
     public static function getMailConfiguration() {
         $mail_method = Configuration::get('PS_MAIL_METHOD');
         if ($mail_method == 2)
-            return self::$_module->l('Email are enabled with custom settings.');
+            return self::$_module->l('Email are enabled with custom settings.', 'lengow.check.class');
         elseif ($mail_method == 3 && _PS_VERSION_ >= '1.5.0')
-            return self::$_module->l('Email are desactived.');
+            return self::$_module->l('Email are desactived.', 'lengow.check.class');
         elseif ($mail_method == 3)
-            return self::$_module->l('Error mail settings, PS_MAIL_METHOD is 3 but this value is not allowed in Prestashop 1.4');
+            return self::$_module->l('Error mail settings, PS_MAIL_METHOD is 3 but this value is not allowed in Prestashop 1.4', 'lengow.check.class');
         else
-            return self::$_module->l('Email using php mail function.');
+            return self::$_module->l('Email using php mail function.', 'lengow.check.class');
     }
 
     /**
@@ -154,13 +154,10 @@ class LengowCheck {
         if (!self::isCurlActivated())
             return false;
 
-        $id_customer = Configuration::get('LENGOW_ID_CUSTOMER');
-        $id_group = Configuration::get('LENGOW_ID_GROUP');
+        $id_customer = (int) Configuration::get('LENGOW_ID_CUSTOMER');
         $token = Configuration::get('LENGOW_TOKEN');
-
-        $connector = new LengowConnector((int) $id_customer, $token);
+        $connector = new LengowConnector($id_customer, $token);
         $result = $connector->api('authentification');
-
         if ($result['return'] == 'Ok')
             return true;
         else
@@ -177,7 +174,7 @@ class LengowCheck {
             return false;
 
         // Fake customer id to force API to return IP
-        $id_customer = Configuration::get('LENGOW_ID_CUSTOMER') + 9;
+        $id_customer = 0;
         $id_group = Configuration::get('LENGOW_ID_GROUP');
         $token = Configuration::get('LENGOW_TOKEN');
 
@@ -220,60 +217,60 @@ class LengowCheck {
         self::$_module = new Lengow();
         
         $checklist[] = array(
-            'message' => self::$_module->l('Lengow needs the CURL PHP extension'),
-            'help' => self::$_module->l('The CURL extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable CURL on your system.'),
+            'message' => self::$_module->l('Lengow needs the CURL PHP extension', 'lengow.check.class'),
+            'help' => self::$_module->l('The CURL extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable CURL on your system.', 'lengow.check.class'),
             'help_link' => 'http://www.php.net/manual/en/curl.setup.php',
-            'help_label' => self::$_module->l('Go to Curl PHP extension manual'),
+            'help_label' => self::$_module->l('Go to Curl PHP extension manual', 'lengow.check.class'),
             'state' => (int) self::isCurlActivated()
         );
         $checklist[] = array(
-            'message' => self::$_module->l('Lengow needs the SimpleXML PHP extension'),
-            'help' => self::$_module->l('The SimpleXML extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable SimpleXML on your system.'),
+            'message' => self::$_module->l('Lengow needs the SimpleXML PHP extension', 'lengow.check.class'),
+            'help' => self::$_module->l('The SimpleXML extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable SimpleXML on your system.', 'lengow.check.class'),
             'help_link' => 'http://www.php.net/manual/en/book.simplexml.php',
-            'help_label' => self::$_module->l('Go to SimpleXML PHP extension manual'),
+            'help_label' => self::$_module->l('Go to SimpleXML PHP extension manual', 'lengow.check.class'),
             'state' => (int) self::isSimpleXMLActivated()
         );
         $checklist[] = array(
-            'message' => self::$_module->l('Lengow needs the JSON PHP extension'),
-            'help' => self::$_module->l('The JSON extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable JSON on your system.'),
+            'message' => self::$_module->l('Lengow needs the JSON PHP extension', 'lengow.check.class'),
+            'help' => self::$_module->l('The JSON extension is not installed or enabled in your PHP installation. Check the manual for information on how to install or enable JSON on your system.', 'lengow.check.class'),
             'help_link' => 'http://www.php.net/manual/fr/book.json.php',
-            'help_label' => self::$_module->l('Go to JSON PHP extension manual'),
+            'help_label' => self::$_module->l('Go to JSON PHP extension manual', 'lengow.check.class'),
             'state' => (int) self::isJsonActivated()
         );
         $checklist[] = array(
-            'message' => self::$_module->l('Lengow authentification'),
-            'help' => self::$_module->l('Please check your Client ID, Group ID and Token API.'),
+            'message' => self::$_module->l('Lengow authentification', 'lengow.check.class'),
+            'help' => self::$_module->l('Please check your Client ID, Group ID and Token API.', 'lengow.check.class'),
             'help_link' => 'https://solution.lengow.com/api/',
-            'help_label' => self::$_module->l('Go to Lengow dashboard'),
+            'help_label' => self::$_module->l('Go to Lengow dashboard', 'lengow.check.class'),
             'state' => (int) self::isValidAuth() == 1 ? 1 : 0,
-            'additional_infos' => sprintf(self::$_module->l('Make sure your website IP (%s) address is filled in your Lengow Dashboard.'), self::getWebsiteAddress())
+            'additional_infos' => sprintf(self::$_module->l('Make sure your website IP (%s) address is filled in your Lengow Dashboard.', 'lengow.check.class'), self::getWebsiteAddress())
         );
         $checklist[] = array(
-            'message' => self::$_module->l('Shop functionality'),
-            'help' => self::$_module->l('Shop functionality are disabled, order import will be impossible, please enable them in your products settings.'),
+            'message' => self::$_module->l('Shop functionality', 'lengow.check.class'),
+            'help' => self::$_module->l('Shop functionality are disabled, order import will be impossible, please enable them in your products settings.', 'lengow.check.class'),
             'state' => (int) self::isShopActivated()
         );
         $checklist[] = array(
-            'message' => self::$_module->l('Config folder is writable'),
-            'help' => self::$_module->l('The config folder must be writable.'),
+            'message' => self::$_module->l('Config folder is writable', 'lengow.check.class'),
+            'help' => self::$_module->l('The config folder must be writable.', 'lengow.check.class'),
             'state' => (int) self::isConfigWritable()
         );
         $checklist[] = array(
-            'message' => self::$_module->l('Export disabled products'),
-            'help' => self::$_module->l('Disabled product are enabled in export, Marketplace order import will not work with this configuration.'),
+            'message' => self::$_module->l('Export disabled products', 'lengow.check.class'),
+            'help' => self::$_module->l('Disabled product are enabled in export, Marketplace order import will not work with this configuration.', 'lengow.check.class'),
             'state' => (int) self::isDisabledProduct()
         );
         $checklist[] = array(
-            'message' => self::$_module->l('Prestashop plugin version'),
-            'help' => self::$_module->l('There is a new version of Lengow Module, please update it.'),
+            'message' => self::$_module->l('Prestashop plugin version', 'lengow.check.class'),
+            'help' => self::$_module->l('There is a new version of Lengow Module, please update it.', 'lengow.check.class'),
             'help_link' => 'http://www.lengow.fr/plugin-prestashop.html',
-            'help_label' => self::$_module->l('Download the lastest version'),
+            'help_label' => self::$_module->l('Download the lastest version', 'lengow.check.class'),
             'state' => (int) self::checkPluginVersion(self::$_module->version)
         );
 
         if(Configuration::get('LENGOW_DEBUG')) {
             $checklist[] = array(
-                'message' => self::$_module->l('Mail configuration (Be carefull, debug mode is activated)'),
+                'message' => self::$_module->l('Mail configuration (Be carefull, debug mode is activated)', 'lengow.check.class'),
                 'help' => self::getMailConfiguration(),
                 'state' => 2
             );

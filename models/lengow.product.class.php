@@ -122,7 +122,7 @@ class LengowProductAbstract extends Product {
         }
         $this->images = $array_images;
         $today = date('Y-m-d H:i:s');
-        if(isset($this->specificPrice))
+        if(isset($this->specificPrice) && is_array($this->specificPrice))
             if(array_key_exists('from', $this->specificPrice) && array_key_exists('to', $this->specificPrice))
                 if ($this->specificPrice['from'] <= $today && $today <= $this->specificPrice['to'])
                     $this->is_sale = true;
