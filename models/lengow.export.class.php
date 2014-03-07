@@ -84,6 +84,7 @@ class LengowExportAbstract {
         'available_now' => 'available_now',
         'available_later' => 'available_later',
         'stock_availables' => 'stock_availables',
+        'description_html' => 'description_html',
     );
 
     /**
