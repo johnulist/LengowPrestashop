@@ -174,6 +174,8 @@ class LengowProductAbstract extends Product {
                 return LengowCore::cleanHtml($this->description);
             case 'short_description' :
                 return LengowCore::cleanHtml($this->description_short);
+            case 'description_html' :
+                return $this->description;
             case 'price' :
                 if ($id_product_attribute)
                     return $this->getPrice($tax = true, $id_product_attribute, $decimals = 2, $divisor = null, $only_reduc = false, $usereduc = false, $quantity = 1);

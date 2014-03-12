@@ -84,6 +84,7 @@ class LengowExportAbstract {
         'available_now' => 'available_now',
         'available_later' => 'available_later',
         'stock_availables' => 'stock_availables',
+        'description_html' => 'description_html',
     );
 
     /**
@@ -456,41 +457,42 @@ class LengowExportAbstract {
             LengowCore::log('export : find ' . count($products) . ' products');
             $i = 0;
             foreach ($products as $p) {
-                $is_last = false;
                 $product = new LengowProduct($p['id_product'], LengowCore::getContext()->language->id);
-
-                $combinations = $product->getCombinations();
-                if($p['id_product'] == $last['id_product'] && empty($combinations))
-                    $is_last = true;
-
-                $this->_write('data', $this->_make($product), $is_last);
-                // Attributes
-                if ($this->full) {
-                    $total = count($product->getCombinations());
-                    $count = 0;
+                if($product->id) {
                     $is_last = false;
-                    foreach ($product->getCombinations() as $id_product_attribute => $combination) {
-                        $count++;
-                        if($p['id_product'] == $last['id_product'] && $total ==  $count)
-                            $is_last = true;
-                        $this->_write('data', $this->_make($product, $id_product_attribute), $is_last);
+                    $combinations = $product->getCombinations();
+                    if($p['id_product'] == $last['id_product'] && empty($combinations))
+                        $is_last = true;
+
+                    $this->_write('data', $this->_make($product), $is_last);
+                    // Attributes
+                    if ($this->full) {
+                        $total = count($product->getCombinations());
+                        $count = 0;
+                        $is_last = false;
+                        foreach ($product->getCombinations() as $id_product_attribute => $combination) {
+                            $count++;
+                            if($p['id_product'] == $last['id_product'] && $total ==  $count)
+                                $is_last = true;
+                            $this->_write('data', $this->_make($product, $id_product_attribute), $is_last);
+                        }
                     }
+                    $product = null;
+                    if ($i % 10 == 0)
+                        LengowCore::log('export : ' . $i . ' products');
+                    $product = null;
+                    db::getInstance()->queries = array();
+                    db::getInstance()->uniqQueries = array();
+                    LengowCache::clear();
+                    if (function_exists('gc_collect_cycles'))
+                        gc_collect_cycles();
+
+                    $i++;
+
+                    if($this->limit != null)
+                        if($i >= $this->limit)
+                            break;
                 }
-                $product = null;
-                if ($i % 10 == 0)
-                    LengowCore::log('export : ' . $i . ' products');
-                $product = null;
-                db::getInstance()->queries = array();
-                db::getInstance()->uniqQueries = array();
-                LengowCache::clear();
-                if (function_exists('gc_collect_cycles'))
-                    gc_collect_cycles();
-
-                $i++;
-
-                if($this->limit != null)
-                    if($i >= $this->limit)
-                        break;
             }
             $this->_write('footer');
             LengowCore::log('export : end');

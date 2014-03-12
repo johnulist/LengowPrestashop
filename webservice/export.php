@@ -37,6 +37,11 @@ if (LengowCore::checkIP()) {
         $fullmode = true;
     else if (Tools::getValue('mode') && Tools::getValue('mode') == 'simple')
         $fullmode = false;
+    // > Feature
+    $export_feature = null;
+    if ($export_feature = Tools::getValue('feature')) {
+        $export_feature = true;
+    }
     // > Stream
     $stream = null;
     if (Tools::getValue('stream') == 0)
@@ -63,7 +68,6 @@ if (LengowCore::checkIP()) {
         if ($id_language = Language::getIdByIso($iso_code))
             Context::getContext()->language = new Language($id_language);
     }
-
     // > Title
     $title = null;
     if (Tools::getValue('title') && Tools::getValue('title') == 'full')
@@ -77,7 +81,6 @@ if (LengowCore::checkIP()) {
         $all_product = false;
     elseif (Tools::getValue('active') && Tools::getValue('active') == 'all')
         $all_product = true;
-
     // Products ids
     $product_ids = null;
     if(Tools::getValue('ids') && Tools::getValue('ids') != '') {
