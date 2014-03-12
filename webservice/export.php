@@ -39,8 +39,11 @@ if (LengowCore::checkIP()) {
         $fullmode = false;
     // > Stream
     $stream = null;
-    if (Tools::getValue('stream'))
-        $stream = Tools::getValue('stream');
+    if (Tools::getValue('stream') == 0)
+        $stream = false;
+    elseif(Tools::getValue('steam') == 1)
+        $stream = true;
+
     // > All products
     $all = null;
     if (Tools::getValue('all'))
