@@ -1,4 +1,10 @@
 =============================================================
+Version 2.0.4.4
+=============================================================
+    - Add option show or not feed management
+    - Add option to merge parent and children image
+
+=============================================================
 Version 2.0.4.3
 =============================================================
     - Display message when order is already processing
