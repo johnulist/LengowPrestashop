@@ -169,6 +169,7 @@ class Lengow extends Module {
                 Configuration::updateValue('LENGOW_MIGRATE', false) &&
                 Configuration::updateValue('LENGOW_MP_CONF', false) &&
                 Configuration::updateValue('LENGOW_CRON', false) &&
+                Configuration::updateValue('LENGOW_FEED_MANAGEMENT', false) &&
                 Configuration::updateValue('LENGOW_DEBUG', false) &&
                 // Orders lengow table
                 Db::getInstance()->execute('
@@ -293,6 +294,7 @@ class Lengow extends Module {
         // Update version 2.0.4.3
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.4') {
             $this->registerHook('home') && // hookHome
+            Configuration::updateValue('LENGOW_PARENT_IMAGE', false);
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.4');
         }
     }
@@ -395,8 +397,10 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_EXPORT_FILE', Tools::getValue('lengow_export_file'));
             Configuration::updateValue('LENGOW_CARRIER_DEFAULT', Tools::getValue('lengow_carrier_default'));
             Configuration::updateValue('LENGOW_DEBUG', Tools::getValue('lengow_debug'));
+            Configuration::updateValue('LENGOW_PARENT_IMAGE', Tools::getValue('lengow_parent_image'));
+            Configuration::updateValue('LENGOW_FEED_MANAGEMENT', Tools::getValue('lengow_feed_management'));
             Configuration::updateValue('LENGOW_EXPORT_DISABLED', Tools::getValue('lengow_export_disabled'));
-
+            
             // Send to Lengow versions
             if (LengowCore::getTokenCustomer() && LengowCore::getIdCustomer() && LengowCore::getGroupCustomer()) {
                 $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
@@ -424,8 +428,8 @@ class Lengow extends Module {
             // Get default language
             $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
             // Init Fields form array
-
-            $fields_form[0]['form'] = array(
+            $index = 0;
+            $fields_form[$index]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Check configuration'),
                 ),
@@ -439,8 +443,8 @@ class Lengow extends Module {
                     ),
                 ),
             );
-
-            $fields_form[1]['form'] = array(
+            $index += 1;
+            $fields_form[$index]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Account'),
                 ),
@@ -472,7 +476,8 @@ class Lengow extends Module {
                     'class' => 'button'
                 ),
             );
-            $fields_form[2]['form'] = array(
+            $index += 1;
+            $fields_form[$index]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Security'),
                 ),
@@ -485,7 +490,8 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[3]['form'] = array(
+            $index += 1;
+            $fields_form[$index]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Tracking'),
                 ),
@@ -512,7 +518,8 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[4]['form'] = array(
+            $index += 1;
+            $fields_form[$index]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Export parameters'),
                 ),
@@ -658,6 +665,25 @@ class Lengow extends Module {
                         ),
                     ),
                     array(
+                        'type' => 'radio',
+                        'label' => $this->l('Parent\'s image for children products'),
+                        'name' => 'lengow_parent_image',
+                        'is_bool' => true,
+                        'class' => 't',
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
                         'type' => 'select',
                         'label' => $this->l('Export default format'),
                         'name' => 'lengow_export_format',
@@ -709,22 +735,26 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[5]['form'] = array(
-                'legend' => array(
-                    'title' => $this->l('Feed'),
-                ),
-                'input' => array(
-                    array(
-                        'type' => 'free',
-                        'label' => $this->l('Feed used by Lengow'),
-                        'name' => 'lengow_flow',
-                        'desc' => $this->l('If you use the backoffice of the Lengow module, migrate your feed when you are sure to be ready') . '.<br />' .
-                        $this->l('If you want to use the file export, don\'t use this fonctionality. Please contact Lengow Support Team') . '.'
-                    ,
+            $index += 1;
+            if(Configuration::get('LENGOW_FEED_MANAGEMENT') == true) {
+                $fields_form[$index]['form'] = array(
+                    'legend' => array(
+                        'title' => $this->l('Feed'),
                     ),
-                ),
-            );
-            $fields_form[6]['form'] = array(
+                    'input' => array(
+                        array(
+                            'type' => 'free',
+                            'label' => $this->l('Feed used by Lengow'),
+                            'name' => 'lengow_flow',
+                            'desc' => $this->l('If you use the backoffice of the Lengow module, migrate your feed when you are sure to be ready') . '.<br />' .
+                            $this->l('If you want to use the file export, don\'t use this fonctionality. Please contact Lengow Support Team') . '.'
+                        ,
+                        ),
+                    ),
+                );
+                $index += 1;
+            }
+            $fields_form[$index]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Import parameters'),
                 ),
@@ -843,7 +873,8 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[7]['form'] = array(
+            $index += 1;
+            $fields_form[$index]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Import cron'),
                 ),
@@ -856,7 +887,8 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            $fields_form[8]['form'] = array(
+            $index += 1;
+            $fields_form[$index]['form'] = array(
                 'legend' => array(
                     'title' => $this->l('Developer'),
                 ),
@@ -867,6 +899,27 @@ class Lengow extends Module {
                         'name' => 'lengow_debug',
                         'is_bool' => true,
                         'class' => 't',
+                        'desc' => $this->l('Use it only during tests.'),
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'radio',
+                        'label' => $this->l('Feed Management'),
+                        'name' => 'lengow_feed_management',
+                        'is_bool' => true,
+                        'class' => 't',
+                        'desc' => $this->l('True if you want to manage your feeds, for advanced users.'),
                         'values' => array(
                             array(
                                 'id' => 'active_on',
@@ -947,6 +1000,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_force_price'] = Configuration::get('LENGOW_FORCE_PRICE');
             $helper->fields_value['lengow_debug'] = Configuration::get('LENGOW_DEBUG');
             $helper->fields_value['lengow_is_import'] = $this->_getFormIsImport();
+            $helper->fields_value['lengow_feed_management'] = Configuration::get('LENGOW_FEED_MANAGEMENT');
 
             $links = $this->_getWebservicesLinks();
             $helper->fields_value['url_feed_export'] = $links['link_feed_export'];
@@ -1023,6 +1077,8 @@ class Lengow extends Module {
                     'lengow_carrier_default' => Configuration::get('LENGOW_CARRIER_DEFAULT'),
                     'lengow_force_price' => Configuration::get('LENGOW_FORCE_PRICE'),
                     'lengow_debug' => Configuration::get('LENGOW_DEBUG'),
+                    'lengow_feed_management' => Configuration::get('LENGOW_FEED_MANAGEMENT'),
+                    'lengow_parent_image' => Configuration::get('LENGOW_PARENT_IMAGE'),
                     'url_feed_export' => $links['link_feed_export'],
                     'url_feed_import' => $links['link_feed_import'],
                     'lengow_flow' => $this->_getFormFeeds(),
