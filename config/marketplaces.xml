@@ -285,6 +285,9 @@
             <state name="RefusedBySeller">
                 <lengow>canceled</lengow>
             </state>
+            <state name="PickedUp">
+                <lengow>shipped</lengow>
+            </state>            
         </states>
         <additional_params>
             <param usedby="shipped">
@@ -525,6 +528,9 @@
         <api>https://wsdl.lengow.com/wsdl/monechelle/#ID_FLUX#/#ORDER_ID#/#ACTION#.xml</api>
         <states>
             <state name="new">
+                <lengow>new</lengow>
+            </state>            
+            <state name="processing">
                 <actions>
                     <action type="refuse">refuseOrder</action>
                     <action type="accept">acceptOrder</action>
@@ -719,6 +725,46 @@
             </state>
             <state name="shipped">
                 <lengow>shipped</lengow>
+            </state>
+        </states>
+    </marketplace>
+    <marketplace name="godsavethekid">    
+        <states>
+            <state name="RECEIVED">
+                <lengow>new</lengow>
+            </state>
+            <state name="STAGING">
+                <lengow>new</lengow>
+            </state>
+            <state name="WAITING_ACCEPTANCE">
+                <lengow>new</lengow>
+            </state>
+            <state name="WAITING_DEBIT">
+                <lengow>new</lengow>
+            </state>
+            <state name="WAITING_DEBIT_PAYMENT">
+                <lengow>new</lengow>
+            </state>
+            <state name="CANCELED">
+                <lengow>canceled</lengow>
+            </state>
+            <state name="CLOSED">
+                <lengow>processing</lengow>
+            </state>
+            <state name="REFUSED">
+                <lengow>canceled</lengow>
+            </state>
+            <state name="SHIPPING">
+                <lengow>shipped</lengow>
+            </state>
+            <state name="INCIDENT_OPEN">
+                <lengow>processing</lengow>
+            </state>
+            <state name="SHIPPED">
+                <lengow>shipped</lengow>
+            </state>
+            <state name="REFUNDED">
+                <lengow>canceled</lengow>
             </state>
         </states>
     </marketplace>
