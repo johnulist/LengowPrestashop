@@ -44,9 +44,7 @@ if (LengowCore::checkIP()) {
     }
     // > Stream
     $stream = null;
-    if (Tools::getValue('stream') == 0)
-        $stream = false;
-    elseif(Tools::getValue('steam') == 1)
+    if (Tools::getValue('stream'))
         $stream = true;
 
     // > All products
@@ -97,5 +95,5 @@ if (LengowCore::checkIP()) {
     $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product, null, $limit, $product_ids);
     $export->exec();
 } else {
-    die('Unauthorized access');
+    die('Unauthorized access for IP : ' . $_SERVER['REMOTE_ADDR']);
 }

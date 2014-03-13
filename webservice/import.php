@@ -47,5 +47,5 @@ if(LengowCore::checkIP()) {
                                     'debug' => $debug));
 	LengowCore::setImportEnd();
 } else {
-	die('Unauthorized access');
+	die('Unauthorized access for IP : ' . $_SERVER['REMOTE_ADDR']);
 }

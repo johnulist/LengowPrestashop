@@ -130,5 +130,5 @@ if (LengowCore::checkIP()) {
         }
     }
 } else {
-    die('Unauthorized access');
+    die('Unauthorized access for IP : ' . $_SERVER['REMOTE_ADDR']);
 }
