@@ -665,25 +665,6 @@ class Lengow extends Module {
                         ),
                     ),
                     array(
-                        'type' => 'radio',
-                        'label' => $this->l('Parent\'s image for children products'),
-                        'name' => 'lengow_parent_image',
-                        'is_bool' => true,
-                        'class' => 't',
-                        'values' => array(
-                            array(
-                                'id' => 'active_on',
-                                'value' => 1,
-                                'label' => $this->l('Enabled'),
-                            ),
-                            array(
-                                'id' => 'active_off',
-                                'value' => 0,
-                                'label' => $this->l('Disabled'),
-                            ),
-                        ),
-                    ),
-                    array(
                         'type' => 'select',
                         'label' => $this->l('Export default format'),
                         'name' => 'lengow_export_format',
