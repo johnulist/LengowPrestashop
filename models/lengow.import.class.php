@@ -102,11 +102,11 @@ class LengowImportAbstract {
         LengowCore::setImportProcessing();
         LengowCore::disableSendState();
 
-        self::$import_start = true;
+        self::$import_start   = true;
         $count_orders_updated = 0;
-        $count_orders_added = 0;
-        $lengow = new Lengow();
-        $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
+        $count_orders_added   = 0;
+        $lengow               = new Lengow();
+        $lengow_connector     = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
         
         if(array_key_exists('id_order_lengow', $args) && $args['id_order_lengow'] != '' && array_key_exists('feed_id', $args) && $args['feed_id'] != '') {
             $args_order = array(
@@ -136,7 +136,6 @@ class LengowImportAbstract {
             LengowCore::log('Find ' . $find_count_orders . ' order' . ($find_count_orders > 1 ? 's' : ''), $this->force_log_output);
         }
 
-        //LengowCore::debug($orders);
         $count_orders = (integer) $orders->orders_count->count_total;
         if ($count_orders == 0) {
             LengowCore::log('No orders to import between ' . $args['dateFrom'] . ' and ' . $args['dateTo'], $this->force_log_output);
@@ -145,7 +144,6 @@ class LengowImportAbstract {
         }
         foreach ($orders->orders->order as $key => $data) {
             $lengow_order = $data;
-
             if (self::$debug == true)
                 $lengow_order_id = (string) $lengow_order->order_id . '--' . time();
             else
@@ -725,7 +723,6 @@ class LengowImportAbstract {
                         $total_saleable_quantity += (integer) $lengow_product->quantity;
                         $lengow_new_order = true;
                     }
-
                     // Check product wharehouse
                     if(_PS_VERSION_ >= '1.5' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1) {
                         foreach($cart->getPackageList() as $key => $value) {
@@ -736,7 +733,6 @@ class LengowImportAbstract {
                             }
                         }
                     }
-
                     $cart->lengow_products = $lengow_products;
                     $cart->lengow_shipping = $shipping_price;
                     $buffer_cart = $cart;
@@ -764,10 +760,7 @@ class LengowImportAbstract {
                             . 'Total paid : ' . (float) $lengow_order->order_amount . ' | ' . "\r\n"
                             . 'Shipping : ' . (string) $lengow_order->order_shipping . ' | ' . "\r\n"
                             . 'Message : ' . (string) $lengow_order->order_comments . "\r\n";
-
-
                     LengowCore::disableMail();
-
                     // HACK force flush
                     if (_PS_VERSION_ >= '1.5') {
                         $this->context->customer = new Customer($this->context->cart->id_customer);
@@ -781,12 +774,10 @@ class LengowImportAbstract {
                     }
                     $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, null, null, false), 2);
                     //$lengow_total_pay = (float) Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), 2);
-
                     if(_PS_VERSION_ >= '1.5.2' && _PS_VERSION_ <= '1.5.3.1')
                         $validateOrder = 'validateOrder152';
                     else
                         $validateOrder = 'validateOrder';
-
                     // SoColissimo compatibility
                     if(LengowCore::isColissimo()) {
                         $shipping_address_complement = ($lengow_order->delivery_address->delivery_address_complement != '' ? pSQL($lengow_order->delivery_address->delivery_address_complement) : '');
@@ -796,10 +787,7 @@ class LengowImportAbstract {
                                 $shipping_address->address1, $shipping_address->address2, $shipping_address->postcode, $shipping_address->city, 
                                 $shipping_address->phone_mobile, $customer->email, $shipping_society);
                     }
-
-                    /**
-                     * Try validate order
-                     */
+                    // Validate Order
                     if(!$lengow_new_order) {
                         LengowCore::log('No new order to import', $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
@@ -811,44 +799,35 @@ class LengowImportAbstract {
                             $payment_validate = $payment->$validateOrder($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true);
                         } catch (Exception $e) {
                             LengowCore::log('Order ' . $lengow_order_id . ' : Error validate order (' . $e->getMessage() . ')', $this->force_log_output);
+                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
+                            continue;
                         }
                     }
-                    /**
-                     * End try
-                     */
-                    if (!$lengow_new_order) {
-                        LengowCore::log('No new order to import', $this->force_log_output);
-                        LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
-                        if (Validate::isLoadedObject($cart))
-                            $cart->delete();
-                        LengowCore::enableMail();
-                        continue;
-                    } elseif ($payment->$validateOrder($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true)) {
-                        $id_order = $payment->currentOrder;
-                        $id_flux = (integer) $lengow_order->idFlux;
+                    // Check payment
+                    if($payment_validate) {
+                        $id_order    = $payment->currentOrder;
+                        $id_flux     = (integer) $lengow_order->idFlux;
                         $marketplace = (string) $lengow_order->marketplace;
-                        //$lengow_order_id = (string) $lengow_order->order_id;
-                        $message = (string) $lengow_order->order_comments;
-                        $total_paid = (float) $lengow_order->order_amount;
-                        $carrier = (string) $lengow_order->order_shipping;
-                        $tracking = (string) $lengow_order->tracking_informations->tracking_number;
-                        $extra = Tools::jsonEncode($lengow_order);
+                        $message     = (string) $lengow_order->order_comments;
+                        $total_paid  = (float) $lengow_order->order_amount;
+                        $carrier     = (string) $lengow_order->order_shipping;
+                        $tracking    = (string) $lengow_order->tracking_informations->tracking_number;
+                        $extra       = Tools::jsonEncode($lengow_order);
                         LengowOrder::addLengow($id_order, $lengow_order_id, $id_flux, $marketplace, $message, $total_paid, $carrier, $tracking, $extra);
                         $new_lengow_order = new LengowOrder($id_order);
-
+                        // Force price
                         if (Configuration::get('LENGOW_FORCE_PRICE')) {
                             $current_order = LengowCart::$current_order;
-                            // Update order if real amout paid is different from Prestashop calc total pay
                             if ($new_lengow_order->total_paid != $order_amount_pay) {
                                 $new_lengow_order->rebuildOrder($current_order['products'], $current_order['total_pay'], $current_order['shipping_price'], $current_order['wrapping_price']);
                             }
                         }
-
+                        // Force carrier
                         if(_PS_VERSION_ >= '1.5') {
                             if($new_lengow_order->getIdOrderCarrier() != LengowCore::getDefaultCarrier())
                                 $new_lengow_order->forceCarrier(LengowCore::getDefaultCarrier());
                         }
-
+                        // Check Mondial Relay
                         if(LengowCore::isMondialRelay()) {
                             if($lengow_order->tracking_informations->tracking_carrier == 'Mondial Relay' &&
                                 $lengow_order->tracking_informations->tracking_relay != '') {
@@ -859,7 +838,6 @@ class LengowImportAbstract {
                                     LengowCore::log('Unable to find Relay Point', $this->force_log_output);
                             }
                         }
-
                         // Update status on lengow if no debug
                         if (self::$debug == false) {
                             $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
@@ -871,7 +849,6 @@ class LengowImportAbstract {
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : success import on presta (ORDER ' . $id_order . ')', $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Success import on presta (ORDER ' . $id_order . ')');
-
                         // Custom Hook
                         if(_PS_VERSION_ >= '1.5') {
                             Hook::exec('actionValidateLengowOrder', array(
@@ -879,7 +856,6 @@ class LengowImportAbstract {
                                 'lengow_order_id' => $lengow_order_id
                             ));
                         }
-
                         $count_orders_added++;
                         if(Tools::getValue('limit') != '' && Tools::getValue('limit') > 0) {
                             if($count_orders_added == (int) Tools::getValue('limit')) {
