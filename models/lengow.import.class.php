@@ -246,7 +246,7 @@ class LengowImportAbstract {
                 
                 if (($marketplace->getStateLengow($lengow_order_state) == 'processing' || $marketplace->getStateLengow($lengow_order_state) == 'shipped') && !$id_order_presta) {
                     // Currency
-                    $id_currency = (int) Currency::getIdByIsoCode($lengow_order->order_currency);
+                    $id_currency = (int) Currency::getIdByIsoCode((string) $lengow_order->order_currency);
                     if (!$id_currency) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : no currency', $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No currency');
@@ -797,6 +797,25 @@ class LengowImportAbstract {
                                 $shipping_address->phone_mobile, $customer->email, $shipping_society);
                     }
 
+                    /**
+                     * Try validate order
+                     */
+                    if(!$lengow_new_order) {
+                        LengowCore::log('No new order to import', $this->force_log_output);
+                        LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
+                        if (Validate::isLoadedObject($cart))
+                            $cart->delete();
+                        LengowCore::enableMail();
+                    } else {
+                        try {
+                            $payment_validate = $payment->$validateOrder($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true);
+                        } catch (Exception $e) {
+                            LengowCore::log('Order ' . $lengow_order_id . ' : Error validate order (' . $e->getMessage() . ')', $this->force_log_output);
+                        }
+                    }
+                    /**
+                     * End try
+                     */
                     if (!$lengow_new_order) {
                         LengowCore::log('No new order to import', $this->force_log_output);
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
