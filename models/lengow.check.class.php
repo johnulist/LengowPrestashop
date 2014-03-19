@@ -311,19 +311,27 @@ class LengowCheck {
             return false;
 
         // Load xml
-        if(_PS_MODULE_DIR_)
-            self::$DOM = simplexml_load_file(_PS_MODULE_DIR_ . 'lengow' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . self::$XML_PLUGINS);
-        else
-            self::$DOM = simplexml_load_file(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . self::$XML_PLUGINS);
+        try {
+            if(_PS_MODULE_DIR_)
+                self::$DOM = simplexml_load_file(_PS_MODULE_DIR_ . 'lengow' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . self::$XML_PLUGINS);
+            else
+                self::$DOM = simplexml_load_file(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . self::$XML_PLUGINS);
+        } catch (Exception $e) {
+            LengowCore::log('Unable to download plugins.xml => ' . $e->getMessage());
+            return true;
+        }
+        
 
         // Compare version
-        $object = self::$DOM->xpath('/plugins/plugin[@name=\'prestashop\']');
-        if(!empty($object)) {
-            $plugin = $object[0];
-            if(version_compare($current_version, $plugin->version, '<')) {
-                return false;
-            } else {
-                return true;
+        if(is_object(self::$DOM)) {
+            $object = self::$DOM->xpath('/plugins/plugin[@name=\'prestashop\']');
+            if(!empty($object)) {
+                $plugin = $object[0];
+                if(version_compare($current_version, $plugin->version, '<')) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
         }
         return true;

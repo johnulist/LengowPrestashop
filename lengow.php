@@ -76,7 +76,10 @@ class Lengow extends Module {
         $this->version = '2.0.4.3';
         $this->author = 'Lengow';
         $this->need_instance = 0;
-        $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.6');
+        $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.7');
+        if(_PS_VERSION_ >= '1.6.0.0') {
+            $this->bootstrap = true;
+        }
 
         parent::__construct();
         $this->registerHook('actionAdminControllerSetMedia');
@@ -272,25 +275,21 @@ class Lengow extends Module {
 
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
         }
-
         // Update version 2.0.4.1
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.1') {
             $this->registerHook('actionValidateLengowOrder');
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.1');
         }
-
         // Update version 2.0.4.2
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.2') {
             $this->_createTab();
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.2');
         }
-
         // Update version 2.0.4.3
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.3') {
             Configuration::updateValue('LENGOW_TRACKING_ID', 'id');
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.3');
         }
-
         // Update version 2.0.4.3
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.4') {
             $this->registerHook('home') && // hookHome
@@ -400,7 +399,6 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_PARENT_IMAGE', Tools::getValue('lengow_parent_image'));
             Configuration::updateValue('LENGOW_FEED_MANAGEMENT', Tools::getValue('lengow_feed_management'));
             Configuration::updateValue('LENGOW_EXPORT_DISABLED', Tools::getValue('lengow_export_disabled'));
-            
             // Send to Lengow versions
             if (LengowCore::getTokenCustomer() && LengowCore::getIdCustomer() && LengowCore::getGroupCustomer()) {
                 $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
@@ -410,7 +408,6 @@ class Lengow extends Module {
                     'idGroup' => LengowCore::getGroupCustomer(),
                     'module' => $this->version));
             }
-
             if (Tools::getValue('cron-delay') > 0) {
                 Configuration::updateValue('LENGOW_CRON', Tools::getValue('cron-delay'));
                 self::updateCron(Tools::getValue('cron-delay'));
@@ -424,7 +421,7 @@ class Lengow extends Module {
      * @return varchar form html
      */
     private function _getConfigAdmin() {
-        if (LengowCore::compareVersion('1.5') == 0) {
+        if (LengowCore::compareVersion('1.5') == 0 || LengowCore::compareVersion('1.6') == 0) {
             // Get default language
             $default_lang = (int) Configuration::get('PS_LANG_DEFAULT');
             // Init Fields form array
@@ -921,11 +918,7 @@ class Lengow extends Module {
                     ),
                 ),
             );
-            // +Status commandes
-            // +Nom transporteur : marketplace ou lengow
-            // +Debug mode
-            // +Tache cron
-            // +Choix image principale
+
             $helper = new HelperForm();
             // Module, token and currentIndex
             $helper->module = $this;
@@ -952,7 +945,6 @@ class Lengow extends Module {
                     'desc' => $this->l('Back to list')
                 )
             );
-
             // Load currents values
             $helper->fields_value['lengow_customer_id'] = Configuration::get('LENGOW_ID_CUSTOMER');
             $helper->fields_value['lengow_group_id'] = Configuration::get('LENGOW_ID_GROUP');
@@ -982,18 +974,13 @@ class Lengow extends Module {
             $helper->fields_value['lengow_debug'] = Configuration::get('LENGOW_DEBUG');
             $helper->fields_value['lengow_is_import'] = $this->_getFormIsImport();
             $helper->fields_value['lengow_feed_management'] = Configuration::get('LENGOW_FEED_MANAGEMENT');
-
             $links = $this->_getWebservicesLinks();
             $helper->fields_value['url_feed_export'] = $links['link_feed_export'];
             $helper->fields_value['url_feed_import'] = $links['link_feed_import'];
-
             $helper->fields_value['lengow_check_configuration'] = $this->_getCheckList();
             $helper->fields_value['lengow_logs'] = $this->_getLogFiles();
-
             $helper->fields_value['lengow_flow'] = $this->_getFormFeeds();
-
             $helper->fields_value['lengow_cron'] = $this->_getFormCron();
-
             return $helper->generateForm($fields_form);
         } else {
             return $this->displayForm14();
