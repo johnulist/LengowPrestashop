@@ -468,10 +468,6 @@ class Lengow extends Module {
                         'required' => true,
                     ),
                 ),
-                'submit' => array(
-                    'title' => $this->l('Save'),
-                    'class' => 'btn btn-default pull-right'
-                ),
             );
             $index += 1;
             $fields_form[$index]['form'] = array(
@@ -486,6 +482,10 @@ class Lengow extends Module {
                         'size' => 100,
                     ),
                 ),
+                'submit' => array(
+                    'title' => $this->l('Save'),
+                    'class' => 'button btn btn-default pull-right'
+                )
             );
             $index += 1;
             $fields_form[$index]['form'] = array(
@@ -516,7 +516,7 @@ class Lengow extends Module {
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
-                    'class' => 'btn btn-default pull-right'
+                    'class' => 'button btn btn-default pull-right'
                 )
             );
             $index += 1;
@@ -718,7 +718,7 @@ class Lengow extends Module {
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
-                    'class' => 'btn btn-default pull-right'
+                    'class' => 'button btn btn-default pull-right'
                 ),
             );
             $index += 1;
@@ -858,6 +858,10 @@ class Lengow extends Module {
                         'size' => 100,
                     ),
                 ),
+                'submit' => array(
+                    'title' => $this->l('Save'),
+                    'class' => 'button btn btn-default pull-right'
+                ),
             );
             $index += 1;
             $fields_form[$index]['form'] = array(
@@ -925,6 +929,10 @@ class Lengow extends Module {
                         'name' => 'lengow_logs',
                     ),
                 ),
+                'submit' => array(
+                    'title' => $this->l('Save'),
+                    'class' => 'button btn btn-default pull-right'
+                )
             );
 
             $helper = new HelperForm();
