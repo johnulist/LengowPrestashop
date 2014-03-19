@@ -470,7 +470,7 @@ class Lengow extends Module {
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
-                    'class' => 'button'
+                    'class' => 'btn btn-default pull-right'
                 ),
             );
             $index += 1;
@@ -514,6 +514,10 @@ class Lengow extends Module {
                         ),
                     ),
                 ),
+                'submit' => array(
+                    'title' => $this->l('Save'),
+                    'class' => 'btn btn-default pull-right'
+                )
             );
             $index += 1;
             $fields_form[$index]['form'] = array(
@@ -711,6 +715,10 @@ class Lengow extends Module {
                         'name' => 'url_feed_export',
                         'size' => 100,
                     ),
+                ),
+                'submit' => array(
+                    'title' => $this->l('Save'),
+                    'class' => 'btn btn-default pull-right'
                 ),
             );
             $index += 1;
@@ -1088,7 +1096,7 @@ class Lengow extends Module {
             $controller = 'index.php?controller=AdminLengow&ajax&action=updateFlow&token=' . Tools::getAdminTokenLite('AdminLengow') . '';
         }
         if ($flows['return'] == 'OK') {
-            $display = '<table id="table-flows">';
+            $display = '<div class="table-responsive"><table id="table-flows" class="table table-condensed">';
             $display .= '<tr>'
                     . '<th>' . $this->l('Feed ID') . '</th>'
                     . '<th>' . $this->l('Feed name') . '</th>'
@@ -1110,7 +1118,7 @@ class Lengow extends Module {
                         . '</span> </td>';
                 $display .= '</tr>';
             }
-            $display .= '</table>';
+            $display .= '</table></div>';
         }
         return $display;
     }
