@@ -84,6 +84,14 @@ class LengowImportAbstract {
         }
     }
 
+    private function _getLengowOrderId($lengow_order) {
+        if (self::$debug == true)
+            $lengow_order_id = (string) $lengow_order->order_id . '--' . time();
+        else
+            $lengow_order_id = (string) $lengow_order->order_id;
+        return $lengow_order_id;
+    }
+
     /**
      * Makes the Orders API Url.
      *
@@ -101,7 +109,6 @@ class LengowImportAbstract {
 
         LengowCore::setImportProcessing();
         LengowCore::disableSendState();
-
         self::$import_start   = true;
         $count_orders_updated = 0;
         $count_orders_added   = 0;
@@ -115,7 +122,7 @@ class LengowImportAbstract {
                 'id_group' => LengowCore::getGroupCustomer()
             );
             $this->force_log_output = -1;
-            $this->single_order = true;
+            $this->single_order     = true;
         } else {
             $args_order = array(
                 'dateFrom' => $args['dateFrom'],
@@ -143,30 +150,31 @@ class LengowImportAbstract {
             return false;
         }
         foreach ($orders->orders->order as $key => $data) {
-            $lengow_order = $data;
-            if (self::$debug == true)
-                $lengow_order_id = (string) $lengow_order->order_id . '--' . time();
-            else
-                $lengow_order_id = (string) $lengow_order->order_id;
-            /**
-             * Log into database order is processing
-             */
+            $lengow_order    = $data;
+            $lengow_order_id = $this->_buildLengowOrderId($lengow_order);
+            // Check if order is already process or imported
             if(LengowCore::isProcessing($lengow_order_id) && self::$debug != true && $this->single_order == false) {
-                $msg = LengowCore::getOrgerLog($lengow_order_id);
-                if($msg != '')
-                    LengowCore::log('Order ' . $lengow_order_id . ' : ' . $msg, $this->force_log_output);
-                else
-                    LengowCore::log('Order ' . $lengow_order_id . ' : Order is flagged as processing or finished, ignore it', $this->force_log_output);
+                if(LengowOrder::isAlreadyImported($lengow_order_id, $id_flux)) {
+                    LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux), $this->force_log_output);
+                } else {
+                    $msg = LengowCore::getOrgerLog($lengow_order_id);
+                    if($msg != '')
+                        LengowCore::log('Order ' . $lengow_order_id . ' : ' . $msg, $this->force_log_output);
+                    else
+                        LengowCore::log('Order ' . $lengow_order_id . ' : Order is flagged as processing or finished, ignore it', $this->force_log_output);
+                }
                 continue;
             }
             LengowCore::startProcessOrder($lengow_order_id, Tools::jsonEncode($lengow_order));
+            // Check if order is already sent by marketplace
             if((int)$lengow_order->tracking_informations->tracking_deliveringByMarketPlace == 1) {
                 LengowCore::log('Order ' . $lengow_order_id . ' : Shipping by ' . (string) $lengow_order->marketplace, $this->force_log_output);
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Shipping by ' . (string) $lengow_order->marketplace);
                 continue;
             }
             $marketplace = LengowCore::getMarketplaceSingleton((string) $lengow_order->marketplace);
-            $id_flux = (integer) $lengow_order->idFlux;
+            $id_flux     = (integer) $lengow_order->idFlux;
+            // Check if status is available for import
             if ((string) $lengow_order->order_status->marketplace == '') {
                 LengowCore::log('Order ' . $lengow_order_id . ' : no order\'s status', $this->force_log_output);
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'No order status');
@@ -177,7 +185,7 @@ class LengowImportAbstract {
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Delivery by the marketplace (' . $lengow_order->marketplace . ')');
                 continue;
             }
-
+            // Check if order is already imported
             if (LengowOrder::isAlreadyImported($lengow_order_id, $id_flux) && $this->single_order == false) {
                 LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux), $this->force_log_output);
                 LengowCore::endProcessOrder($lengow_order_id, 0, 1, 'Already imported in Prestashop with order ID ' . LengowOrder::getOrderId($lengow_order_id, $id_flux));
