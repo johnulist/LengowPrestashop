@@ -222,6 +222,7 @@ class Lengow extends Module {
                 $this->registerHook('backOfficeHeader') && // Backofficeheader
                 $this->registerHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
+                (LengowCore::compareVersion('1.6') === 0 ? $this->registerHook('dashboardZoneTwo') : true) &&
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayAdminHomeStatistics') : true) &&
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('actionAdminControllerSetMedia') : true) &&
                 $this->registerHook('orderConfirmation'); // displayOrderConfirmation
@@ -1583,6 +1584,12 @@ class Lengow extends Module {
      * @param array $args Arguments of hook
      */
     public function hookActionAdminControllerSetMedia($args) {
+        $controllers = array('admindashboard', 'adminhome', 'adminlengow');
+        if(in_array(strtolower(Tools::getValue('controller')), $controllers)) {
+            //$this->context->controller->addCss($this->_path . 'views/css/admin.css');
+            $this->context->controller->addJs($this->_path . 'views/js/chart.min.js');
+        }
+
         if (Tools::getValue('controller') == 'AdminModules' && Tools::getValue('configure') == 'lengow') {
             $this->context->controller->addJs($this->_path . 'views/js/admin.js');
             $this->context->controller->addCss($this->_path . 'views/css/admin.css');
@@ -1590,10 +1597,20 @@ class Lengow extends Module {
         if(Tools::getValue('controller') == 'AdminOrders') {
             $this->context->controller->addJs($this->_path . 'views/js/admin.js');
         }
-        if (strtolower(Tools::getValue('controller')) == 'adminhome' || Tools::getValue('controller') == 'AdminLengow') {
-            $this->context->controller->addCss($this->_path . 'views/css/admin.css');
-            $this->context->controller->addJs($this->_path . 'views/js/chart.min.js');
-        }
+    }
+
+    /**
+     * Prestashop 1.6 - Dashboard
+     */
+    public function hookDashboardZoneTwo($params) {
+        $this->context->smarty->assign(
+                array(
+                    'token' => LengowCore::getTokenCustomer(),
+                    'id_customer' => LengowCore::getIdCustomer(),
+                    'id_group' => LengowCore::getGroupCustomer(),
+                )
+        );
+        return $this->display(__FILE__, 'views/templates/admin/dashboard/stats_16.tpl');
     }
 
     /**
