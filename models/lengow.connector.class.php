@@ -302,6 +302,7 @@ class LengowConnectorAbstract {
      * @return string The response text
      */
     protected function _makeRequest($url) {
+        return file_get_contents('/home/romain/Bureau/Commandes/test.xml');
         LengowCore::log('Connector ' . $url, -1);
         $ch = curl_init();
         // Options

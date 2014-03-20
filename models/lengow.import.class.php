@@ -84,7 +84,7 @@ class LengowImportAbstract {
         }
     }
 
-    private function _getLengowOrderId($lengow_order) {
+    private function _buildLengowOrderId($lengow_order) {
         if (self::$debug == true)
             $lengow_order_id = (string) $lengow_order->order_id . '--' . time();
         else
