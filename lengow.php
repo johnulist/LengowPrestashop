@@ -1665,7 +1665,8 @@ class Lengow extends Module {
                 $template_data['tracking_carrier'] = $lengow_order_extra->tracking_informations->tracking_carrier;
 
             $this->context->smarty->assign($template_data);
-            
+            if(_PS_VERSION_ >= '1.6')
+                return $this->display(__FILE__, 'views/templates/admin/order/info_16.tpl');
             return $this->display(__FILE__, 'views/templates/admin/order/info.tpl');
         } else {
             return '';

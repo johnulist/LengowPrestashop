@@ -39,6 +39,8 @@ class AdminLengowLogController extends ModuleAdminController {
         $this->_defaultOrderBy = 'date';
         $this->_defaultOrderWay = 'DESC';
         $this->show_toolbar = false;
+        if(_PS_VERSION_ >= '1.6')
+            $this->bootstrap = true;
 
         $this->bulk_actions = array(
             'delete' => array(
@@ -122,6 +124,16 @@ class AdminLengowLogController extends ModuleAdminController {
                 LengowCore::deleteProcessOrder($log);
             }
         }
+    }
+
+    public function initToolbar()
+    {
+        parent::initToolbar();
+
+        unset($this->toolbar_btn['new']);
+        $this->context->smarty->assign('toolbar_scroll', 1);
+        $this->context->smarty->assign('show_toolbar', 1);
+        $this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
     }
 
 }

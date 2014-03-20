@@ -37,6 +37,8 @@ class AdminLengowController extends ModuleAdminController {
 		$this->explicitSelect = true;
 		$this->list_no_link   = true;
         $this->actions = array('lengowpublish', 'lengowunpublish');
+        if(_PS_VERSION_ >= '1.6')
+            $this->bootstrap = true;
 		
 		require_once _PS_MODULE_DIR_ . 'lengow' . DIRECTORY_SEPARATOR . 'models' . DIRECTORY_SEPARATOR . 'lengow.product.class.php';
 
@@ -376,10 +378,10 @@ class AdminLengowController extends ModuleAdminController {
 	public function initToolbar() {
 		parent::initToolbar();
 		unset($this->toolbar_btn['new']);
-		$this->toolbar_btn['importlengow'] = array(
+		/*$this->toolbar_btn['importlengow'] = array(
 				'href' => $this->context->link->getAdminLink('AdminLengow', true).'&importorder=1',
 				'desc' => $this->l('Import orders from lengow')
-			);+
+			);*/
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);
