@@ -377,10 +377,18 @@ class LengowCoreAbstract {
         return Configuration::get('LENGOW_IMPORT_METHOD_NAME');
     }
 
+    public static function disableMail() {
+        if(_PS_VERSION_ < '1.5.4') {
+            LengowCore::_changeMailConfiguration();
+        } else {
+            Configuration::set('PS_MAIL_METHOD', 3);
+        }
+    }
+
     /**
      * Disable mail.
      */
-    public static function disableMail() {
+    /*public static function disableMail() {
         Configuration::updateValue('LENGOW_MAIL_VALUE', Configuration::get('PS_MAIL_METHOD'));
         Configuration::updateValue('LENGOW_MAIL_DOMAIN', Configuration::get('PS_MAIL_DOMAIN'));
         Configuration::updateValue('LENGOW_MAIL_SERVER', Configuration::get('PS_MAIL_SERVER'));
@@ -393,7 +401,7 @@ class LengowCoreAbstract {
         else
             Configuration::updateValue('PS_MAIL_METHOD', 3);
         Configuration::updateValue('LENGOW_IS_MAIL_TEMP', true);
-    }
+    }*/
 
     public static function checkMail() {
         if(Configuration::get('LENGOW_IS_MAIL_TEMP') == true) {
@@ -408,13 +416,13 @@ class LengowCoreAbstract {
      * @return boolean
      */
     private static function _changeMailConfiguration() {
-        if(Configuration::updateValue('PS_MAIL_DOMAIN', 'temp.lengow') &&
-           Configuration::updateValue('PS_MAIL_SERVER', 'temp.lengow') &&
-           Configuration::updateValue('PS_MAIL_USER', 'temp@lengow.temp') &&
-           Configuration::updateValue('PS_MAIL_PASSWD', 'temp') &&
-           Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', 'off') &&
-           Configuration::updateValue('PS_MAIL_SMTP_PORT', '25') &&
-           Configuration::updateValue('PS_MAIL_METHOD', 2))
+        if(Configuration::set('PS_MAIL_DOMAIN', 'temp.lengow') &&
+           Configuration::set('PS_MAIL_SERVER', 'temp.lengow') &&
+           Configuration::set('PS_MAIL_USER', 'temp@lengow.temp') &&
+           Configuration::set('PS_MAIL_PASSWD', 'temp') &&
+           Configuration::set('PS_MAIL_SMTP_ENCRYPTION', 'off') &&
+           Configuration::set('PS_MAIL_SMTP_PORT', '25') &&
+           Configuration::set('PS_MAIL_METHOD', 2))
             return true;
         else
             return false;

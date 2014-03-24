@@ -152,6 +152,7 @@ class LengowImportAbstract {
         foreach ($orders->orders->order as $key => $data) {
             $lengow_order    = $data;
             $lengow_order_id = $this->_buildLengowOrderId($lengow_order);
+            LengowCore::disableMail();
             // Check if order is already process or imported
             if(LengowCore::isProcessing($lengow_order_id) && self::$debug != true && $this->single_order == false) {
                 if(LengowOrder::isAlreadyImported($lengow_order_id, $id_flux)) {
@@ -197,7 +198,7 @@ class LengowImportAbstract {
                 if ($order->current_state != $id_state_lengow) {
                     // Change state process to shipped
                     if ($order->current_state == LengowCore::getOrderState('process') && $marketplace->getStateLengow((string) $lengow_order->order_status->marketplace) == 'shipped') {
-                        LengowCore::disableMail();
+                        //LengowCore::disableMail();
                         $history = new OrderHistory();
                         $history->id_order = $order->id;
                         $history->changeIdOrderState(LengowCore::getOrderState('shipped'), $order, true);
@@ -222,10 +223,10 @@ class LengowImportAbstract {
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : update state to shipped', $this->force_log_output);
                         $count_orders_updated++;
-                        LengowCore::enableMail();
+                        //LengowCore::enableMail();
                     } else if (($order->current_state == LengowCore::getOrderState('process') // Change state process or shipped to cancel
                             || $order->current_state == LengowCore::getOrderState('shipped')) && $marketplace->getStateLengow((string) $lengow_order->order_status->marketplace) == 'cancel') {
-                        LengowCore::disableMail();
+                        //LengowCore::disableMail();
 
                         $history = new OrderHistory();
                         $history->id_order = $order->id;
@@ -240,7 +241,7 @@ class LengowImportAbstract {
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : update state to cancel', $this->force_log_output);
                         $count_orders_updated++;
-                        LengowCore::enableMail();
+                        ////LengowCore::enableMail();
                     }
                 }
             } else {
@@ -768,7 +769,7 @@ class LengowImportAbstract {
                             . 'Total paid : ' . (float) $lengow_order->order_amount . ' | ' . "\r\n"
                             . 'Shipping : ' . (string) $lengow_order->order_shipping . ' | ' . "\r\n"
                             . 'Message : ' . (string) $lengow_order->order_comments . "\r\n";
-                    LengowCore::disableMail();
+                    //LengowCore::disableMail();
                     // HACK force flush
                     if (_PS_VERSION_ >= '1.5') {
                         $this->context->customer = new Customer($this->context->cart->id_customer);
@@ -801,7 +802,7 @@ class LengowImportAbstract {
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
                         if (Validate::isLoadedObject($cart))
                             $cart->delete();
-                        LengowCore::enableMail();
+                        //LengowCore::enableMail();
                     } else {
                         try {
                             $payment_validate = $payment->$validateOrder($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true);
@@ -868,7 +869,7 @@ class LengowImportAbstract {
                         if(Tools::getValue('limit') != '' && Tools::getValue('limit') > 0) {
                             if($count_orders_added == (int) Tools::getValue('limit')) {
                                 LengowCore::setImportEnd();
-                                LengowCore::enableMail();
+                                //LengowCore::enableMail();
                                 die();
                             }
                         }
@@ -878,7 +879,7 @@ class LengowImportAbstract {
                         if (Validate::isLoadedObject($cart))
                             $cart->delete();
                     }
-                    LengowCore::enableMail();
+                    //LengowCore::enableMail();
                 } else {
                     if ($id_order_presta) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : already imported in Prestashop with order ID ' . $id_order_presta, $this->force_log_output);
