@@ -232,6 +232,10 @@ class LengowCoreAbstract {
         return Configuration::get('LENGOW_EXPORT_ALL');
     }
 
+    public static function exportOutOfStockProduct() {
+        return Configuration::get('LENGOW_EXPORT_OUT_STOCK');
+    }
+
     /**
      * The export format used.
      *

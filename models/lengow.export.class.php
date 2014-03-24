@@ -183,6 +183,11 @@ class LengowExportAbstract {
     private $all_product = false;
 
     /**
+     * Export out of stock product
+     */
+    private $export_out_stock = false;
+
+    /**
      * Export active product.
      */
     private $export_features = false;
@@ -204,7 +209,7 @@ class LengowExportAbstract {
      *
      * @return Exception Error
      */
-    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null, $export_features = null, $limit = null, $product_ids = null) {
+    public function __construct($format = null, $fullmode = null, $all = null, $stream = null, $full_title = null, $all_product = null, $export_features = null, $limit = null, $product_ids = null, $out_stock = null) {
         try {
             $this->setFormat($format);
             $this->setFullmode($fullmode);
@@ -215,6 +220,7 @@ class LengowExportAbstract {
             $this->setAllProduct($all_product);
             $this->setLimit($limit);
             $this->setIdsProduct($product_ids);
+            $this->setExportOutOfStock($out_stock);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -412,6 +418,13 @@ class LengowExportAbstract {
             $this->all_product = LengowCore::exportAllProduct() ? true : false;
     }
 
+    public function setExportOutOfStock($out_stock) {
+        if($out_stock !== null)
+            $this->export_out_stock = $out_stock;
+        else
+            $this->export_out_stock = LengowCore::exportOutOfStockProduct();
+    }
+
     public function setLimit($limit) {
         $this->limit = $limit;
     }
@@ -461,6 +474,8 @@ class LengowExportAbstract {
                 if($product->id) {
                     $is_last = false;
                     $combinations = $product->getCombinations();
+                    if(!$this->export_out_stock && $product->getData('quantity') <= 0)
+                        continue;
                     if($p['id_product'] == $last['id_product'] && empty($combinations))
                         $is_last = true;
 
@@ -472,6 +487,8 @@ class LengowExportAbstract {
                         $is_last = false;
                         foreach ($product->getCombinations() as $id_product_attribute => $combination) {
                             $count++;
+                            if(!$this->export_out_stock && $product->getData('quantity', $id_product_attribute) <= 0)
+                                continue;
                             if($p['id_product'] == $last['id_product'] && $total ==  $count)
                                 $is_last = true;
                             $this->_write('data', $this->_make($product, $id_product_attribute), $is_last);

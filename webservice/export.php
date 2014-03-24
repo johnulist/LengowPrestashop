@@ -79,6 +79,13 @@ if (LengowCore::checkIP()) {
         $all_product = false;
     elseif (Tools::getValue('active') && Tools::getValue('active') == 'all')
         $all_product = true;
+    // Export out of stock product
+    $out_stock = null;
+    if(Tools::getValue('out_stock') == "0")
+        $out_stock = false;
+    elseif(Tools::getValue('out_stock') == "1")
+        $out_stock = true;
+
     // Products ids
     $product_ids = null;
     if(Tools::getValue('ids') && Tools::getValue('ids') != '') {
@@ -92,7 +99,7 @@ if (LengowCore::checkIP()) {
     if(Tools::getValue('limit') && Tools::getValue('limit') > 0)
         $limit = Tools::getValue('limit');
 
-    $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product, null, $limit, $product_ids);
+    $export = new LengowExport($format, $fullmode, $all, $stream, $title, $all_product, null, $limit, $product_ids, $out_stock);
     $export->exec();
 } else {
     die('Unauthorized access for IP : ' . $_SERVER['REMOTE_ADDR']);

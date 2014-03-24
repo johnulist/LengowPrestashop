@@ -297,6 +297,12 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_PARENT_IMAGE', false);
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.4');
         }
+
+        // Update version 2.0.5
+        if(Configuration::get('LENGOW_VERSION') < '2.0.4.5') {
+            Configuration::updateValue('LENGOW_EXPORT_OUT_STOCK', true);
+            Configuration::updateValue('LENGOW_VERSION', '2.0.4.5');
+        }
     }
 
     /**
@@ -400,6 +406,7 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_PARENT_IMAGE', Tools::getValue('lengow_parent_image'));
             Configuration::updateValue('LENGOW_FEED_MANAGEMENT', Tools::getValue('lengow_feed_management'));
             Configuration::updateValue('LENGOW_EXPORT_DISABLED', Tools::getValue('lengow_export_disabled'));
+            Configuration::updateValue('LENGOW_EXPORT_OUT_STOCK', Tools::getValue('lengow_export_out_stock'));
             // Send to Lengow versions
             if (LengowCore::getTokenCustomer() && LengowCore::getIdCustomer() && LengowCore::getGroupCustomer()) {
                 $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
@@ -631,6 +638,26 @@ class Lengow extends Module {
                         'label' => $this->l('Title + attributes + features'),
                         'desc' => $this->l('Select this option if you want a variation product title as title + attributes + feature. By default the title will be the product name'),
                         'name' => 'lengow_export_fullname',
+                        'is_bool' => true,
+                        'class' => 't',
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
+                        'type' => 'radio',
+                        'label' => $this->l('Export out of stock product'),
+                        'desc' => $this->l('Select this option if you want to export out of stock product.'),
+                        'name' => 'lengow_export_out_stock',
                         'is_bool' => true,
                         'class' => 't',
                         'values' => array(
@@ -991,6 +1018,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_debug'] = Configuration::get('LENGOW_DEBUG');
             $helper->fields_value['lengow_is_import'] = $this->_getFormIsImport();
             $helper->fields_value['lengow_feed_management'] = Configuration::get('LENGOW_FEED_MANAGEMENT');
+            $helper->fields_value['lengow_export_out_stock'] = Configuration::get('LENGOW_EXPORT_OUT_STOCK');
             $links = $this->_getWebservicesLinks();
             $helper->fields_value['url_feed_export'] = $links['link_feed_export'];
             $helper->fields_value['url_feed_import'] = $links['link_feed_import'];
@@ -1064,6 +1092,7 @@ class Lengow extends Module {
                     'lengow_debug' => Configuration::get('LENGOW_DEBUG'),
                     'lengow_feed_management' => Configuration::get('LENGOW_FEED_MANAGEMENT'),
                     'lengow_parent_image' => Configuration::get('LENGOW_PARENT_IMAGE'),
+                    'lengow_export_out_stock' => Configuration::get('LENGOW_EXPORT_OUT_STOCK'),
                     'url_feed_export' => $links['link_feed_export'],
                     'url_feed_import' => $links['link_feed_import'],
                     'lengow_flow' => $this->_getFormFeeds(),
