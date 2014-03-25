@@ -266,6 +266,8 @@ class LengowExportAbstract {
                 $this->fields[] = 'image_' . ($i + 1);
             }
         }
+        // Allow to add extra fields 
+        $this->setAdditionalFields();
     }
 
     /**
@@ -570,6 +572,8 @@ class LengowExportAbstract {
             for ($i = 3; $i <= $this->max_images; $i++)
                 $array_product['image_' . $i] = $product->getData('image_' . $i, $id_product_attribute);
         }
+        // Get additional data
+        $array_product = $this->setAdditionalFieldsValues($product, $id_product_attribute, $array_product);
         return $array_product;
     }
 
@@ -740,6 +744,33 @@ class LengowExportAbstract {
             $array_fields[] = new LengowOption($fields, $value);
         }
         return $array_fields;
+    }
+
+    /**
+     * Override this function in override/lengow.export.class.php to add header
+     */
+    public function setAdditionalFields() {
+        /**
+         * Write here your process
+         *
+         * ex : $this->fields[] = 'my_header_value';
+         */
+    }
+
+    /**
+     * Override this function to assign data for additional fields
+     *
+     * - Set value vor index define in function setAdditionalFields
+     *
+     * @param $product LengowProduct
+     * @param $id_product_attribute
+     * @return $array_product
+     */
+    public function setAdditionalFieldsValues($product, $id_product_attribute = null, $array_product) {
+        /**
+         * Write here your process
+         */
+        return $array_product;
     }
 
 }
