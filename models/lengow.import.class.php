@@ -316,18 +316,51 @@ class LengowImportAbstract {
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No address');
                         continue;
                     }
-                    $address_cp = (string) $lengow_order->billing_address->billing_zipcode;
+
+
+
+                    /*$address_cp = (string) $lengow_order->billing_address->billing_zipcode;
                     if (empty($address_cp)) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no zipcode');
                         $address_cp = ' ';
                     } elseif(!LengowCore::isZipCodeFormat($address_cp)) {
+                        if((string) $lengow_order->billing_address->billing_country_iso != '') {
+                            try {
+                                $id_country = Country::getByIso((string) $lengow_order->billing_address->billing_country_iso);
+                                $billing_country = new Country($id_country);
+                                if(!$billing_country->checkZipCode($address_cp)) {
+
+                                }
+                            } catch (Exception $e) {
+                                
+                            }
+                        }
+
                         $address_cp = preg_replace('/[^0-9-]+/', '', $address_cp);
                         if(!LengowCore::isZipCodeFormat($address_cp)) {
                             LengowCore::log('Order ' . $lengow_order_id . ' : ZipCode is not valid', $this->force_log_output);
                             LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'ZipCode is not valid -> ' . (string) $lengow_order->billing_address->billing_zipcode);
                             continue;
                         }
+                    }*/
+                    /**
+                     * Validate zipcode
+                     */
+                    $billing_zipcode     = (string) $lengow_order->billing_address->billing_zipcode;
+                    $billing_country_iso = (string) $lengow_order->billing_address->billing_country_iso;
+                    try {
+                        $id_country      = Country::getByIso($billing_country_iso);
+                        $billing_country = new Country($id_country);
+                        if($billing_country->zip_code_format != '' && !$billing_country->checkZipCode($billing_zipcode)) {
+                            $billing_zipcode = preg_replace('/[^0-9-]+/', '', $billing_zipcode);
+                        }
+                    } catch (Exception $e) {
+                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) No zipcode');
+                        $billing_zipcode = ' ';
                     }
+                    /**
+                     * End validate zipcode
+                     */
                     $address_city = (string) $lengow_order->billing_address->billing_city;
                     if (empty($address_city)) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : no city');
@@ -363,7 +396,7 @@ class LengowImportAbstract {
                         $billing_address->address1 = preg_replace('/[!<>?=+@{}_$%]/sim', '', $billing_address->address1);
                         $billing_address->address2 = preg_replace('/[!<>?=+@{}_$%]/sim', '', $billing_address->address2);
                         $billing_address->city = preg_replace('/[!<>?=#+;@{}_$%]/sim', '', (string) $lengow_order->billing_address->billing_city);
-                        $billing_address->postcode = $address_cp;
+                        $billing_address->postcode = $billing_zipcode;
                         if(empty($billing_address->postcode))
                             $billing_address->postcode = ' ';
                         // Phone
@@ -512,6 +545,7 @@ class LengowImportAbstract {
                     $lengow_new_order = false;
                     $lengow_products = array();
                     $lengow_products_order = $lengow_order->cart->products->product;
+
                     foreach ($lengow_products_order as $lengow_product) {
                         if((string) $lengow_product->status != '' && $marketplace->getStateLengow((string) $lengow_product->status) == 'canceled')
                             continue;
@@ -531,6 +565,7 @@ class LengowImportAbstract {
                             $product_ids = LengowProduct::getIdsProduct($lengow_product, $array_ref[$n]);
                             $id_product = $product_ids['id_product'];
                             $id_product_attribute = $product_ids['id_product_attribute'];
+
                             if(array_key_exists($product_field, LengowExport::$DEFAULT_FIELDS)) {
                                 switch(LengowExport::$DEFAULT_FIELDS[$product_field]) {
                                     case 'reference':
@@ -566,7 +601,6 @@ class LengowImportAbstract {
                             }
                             if(is_numeric($id_product)) {
                                 $product = new LengowProduct($id_product);
-
                                 // Check Product
                                 if($product->name == '') {
                                     $product = null;
@@ -783,7 +817,7 @@ class LengowImportAbstract {
                     }
                     $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, null, null, false), 2);
                     //$lengow_total_pay = (float) Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), 2);
-                    if(_PS_VERSION_ >= '1.5.2' && _PS_VERSION_ <= '1.5.3.1')
+                    if(_PS_VERSION_ >= '1.5.2.0' && _PS_VERSION_ <= '1.5.3.1')
                         $validateOrder = 'validateOrder152';
                     else
                         $validateOrder = 'validateOrder';
@@ -805,10 +839,10 @@ class LengowImportAbstract {
                         //LengowCore::enableMail();
                     } else {
                         try {
-                            $payment_validate = $payment->$validateOrder($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true);
+                            $payment_validate = $payment->{$validateOrder}($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true);
                         } catch (Exception $e) {
                             LengowCore::log('Order ' . $lengow_order_id . ' : Error validate order (' . $e->getMessage() . ')', $this->force_log_output);
-                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No new order to import');
+                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order ' . $lengow_order_id . ' : Error validate order (' . $e->getMessage() . ')');
                             continue;
                         }
                     }
