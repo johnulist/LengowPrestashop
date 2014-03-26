@@ -432,7 +432,7 @@ class LengowImportAbstract {
                         $shipping_address_firstname = '--';
                     if (empty($shipping_address_lastname))
                         $shipping_address_lastname = '--';
-                    $shipping_zipcode = (string) $lengow_order->delivery_address->delivery_zipcode;
+                    /*$shipping_zipcode = (string) $lengow_order->delivery_address->delivery_zipcode;
                     if (empty($shipping_zipcode)) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no shipping zipcode');
                         $shipping_zipcode = ' ';
@@ -443,7 +443,7 @@ class LengowImportAbstract {
                             LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Shipping ZipCode is not valid -> ' . (string) $lengow_order->shipping_address->shipping_zipcode);
                             continue;
                         }
-                    }
+                    }*/
                     $shipping_zipcode     = (string) $lengow_order->delivery_address->delivery_zipcode;
                     $shipping_country_iso = (string) $lengow_order->delivery_address->delivery_country_iso;
                     try {
