@@ -316,9 +316,6 @@ class LengowImportAbstract {
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No address');
                         continue;
                     }
-
-
-
                     /*$address_cp = (string) $lengow_order->billing_address->billing_zipcode;
                     if (empty($address_cp)) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no zipcode');
@@ -343,9 +340,6 @@ class LengowImportAbstract {
                             continue;
                         }
                     }*/
-                    /**
-                     * Validate zipcode
-                     */
                     $billing_zipcode     = (string) $lengow_order->billing_address->billing_zipcode;
                     $billing_country_iso = (string) $lengow_order->billing_address->billing_country_iso;
                     try {
@@ -355,12 +349,10 @@ class LengowImportAbstract {
                             $billing_zipcode = preg_replace('/[^0-9-]+/', '', $billing_zipcode);
                         }
                     } catch (Exception $e) {
+                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) ' . $e->getMessage());
                         LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) No zipcode');
                         $billing_zipcode = ' ';
                     }
-                    /**
-                     * End validate zipcode
-                     */
                     $address_city = (string) $lengow_order->billing_address->billing_city;
                     if (empty($address_city)) {
                         LengowCore::log('Order ' . $lengow_order_id . ' : no city');
@@ -451,6 +443,19 @@ class LengowImportAbstract {
                             LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Shipping ZipCode is not valid -> ' . (string) $lengow_order->shipping_address->shipping_zipcode);
                             continue;
                         }
+                    }
+                    $shipping_zipcode     = (string) $lengow_order->delivery_address->delivery_zipcode;
+                    $shipping_country_iso = (string) $lengow_order->delivery_address->delivery_country_iso;
+                    try {
+                        $id_country       = Country::getByIso($shipping_country_iso);
+                        $shipping_country = new Country($id_country);
+                        if($billing_country->zip_code_format != '' && !$shipping_country->checkZipCode($shipping_zipcode)) {
+                            $shipping_zipcode = preg_replace('/[^0-9-]+/', '', $shipping_zipcode);
+                        }
+                    } catch (Exception $e) {
+                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) ' . $e->getMessage());
+                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) No zipcode');
+                        $shipping_zipcode = ' ';
                     }
                     if ((string) $billing_address->firstname . (string) $billing_address->lastname . (string) $lengow_order->billing_address->billing_full_address 
                         != $shipping_address_firstname . $shipping_address_lastname . (string) $lengow_order->delivery_address->delivery_full_address) {
@@ -573,8 +578,10 @@ class LengowImportAbstract {
                                         $product_sku = (string) $lengow_product->reference;
                                         $product_sku = str_replace('\_', '_', $product_sku);
                                         $product_sku = str_replace('X', '_', $product_sku);
-                                        $id_product = $product_ids['id_product'];
-                                        $id_product_attribute = (array_key_exists('id_product_attribute', $product_ids) ? $product_ids['id_product_attribute'] : 0);
+                                        if(is_array($product_ids)) {
+                                            $id_product = $product_ids['id_product'];
+                                            $id_product_attribute = (array_key_exists('id_product_attribute', $product_ids) ? $product_ids['id_product_attribute'] : 0);
+                                        }
                                         break;
                                     case 'ean':
                                         $product_ids = LengowProduct::findProduct('ean13', $lengow_product->{$array_ref[$n]});
