@@ -1536,7 +1536,6 @@ class Lengow extends Module {
                     if ($id_order_state == LengowCore::getOrderState('cancel')) {
                         $marketplace->wsdl('refuse', $lengow_order->lengow_id_flux, $lengow_order->lengow_id_order, $args);
                     }
-                    LengowCore::enableMail();
                 }
             }
         }
@@ -1547,14 +1546,17 @@ class Lengow extends Module {
      */
     public function hookActionObjectUpdateAfter($args) {
         if($args['object'] instanceof Order) {
-            $order = new LengowOrder($args['object']->id);
-            if(!empty($order->lengow_id_order)) {
-                if($order->shipping_number != '' && $order->current_state == LengowCore::getOrderState('shipped')) {
-                    $args['id_order'] = $args['object']->id;
-                    $marketplace = LengowCore::getMarketplaceSingleton((string) $order->lengow_marketplace);
-                    $marketplace->wsdl('shipped', $order->lengow_id_flux, $order->lengow_id_order, $args);
+            if(LengowOrder::isOrderLengow($args['object']->id)) {
+                $lengow_order = new LengowOrder($args['object']->id);
+                if(!empty($lengow_order->lengow_id_order)) {
+                    if($lengow_order->shipping_number != '' && $args['object']->current_state == LengowCore::getOrderState('shipped')) {
+                        $params = array();
+                        $params['id_order'] = $args['object']->id;
+                        $marketplace = LengowCore::getMarketplaceSingleton((string) $lengow_order->lengow_marketplace);
+                        $marketplace->wsdl('shipped', $lengow_order->lengow_id_flux, $lengow_order->lengow_id_order, $params);
+                    }
                 }
-            }        
+            }
         }
     }
 

@@ -241,7 +241,7 @@ class LengowImportAbstract {
                         }
                         LengowCore::log('Order ' . $lengow_order_id . ' : update state to cancel', $this->force_log_output);
                         $count_orders_updated++;
-                        ////LengowCore::enableMail();
+                        //LengowCore::enableMail();
                     }
                 }
             } else {

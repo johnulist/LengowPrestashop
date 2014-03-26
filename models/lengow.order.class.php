@@ -425,5 +425,16 @@ class LengowOrderAbstract extends Order {
             return DB::getInstance()->insert('mr_selected', $insert_values);
         }
     }
+
+    public static function isOrderLengow($id) {
+        $id_order_lengow = Db::getInstance()->getValue(
+            'SELECT `id_order_lengow` ' .
+            'FROM `'._DB_PREFIX_.'lengow_orders` ' . 
+            'WHERE `id_order` = ' . $id . ';');
+        if($id_order_lengow == '')
+            return false;
+        else
+            return true;
+    }
 }
                                                      
