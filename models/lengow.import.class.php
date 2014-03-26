@@ -654,8 +654,12 @@ class LengowImportAbstract {
                                 else
                                     $product_sku = $id_product;
                             }
-
                             $product = new LengowProduct((int) $id_product, $this->id_lang);
+                        }
+                        if(!array_key_exists($id_product_attribute, $product->getCombinations())) {
+                            LengowCore::log('Order ' . $lengow_order_id . ' : Unable to find combination ' . $id_product_attribute . ' for product ' . $id_product, $this->force_log_output);
+                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order ' . $lengow_order_id . ' : Unable to find combination ' . $id_product_attribute . ' for product ' . $id_product);
+                            continue 2;
                         }
                         // Test if product is active
                         if($product->active != 1) {
