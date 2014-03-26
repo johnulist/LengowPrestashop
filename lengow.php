@@ -222,6 +222,7 @@ class Lengow extends Module {
                 $this->registerHook('backOfficeHeader') && // Backofficeheader
                 $this->registerHook('newOrder') && // actionValidateOrder
                 $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
+                $this->registerHook('actionObjectUpdateAfter') && 
                 (LengowCore::compareVersion('1.6') === 0 ? $this->registerHook('dashboardZoneTwo') : true) &&
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayAdminHomeStatistics') : true) &&
                 (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('actionAdminControllerSetMedia') : true) &&
@@ -297,9 +298,9 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_PARENT_IMAGE', false);
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.4');
         }
-
         // Update version 2.0.5
         if(Configuration::get('LENGOW_VERSION') < '2.0.4.5') {
+            $this->registerHook('actionObjectUpdateAfter');
             Configuration::updateValue('LENGOW_EXPORT_OUT_STOCK', true);
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.5');
         }
@@ -1538,6 +1539,22 @@ class Lengow extends Module {
                     LengowCore::enableMail();
                 }
             }
+        }
+    }
+
+    /**
+     * Update, if isset tracking number
+     */
+    public function hookActionObjectUpdateAfter($args) {
+        if($args['object'] instanceof Order) {
+            $order = new LengowOrder($args['object']->id);
+            if(!empty($order->lengow_id_order)) {
+                if($order->shipping_number != '' && $order->current_state == LengowCore::getOrderState('shipped')) {
+                    $args['id_order'] = $args['object']->id;
+                    $marketplace = LengowCore::getMarketplaceSingleton((string) $order->lengow_marketplace);
+                    $marketplace->wsdl('shipped', $order->lengow_id_flux, $order->lengow_id_order, $args);
+                }
+            }        
         }
     }
 

@@ -879,8 +879,8 @@ class LengowImportAbstract {
                         }
                         // Force carrier
                         if(_PS_VERSION_ >= '1.5') {
-                            if($new_lengow_order->getIdOrderCarrier() != LengowCore::getDefaultCarrier())
-                                $new_lengow_order->forceCarrier(LengowCore::getDefaultCarrier());
+                            if($new_lengow_order->getIdOrderCarrier() != (int) LengowCore::getDefaultCarrier())
+                                $new_lengow_order->forceCarrier((int) LengowCore::getDefaultCarrier());
                         }
                         // Check Mondial Relay
                         if(LengowCore::isMondialRelay()) {

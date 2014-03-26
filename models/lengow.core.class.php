@@ -314,7 +314,7 @@ class LengowCoreAbstract {
      * @return integer
      */
     public static function getDefaultCarrier() {
-        return Configuration::get('LENGOW_CARRIER_DEFAULT');
+        return (int) Configuration::get('LENGOW_CARRIER_DEFAULT');
     }
 
     /**
