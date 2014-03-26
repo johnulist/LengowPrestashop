@@ -181,7 +181,7 @@ class LengowCheck {
         $connector = new LengowConnector((int) $id_customer, $token);
         $result = $connector->api('authentification');
 
-        if(array_key_exists('ip', $result))
+        if(is_array($result) && array_key_exists('ip', $result))
             return $result['ip'];
         else
             return 'IP not found';
