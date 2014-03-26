@@ -375,11 +375,14 @@ class LengowOrderAbstract extends Order {
         
         $this->id_carrier = $id_carrier;
         $this->update();
-
         if($this->getIdOrderCarrier() != '') {
             $order_carrier = new OrderCarrier($this->getIdOrderCarrier());
             $order_carrier->id_carrier = $id_carrier;
-            $order_carrier->update();
+        } else {
+            $order_carrier = new OrderCarrier();
+            $order_carrier->id_order = $this->id;
+            $order_carrier->id_carrier = $id_carrier;
+            $order_carrier->add();
         }
     }
 
