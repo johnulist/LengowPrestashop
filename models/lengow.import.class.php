@@ -527,8 +527,8 @@ class LengowImportAbstract {
                     $order_shipping_price = 0;
                     $lengow_total_order = 0;
                     // Building Cart
-
-                    global $cart;
+                    if(_PS_VERSION_ < '1.5')
+                        global $cart;
                     $cart = new LengowCart();
                     $cart->id_address_delivery = $shipping_address->id;
                     $cart->id_address_invoice = $billing_address->id;
@@ -828,7 +828,7 @@ class LengowImportAbstract {
                         Context::getContext()->cart->getPackageList(true);
                         Context::getContext()->cart->getDeliveryOption(null, false, false);
                     }
-                    $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, true, null, false), 2);
+                    $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, null, null, false), 2);
                     //$lengow_total_pay = (float) Tools::ps_round($this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
                     if(_PS_VERSION_ >= '1.5.2.0' && _PS_VERSION_ <= '1.5.3.1')
                         $validateOrder = 'validateOrder152';
