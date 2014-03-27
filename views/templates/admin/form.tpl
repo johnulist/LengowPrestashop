@@ -199,6 +199,7 @@
         <div class="small"><sup>*</sup> {l s='Required field' mod='lengow'}</div>
     </fieldset>
     <br />
+    {if $lengow_feed_management}
     <fieldset id="fieldset_5"> <legend>{l s='Feeds' mod='lengow'}</legend>
         {$lengow_flow}
         <p class="preference_description">{l s='If you use the backoffice of the Lengow module, migrate your feed when you are sure to be ready' mod='lengow'}<br />
@@ -207,6 +208,7 @@
         <div class="clear"></div>
     </fieldset>
     <br />
+    {/if}
     <fieldset id="fieldset_6"> <legend>{l s='Import parameters' mod='lengow'}</legend>
         <label>{l s='Status of process orders' mod='lengow'}</label>
         <div class="margin-form">
@@ -310,6 +312,18 @@
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
             <input type="radio"	name="lengow_debug"id="active_off" value="0" {if $lengow_debug == 0}checked="checked"{/if} />
+            <label class="t" for="active_off">
+                <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
+            </label> 
+        </div>
+        <div class=:"clear"></div>
+        <label>{l s='Feed management' mod='lengow'}</label>
+        <div class="margin-form">
+            <input type="radio" name="lengow_feed_management"id="active_on" value="1" {if $lengow_feed_management}checked="checked"{/if} />
+            <label class="t" for="active_on">
+                <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
+            </label>
+            <input type="radio" name="lengow_feed_management"id="active_off" value="0" {if $lengow_feed_management == 0}checked="checked"{/if} />
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label> 

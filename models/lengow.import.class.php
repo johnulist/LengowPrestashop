@@ -345,7 +345,7 @@ class LengowImportAbstract {
                     try {
                         $id_country      = Country::getByIso($billing_country_iso);
                         $billing_country = new Country($id_country);
-                        if($billing_country->zip_code_format != '' && !$billing_country->checkZipCode($billing_zipcode)) {
+                        if($billing_country->zip_code_format != '' && !LengowCore::checkZipCode($billing_country->zip_code_format, $billing_zipcode, $billing_country->iso_code)) {
                             $billing_zipcode = preg_replace('/[^0-9-]+/', '', $billing_zipcode);
                         }
                     } catch (Exception $e) {
@@ -449,7 +449,7 @@ class LengowImportAbstract {
                     try {
                         $id_country       = Country::getByIso($shipping_country_iso);
                         $shipping_country = new Country($id_country);
-                        if($billing_country->zip_code_format != '' && !$shipping_country->checkZipCode($shipping_zipcode)) {
+                        if($billing_country->zip_code_format != '' && !LengowCore::checkZipCode($shipping_country->zip_code_format, $shipping_zipcode, $shipping_country->iso_code)) {
                             $shipping_zipcode = preg_replace('/[^0-9-]+/', '', $shipping_zipcode);
                         }
                     } catch (Exception $e) {
@@ -527,6 +527,8 @@ class LengowImportAbstract {
                     $order_shipping_price = 0;
                     $lengow_total_order = 0;
                     // Building Cart
+
+                    global $cart;
                     $cart = new LengowCart();
                     $cart->id_address_delivery = $shipping_address->id;
                     $cart->id_address_invoice = $billing_address->id;
@@ -826,8 +828,8 @@ class LengowImportAbstract {
                         Context::getContext()->cart->getPackageList(true);
                         Context::getContext()->cart->getDeliveryOption(null, false, false);
                     }
-                    $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, null, null, false), 2);
-                    //$lengow_total_pay = (float) Tools::ps_round($cart->getOrderTotal(true, Cart::BOTH), 2);
+                    $lengow_total_pay = (float) Tools::ps_round((float) $this->context->cart->getOrderTotal(true, Cart::BOTH, true, null, false), 2);
+                    //$lengow_total_pay = (float) Tools::ps_round($this->context->cart->getOrderTotal(true, Cart::BOTH), 2);
                     if(_PS_VERSION_ >= '1.5.2.0' && _PS_VERSION_ <= '1.5.3.1')
                         $validateOrder = 'validateOrder152';
                     else
@@ -849,7 +851,6 @@ class LengowImportAbstract {
                             $cart->delete();
                         //LengowCore::enableMail();
                     } else {
-                        print_r($cart->getProducts());
                         try {
                             $payment_validate = $payment->{$validateOrder}($cart->id, $id_status_import, $lengow_total_pay, $method_name, $message, array(), null, true);
                         } catch (Exception $e) {

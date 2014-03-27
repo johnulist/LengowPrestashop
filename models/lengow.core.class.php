@@ -1069,4 +1069,15 @@ class LengowCoreAbstract {
         $row = $db->getRow($sql);
         return $row['message'];
     }
+
+    public static function checkZipCode($zip_code_format, $zip_code, $iso_code) {
+        $zip_regexp = '/^'.$zip_code_format.'$/ui';
+        $zip_regexp = str_replace(' ', '( |)', $zip_regexp);
+        $zip_regexp = str_replace('-', '(-|)', $zip_regexp);
+        $zip_regexp = str_replace('N', '[0-9]', $zip_regexp);
+        $zip_regexp = str_replace('L', '[a-zA-Z]', $zip_regexp);
+        $zip_regexp = str_replace('C', $iso_code, $zip_regexp);
+
+        return (bool)preg_match($zip_regexp, $zip_code);
+    }
 }
