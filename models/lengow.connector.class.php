@@ -53,7 +53,7 @@ class LengowConnectorAbstract {
     public static $CURL_OPTS = array(
         CURLOPT_CONNECTTIMEOUT => 10,
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 60,
+        CURLOPT_TIMEOUT => 300,
         CURLOPT_USERAGENT => 'lengow-api-1.0',
     );
 

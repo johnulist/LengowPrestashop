@@ -104,8 +104,8 @@ class LengowImportAbstract {
         elseif(Configuration::get('LENGOW_DEBUG'))
             self::$debug = true;
 
-        if(Configuration::get('LENGOW_IS_IMPORT') === 'processing' && self::$debug != true)
-            die('An import process seems already running. You can reset it on the module page configuration.');
+        /*if(Configuration::get('LENGOW_IS_IMPORT') === 'processing' && self::$debug != true)
+            die('An import process seems already running. You can reset it on the module page configuration.');*/
 
         LengowCore::setImportProcessing();
         LengowCore::disableSendState();
@@ -658,11 +658,14 @@ class LengowImportAbstract {
                             }
                             $product = new LengowProduct((int) $id_product, $this->id_lang);
                         }
-                        if(!array_key_exists($id_product_attribute, $product->getCombinations())) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : Unable to find combination ' . $id_product_attribute . ' for product ' . $id_product, $this->force_log_output);
-                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order ' . $lengow_order_id . ' : Unable to find combination ' . $id_product_attribute . ' for product ' . $id_product);
-                            continue 2;
+                        if($id_product_attribute != '' && $id_product_attribute != 0) {
+                            if(!array_key_exists($id_product_attribute, $product->getCombinations())) {
+                                LengowCore::log('Order ' . $lengow_order_id . ' : Unable to find combination ' . $id_product_attribute . ' for product ' . $id_product, $this->force_log_output);
+                                LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Order ' . $lengow_order_id . ' : Unable to find combination ' . $id_product_attribute . ' for product ' . $id_product);
+                                continue 2;
+                            }
                         }
+                        
                         // Test if product is active
                         if($product->active != 1) {
                             if(Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT') != 1) {
