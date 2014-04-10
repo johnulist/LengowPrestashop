@@ -292,7 +292,7 @@ class AdminLengow14 extends AdminTab {
                         // item_id is the product id in a product image context, else it is the image id.
                         $item_id = isset($params['image_id']) ? $tr[$params['image_id']] : $id;
                         // If it's a product image
-                        if (isset($tr['id_image'])) {
+                        if (isset($tr['id_image']) && _PS_VERSION_ >= "1.4.2.5") {
                             $image = new Image((int) $tr['id_image']);
                             $path_to_image = _PS_IMG_DIR_ . $params['image'] . '/' . $image->getExistingImgPath() . '.' . $this->imageType;
                         } else
