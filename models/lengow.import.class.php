@@ -712,7 +712,8 @@ class LengowImportAbstract {
 
                         if(Configuration::get('LENGOW_IMPORT_FORCE_PRODUCT') == true) {
                             // Force disabled or out of stock product
-                            if($cart->containsProduct($id_product, $id_product_attribute)) {
+                            $cart_current_quantity = $cart->containsProduct($id_product, $id_product_attribute);
+                            if($cart_current_quantity != false) {
                                 if(_PS_VERSION_ >= '1.5') {
                                     $result_update = Db::getInstance()->execute('
                                         UPDATE `'._DB_PREFIX_.'cart_product`
@@ -724,9 +725,9 @@ class LengowImportAbstract {
                                     );
                                 } else {
                                     $result_update = Db::getInstance()->autoExecute(_DB_PREFIX_ . 'cart_product', array(
-                                        'quantity' => '`quantity` + ' . (int)$product_quantity,
+                                        'quantity' => (int) $cart_current_quantity['quantity'] + (int)$product_quantity,
                                         'date_add' => date('Y-m-d H:i:s')
-                                    ), 'UPDATE', '`id_product` = ' . (int)$id_product);
+                                    ), 'UPDATE', '`id_product` = ' . (int)$id_product . ' AND `id_cart` = ' . (int) $cart->id . ' AND `id_product_attribute` = ' . (int) $id_product_attribute, 1);
                                 }
                             } else {
                                 if(_PS_VERSION_ >= '1.5') {
