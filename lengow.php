@@ -1414,7 +1414,7 @@ class Lengow extends Module {
         // Product IDS
         if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_LIST || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
             $array_products = array();
-            $products = Context::getContext()->smarty->tpl_vars['products']->value;
+            $products = (isset(Context::getContext()->smarty->tpl_vars['products'])?Context::getContext()->smarty->tpl_vars['products']->value:array());
             if(!empty($products)) {
                 foreach($products as $p) {
                     switch (Configuration::get('LENGOW_TRACKING_ID')) {
@@ -1428,16 +1428,16 @@ class Lengow extends Module {
                             $id_product = $p['reference'];
                             break;
                         default:
-                            if ($p['product_attribute_id'])
-                                $id_product = $p['product_id'] . '_' . $p['product_attribute_id'];
+                            if (isset($p['product_attribute_id']))
+                                $id_product = $p['id_product'] . '_' . $p['product_attribute_id'];
                             else
-                                $id_product = $p['product_id'];
+                                $id_product = $p['id_product'];
                             break;
                     }
                     $array_products[] = $id_product;
                 }
             } else {
-                $p = Context::getContext()->smarty->tpl_vars['product']->value;
+                $p = (isset(Context::getContext()->smarty->tpl_vars['product']) ? Context::getContext()->smarty->tpl_vars['product']->value: null);
                 if($p instanceof Product) {
                     switch (Configuration::get('LENGOW_TRACKING_ID')) {
                         case 'upc':
@@ -1450,7 +1450,7 @@ class Lengow extends Module {
                             $id_product =  $p->reference;
                             break;
                         default:
-                            if ($p->product_attribute_id)
+                            if (isset($p->product_attribute_id))
                                 $id_product =  $p->product_id . '_' .  $p->product_attribute_id;
                             else
                                 $id_product =  $p->product_id;
@@ -1572,6 +1572,7 @@ class Lengow extends Module {
         $ids_product = array();
         $products_list = $args['objOrder']->getProducts();
         $i = 0;
+        $products_cart = array();
         foreach ($products_list as $p) {
             $i++;
             switch (Configuration::get('LENGOW_TRACKING_ID')) {
@@ -1595,7 +1596,7 @@ class Lengow extends Module {
             $ids_products[] = $id_product;
 
             // Basket Product
-            $products_cart[] .= 'i' . $i . '=' . $id_product . '&p' . $i . '=' . Tools::ps_round($p['unit_price_tax_incl'], 2) . '&q' . $i . '=' . $p['product_quantity'];
+            $products_cart[] = 'i' . $i . '=' . $id_product . '&p' . $i . '=' . Tools::ps_round($p['unit_price_tax_incl'], 2) . '&q' . $i . '=' . $p['product_quantity'];
         }
         self::$_IDS_PRODUCTS_CART = implode('&', $products_cart);
         self::$_IDS_PRODUCTS = implode('|', $ids_products);
