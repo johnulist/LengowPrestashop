@@ -198,7 +198,6 @@ class LengowImportAbstract {
                 if ($order->current_state != $id_state_lengow) {
                     // Change state process to shipped
                     if ($order->current_state == LengowCore::getOrderState('process') && $marketplace->getStateLengow((string) $lengow_order->order_status->marketplace) == 'shipped') {
-                        //LengowCore::disableMail();
                         $history = new OrderHistory();
                         $history->id_order = $order->id;
                         $history->changeIdOrderState(LengowCore::getOrderState('shipped'), $order, true);
@@ -226,8 +225,6 @@ class LengowImportAbstract {
                         //LengowCore::enableMail();
                     } else if (($order->current_state == LengowCore::getOrderState('process') // Change state process or shipped to cancel
                             || $order->current_state == LengowCore::getOrderState('shipped')) && $marketplace->getStateLengow((string) $lengow_order->order_status->marketplace) == 'cancel') {
-                        //LengowCore::disableMail();
-
                         $history = new OrderHistory();
                         $history->id_order = $order->id;
                         $history->changeIdOrderState(LengowCore::getOrderState('cancel'), $order, true);
@@ -820,7 +817,7 @@ class LengowImportAbstract {
                             . 'Total paid : ' . (float) $lengow_order->order_amount . ' | ' . "\r\n"
                             . 'Shipping : ' . (string) $lengow_order->order_shipping . ' | ' . "\r\n"
                             . 'Message : ' . (string) $lengow_order->order_comments . "\r\n";
-                    //LengowCore::disableMail();
+                    LengowCore::disableMail();
                     // HACK force flush
                     if (_PS_VERSION_ >= '1.5') {
                         $this->context->customer = new Customer($this->context->cart->id_customer);
