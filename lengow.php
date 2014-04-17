@@ -1428,8 +1428,8 @@ class Lengow extends Module {
                             $id_product = $p['reference'];
                             break;
                         default:
-                            if (isset($p['product_attribute_id']))
-                                $id_product = $p['id_product'] . '_' . $p['product_attribute_id'];
+                            if (isset($p['id_product_attribute']))
+                                $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
                             else
                                 $id_product = $p['id_product'];
                             break;
@@ -1450,10 +1450,10 @@ class Lengow extends Module {
                             $id_product =  $p->reference;
                             break;
                         default:
-                            if (isset($p->product_attribute_id))
-                                $id_product =  $p->product_id . '_' .  $p->product_attribute_id;
+                            if (isset($p->id_product_attribute))
+                                $id_product =  $p->id . '_' .  $p->id_product_attribute;
                             else
-                                $id_product =  $p->product_id;
+                                $id_product =  $p->id;
                             break;
                     }
                     $array_products[] = $id_product;
