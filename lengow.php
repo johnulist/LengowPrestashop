@@ -73,7 +73,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.4.3';
+        $this->version = '2.0.5';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.7');
@@ -98,7 +98,6 @@ class Lengow extends Module {
         LengowCore::updatePluginsVersion();
         LengowCore::setModule($this);
         LengowCore::cleanLog();
-        LengowCore::checkMail();
 
         // Update Process
         if(Configuration::get('LENGOW_VERSION') == '')

@@ -382,8 +382,8 @@ class LengowCoreAbstract {
     }
 
     public static function disableMail() {
-        if(_PS_VERSION_ < '1.5.4') {
-            LengowCore::_changeMailConfiguration();
+        if(_PS_VERSION_ < '1.5.4.0') {
+            Configuration::set('PS_SHOP_EMAIL', 'lengow');
         } else {
             Configuration::set('PS_MAIL_METHOD', 3);
         }
@@ -420,30 +420,30 @@ class LengowCoreAbstract {
      * @return boolean
      */
     private static function _changeMailConfiguration() {
-        if(Configuration::set('PS_MAIL_DOMAIN', 'temp.lengow') &&
-           Configuration::set('PS_MAIL_SERVER', 'temp.lengow') &&
-           Configuration::set('PS_MAIL_USER', 'temp@lengow.temp') &&
-           Configuration::set('PS_MAIL_PASSWD', 'temp') &&
-           Configuration::set('PS_MAIL_SMTP_ENCRYPTION', 'off') &&
-           Configuration::set('PS_MAIL_SMTP_PORT', '25') &&
-           Configuration::set('PS_MAIL_METHOD', 2))
-            return true;
-        else
-            return false;
+        Configuration::set('PS_SHOP_EMAIL', 'lengow');
+        /*Configuration::set('PS_MAIL_DOMAIN', 'temp.lengow');
+        Configuration::set('PS_MAIL_SERVER', 'temp.lengow');
+        Configuration::set('PS_MAIL_USER', 'temp@lengow.temp');
+        Configuration::set('PS_MAIL_PASSWD', 'temp');
+        Configuration::set('PS_MAIL_SMTP_ENCRYPTION', 'off');
+        Configuration::set('PS_MAIL_SMTP_PORT', '25');
+        Configuration::set('PS_MAIL_METHOD', 2);*/
     }
     
     /**
      * Enable mail.
      */
     public static function enableMail() {
-        Configuration::updateValue('PS_MAIL_METHOD', Configuration::get('LENGOW_MAIL_VALUE'));
-        Configuration::updateValue('PS_MAIL_DOMAIN', Configuration::get('LENGOW_MAIL_DOMAIN'));
+        /*if(_PS_VERSION_ < '1.5.4.0') {
+            Configuration::updateValue('PS_MAIL_METHOD', Configuration::get('LENGOW_MAIL_VALUE'));
+        }*/
+        /*Configuration::updateValue('PS_MAIL_DOMAIN', Configuration::get('LENGOW_MAIL_DOMAIN'));
         Configuration::updateValue('PS_MAIL_SERVER', Configuration::get('LENGOW_MAIL_SERVER'));
         Configuration::updateValue('PS_MAIL_USER', Configuration::get('LENGOW_MAIL_USER'));
         Configuration::updateValue('PS_MAIL_PASSWD', Configuration::get('LENGOW_MAIL_PASSWD'));
         Configuration::updateValue('PS_MAIL_SMTP_ENCRYPTION', Configuration::get('LENGOW_MAIL_SMTP_ENCRYPTION'));
         Configuration::updateValue('PS_MAIL_SMTP_PORT', Configuration::get('LENGOW_MAIL_SMTP_PORT'));
-        Configuration::updateValue('LENGOW_IS_MAIL_TEMP', false);
+        Configuration::updateValue('LENGOW_IS_MAIL_TEMP', false);*/
     }
 
     /**
