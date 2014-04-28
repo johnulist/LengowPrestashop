@@ -252,28 +252,48 @@ class Lengow extends Module {
             Db::getInstance()->execute($add_log_table);
             
             // Add Lengow order error status
-            $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state WHERE module_name = \'' . $this->name . '\'');
-            if(empty($states)) {
-                $lengow_state = new OrderState();
-                $lengow_state->send_email = false;
-                $lengow_state->module_name = $this->name;
-                $lengow_state->invoice = false;
-                $lengow_state->delivery = false;
-                $lengow_state->shipped = false;
-                $lengow_state->paid = false;
-                $lengow_state->unremovable = false;
-                $lengow_state->logable = false;
-                $lengow_state->color = '#205985';
-                $lengow_state->name[1] = 'Erreur technique - Lengow';
-                $languages = Language::getLanguages(false);
-                foreach ($languages as $language)
-                    $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
-                $lengow_state->add();
-                Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
+            if(_PS_VERSION_ >= '1.5') {
+                $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state WHERE module_name = \'' . $this->name . '\'');
+                if(empty($states)) {
+                    $lengow_state = new OrderState();
+                    $lengow_state->send_email = false;
+                    $lengow_state->module_name = $this->name;
+                    $lengow_state->invoice = false;
+                    $lengow_state->delivery = false;
+                    $lengow_state->shipped = false;
+                    $lengow_state->paid = false;
+                    $lengow_state->unremovable = false;
+                    $lengow_state->logable = false;
+                    $lengow_state->color = '#205985';
+                    $lengow_state->name[1] = 'Erreur technique - Lengow';
+                    $languages = Language::getLanguages(false);
+                    foreach ($languages as $language)
+                        $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
+                    $lengow_state->add();
+                    Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
+                } else {
+                    Configuration::updateValue('LENGOW_STATE_ERROR', $states[0]['id_order_state']);
+                }
             } else {
-                Configuration::updateValue('LENGOW_STATE_ERROR', $states[0]['id_order_state']);
+                // Todo add Custom order state on Prestashop
+                $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE name = \'Erreur technique - Lengow\' LIMIT 1');
+                if(empty($states)) {
+                    $lengow_state = new OrderState();
+                    $lengow_state->send_email = false;
+                    $lengow_state->invoice = false;
+                    $lengow_state->delivery = false;
+                    $lengow_state->shipped = false;
+                    $lengow_state->paid = false;
+                    $lengow_state->unremovable = false;
+                    $lengow_state->logable = false;
+                    $lengow_state->color = '#205985';
+                    $lengow_state->name[1] = 'Erreur technique - Lengow';
+                    $languages = Language::getLanguages(false);
+                    foreach ($languages as $language)
+                        $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
+                    $lengow_state->add();
+                    Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
             }
-
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
         }
         // Update version 2.0.4.1
@@ -1379,7 +1399,7 @@ class Lengow extends Module {
         }
 
         // Cart
-        if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
+        /*if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
             $ids_product = array();
             $cart = $this->context->cart;
             $cart_products = $cart->getProducts();
@@ -1408,34 +1428,57 @@ class Lengow extends Module {
                 }
                 self::$_IDS_PRODUCTS_CART = implode('&', $products_cart);
             }
-        }
+        }*/
 
         // Product IDS
         if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_LIST || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
             $array_products = array();
-            $products = (isset(Context::getContext()->smarty->tpl_vars['products'])?Context::getContext()->smarty->tpl_vars['products']->value:array());
+            $products = (isset(Context::getContext()->smarty->tpl_vars['products']) ? Context::getContext()->smarty->tpl_vars['products']->value : array() );
+
             if(!empty($products)) {
                 foreach($products as $p) {
-                    switch (Configuration::get('LENGOW_TRACKING_ID')) {
-                        case 'upc':
-                            $id_product = $p['upc'];
-                            break;
-                        case 'ean':
-                            $id_product = $p['ean13'];
-                            break;
-                        case 'ref':
-                            $id_product = $p['reference'];
-                            break;
-                        default:
-                            if (isset($p['product_attribute_id']))
-                                $id_product = $p['id_product'] . '_' . $p['product_attribute_id'];
-                            else
-                                $id_product = $p['id_product'];
-                            break;
+                    if(is_object($p)) {
+                        switch (Configuration::get('LENGOW_TRACKING_ID')) {
+                            case 'upc':
+                                $id_product = $p->upc;
+                                break;
+                            case 'ean':
+                                $id_product = $p->ean13;
+                                break;
+                            case 'ref':
+                                $id_product = $p->reference;
+                                break;
+                            default:
+                                if (isset($p->id_product_attribute))
+                                    $id_product = $p->id . '_' . $p->id_product_attribute;
+                                else {
+                                    $id_product = $p->id;
+                                }
+                                break;
+                        }
+                    } else {
+                        switch (Configuration::get('LENGOW_TRACKING_ID')) {
+                            case 'upc':
+                                $id_product = $p['upc'];
+                                break;
+                            case 'ean':
+                                $id_product = $p['ean13'];
+                                break;
+                            case 'ref':
+                                $id_product = $p['reference'];
+                                break;
+                            default:
+                                if (array_key_exists('id_product_attribute', $p) && $p['id_product_attribute'])
+                                    $id_product = $p['id_product'] . '_' . $p['id_product_attribute'];
+                                else {
+                                    $id_product = $p['id_product'];
+                                }
+                                break;
+                        }
                     }
                     $array_products[] = $id_product;
                 }
-            } else {
+             } else {
                 $p = (isset(Context::getContext()->smarty->tpl_vars['product']) ? Context::getContext()->smarty->tpl_vars['product']->value: null);
                 if($p instanceof Product) {
                     switch (Configuration::get('LENGOW_TRACKING_ID')) {
@@ -1449,10 +1492,10 @@ class Lengow extends Module {
                             $id_product =  $p->reference;
                             break;
                         default:
-                            if (isset($p->product_attribute_id))
-                                $id_product =  $p->product_id . '_' .  $p->product_attribute_id;
+                            if (isset($p->id_product_attribute))
+                                $id_product =  $p->id . '_' .  $p->id_product_attribute;
                             else
-                                $id_product =  $p->product_id;
+                                $id_product =  $p->id;
                             break;
                     }
                     $array_products[] = $id_product;
