@@ -73,7 +73,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.5.1';
+        $this->version = '2.0.5';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.7');
@@ -124,25 +124,8 @@ class Lengow extends Module {
      * @return boolean install sucess or fail
      */
     public function install() {
-        /*
-          // Creation of employee Lengow
-          $new_employe = new Employee();
-          $new_employe->lastname = 'Bot';
-          $new_employe->firstname = 'Lengow';
-          $new_employe->id_lang = (int) $this->context->language->id;
-          $new_employe->email = 'lengow@lengow.fr';
-          $new_employe->passwd = openssl_random_pseudo_bytes(5);
-          $new_employe->id_profile = 1;
-          $new_employe->add();
-          // Creation of customer Lengow
-          $new_customer = new Customer();
-          $new_customer->lastname   = 'Client';
-          $new_customer->firstname = 'Lengow';
-          $new_customer->passwd = '|€-§oW';
-          $new_customer->email = openssl_random_pseudo_bytes(5);
-          $new_customer->add();
-         */
         $this->_createTab();
+        $this->_addStatus();
         return parent::install() &&
                 Configuration::updateValue('LENGOW_AUTHORIZED_IP', $_SERVER['REMOTE_ADDR']) &&
                 Configuration::updateValue('LENGOW_TRACKING', '') &&
@@ -251,50 +234,7 @@ class Lengow extends Module {
 
             Db::getInstance()->execute($add_log_table);
             
-            // Add Lengow order error status
-            if(_PS_VERSION_ >= '1.5') {
-                $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state WHERE module_name = \'' . $this->name . '\'');
-                if(empty($states)) {
-                    $lengow_state = new OrderState();
-                    $lengow_state->send_email = false;
-                    $lengow_state->module_name = $this->name;
-                    $lengow_state->invoice = false;
-                    $lengow_state->delivery = false;
-                    $lengow_state->shipped = false;
-                    $lengow_state->paid = false;
-                    $lengow_state->unremovable = false;
-                    $lengow_state->logable = false;
-                    $lengow_state->color = '#205985';
-                    $lengow_state->name[1] = 'Erreur technique - Lengow';
-                    $languages = Language::getLanguages(false);
-                    foreach ($languages as $language)
-                        $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
-                    $lengow_state->add();
-                    Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
-                } else {
-                    Configuration::updateValue('LENGOW_STATE_ERROR', $states[0]['id_order_state']);
-                }
-            } else {
-                // Todo add Custom order state on Prestashop
-                $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE name = \'Erreur technique - Lengow\' LIMIT 1');
-                if(empty($states)) {
-                    $lengow_state = new OrderState();
-                    $lengow_state->send_email = false;
-                    $lengow_state->invoice = false;
-                    $lengow_state->delivery = false;
-                    $lengow_state->shipped = false;
-                    $lengow_state->paid = false;
-                    $lengow_state->unremovable = false;
-                    $lengow_state->logable = false;
-                    $lengow_state->color = '#205985';
-                    $lengow_state->name[1] = 'Erreur technique - Lengow';
-                    $languages = Language::getLanguages(false);
-                    foreach ($languages as $language)
-                        $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
-                    $lengow_state->add();
-                    Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
-                }
-            }
+            $this->_addStatus();
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
         }
         // Update version 2.0.4.1
@@ -1960,6 +1900,58 @@ class Lengow extends Module {
             }
         }
         return false;
+    }
+
+    /** 
+     * Add error status to reimport order
+     *
+     * @return void
+     */
+    public function _addStatus() {
+        // Add Lengow order error status
+        if(_PS_VERSION_ >= '1.5') {
+            $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state WHERE module_name = \'' . $this->name . '\'');
+            if(empty($states)) {
+                $lengow_state = new OrderState();
+                $lengow_state->send_email = false;
+                $lengow_state->module_name = $this->name;
+                $lengow_state->invoice = false;
+                $lengow_state->delivery = false;
+                $lengow_state->shipped = false;
+                $lengow_state->paid = false;
+                $lengow_state->unremovable = false;
+                $lengow_state->logable = false;
+                $lengow_state->color = '#205985';
+                $lengow_state->name[1] = 'Erreur technique - Lengow';
+                $languages = Language::getLanguages(false);
+                foreach ($languages as $language)
+                    $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
+                $lengow_state->add();
+                Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
+            } else {
+                Configuration::updateValue('LENGOW_STATE_ERROR', $states[0]['id_order_state']);
+            }
+        } else {
+            // Todo add Custom order state on Prestashop
+            $states = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'order_state_lang WHERE name = \'Erreur technique - Lengow\' LIMIT 1');
+            if(empty($states)) {
+                $lengow_state = new OrderState();
+                $lengow_state->send_email = false;
+                $lengow_state->invoice = false;
+                $lengow_state->delivery = false;
+                $lengow_state->shipped = false;
+                $lengow_state->paid = false;
+                $lengow_state->unremovable = false;
+                $lengow_state->logable = false;
+                $lengow_state->color = '#205985';
+                $lengow_state->name[1] = 'Erreur technique - Lengow';
+                $languages = Language::getLanguages(false);
+                foreach ($languages as $language)
+                    $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
+                $lengow_state->add();
+                Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
+            }
+        }
     }
 
     /**
