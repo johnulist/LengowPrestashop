@@ -343,8 +343,7 @@ class LengowProductAbstract extends Product {
                     else
                         return '';
             }
-            return isset($this->images[$out[1]]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->images[$out[1]]['id_image'], LengowCore::getImageFormat()) : '';
-
+            return isset($this->images[$out[1] - 2]) ? LengowCore::getContext()->link->getImageLink($this->link_rewrite, $this->id . '-' . $this->images[$out[1] - 2]['id_image'], LengowCore::getImageFormat()) : '';
         }
         if(isset($this->{$name}))
             return $this->{$name};
