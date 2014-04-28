@@ -73,7 +73,7 @@ class Lengow extends Module {
     public function __construct() {
         $this->name = 'lengow';
         $this->tab = 'export';
-        $this->version = '2.0.5';
+        $this->version = '2.0.5.1';
         $this->author = 'Lengow';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = array('min' => '1.4', 'max' => '1.7');
@@ -293,6 +293,7 @@ class Lengow extends Module {
                         $lengow_state->name[$language['id_lang']] = 'Erreur technique - Lengow';
                     $lengow_state->add();
                     Configuration::updateValue('LENGOW_STATE_ERROR', $lengow_state->id);
+                }
             }
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.0');
         }
