@@ -383,7 +383,8 @@ class LengowCoreAbstract {
 
     public static function disableMail() {
         if(_PS_VERSION_ < '1.5.4.0') {
-            Configuration::set('PS_SHOP_EMAIL', 'lengow');
+            Configuration::set('PS_MAIL_METHOD', 2);
+            Configuration::set('PS_MAIL_SERVER', '');
         } else {
             Configuration::set('PS_MAIL_METHOD', 3);
         }
