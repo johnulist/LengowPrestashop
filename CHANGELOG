@@ -1,4 +1,30 @@
 =============================================================
+Version 2.0.5.1
+=============================================================
+    - Fix bug with 1.4 installation
+    - Fix image export
+    - Add new internal IPS
+    - Disable mail during import
+    - Fiw warning with tagcapsule
+    - Force product option improvments
+
+=============================================================
+Version 2.0.5
+=============================================================
+    - Add option show or not feed management
+    - Send tracking when it's filled
+    - Add function to add value in export
+    - Use set instead of updateValue in Configuration for mail
+    - Now compatible with Prestashop 1.6
+    - Improve zipcode verification
+    - Fix Payment error
+    - Fix wrong carrier after import
+    - Fix import bug with minimal quantity
+    - Improve logs report
+    - Add try/catch on validateOrder
+    - Add posibility to hide feed management
+
+=============================================================
 Version 2.0.4.4
 =============================================================
     - Add option show or not feed management
