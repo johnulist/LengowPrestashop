@@ -781,10 +781,12 @@ class LengowCoreAbstract {
     public static function cleanPhone($phone) {
         if(!$phone)
             return null;
-        if(Validate::isPhoneNumber($phone))
-            return $phone;
-        else
+        if(Validate::isPhoneNumber($phone)) {
+            $replace = array('.', ' ', '-');
+            return str_replace($replace, '', $phone);
+        } else {
             return preg_replace('/[^0-9]*/', '', $phone);
+        }
     }
     
     /**

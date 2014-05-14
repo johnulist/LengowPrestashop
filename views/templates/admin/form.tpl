@@ -168,6 +168,19 @@
             </select>
         </div>
         <div class="clear"></div>
+        <label>{l s='Export out of stock product' mod='lengow'}</label>
+        <div class="margin-form">
+            <input type="radio" name="lengow_export_out_stock"id="active_on" value="1" {if $lengow_export_out_stock}checked="checked"{/if} />
+            <label class="t" for="active_on">
+                <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
+            </label>
+            <input type="radio" name="lengow_export_out_stock"id="active_off" value="0" {if $lengow_export_out_stock == 0}checked="checked"{/if}  />
+            <label class="t" for="active_off">
+                <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
+            </label> 
+            <p class="preference_description">{l s='Select this option if you want to export out of stock product.' mod='lengow'}{$link_file_export}</p>      
+        </div>
+        <div class="clear"></div>
         <label>{l s='Export in a file' mod='lengow'}</label>
         <div class="margin-form">
             <input type="radio"	name="lengow_export_file"id="active_on" value="1" {if $lengow_export_file}checked="checked"{/if} />
