@@ -1068,7 +1068,8 @@ class Lengow extends Module {
                     'link_file_export' => $this->getFileLink(),
                     'options' => $options,
                     'checklist' => $this->_getCheckList(),
-                    'log_files' => $this->_getLogFiles()
+                    'log_files' => $this->_getLogFiles(),
+                    'help_credentials' => $this->_getHelpSolutionIds(),
                 )
         );
         return $this->display(__FILE__, 'views/templates/admin/form.tpl');

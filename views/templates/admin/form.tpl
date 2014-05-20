@@ -11,7 +11,7 @@
 <form id="_form" class="defaultForm lengow" action="{$smarty.server.REQUEST_URI|escape:'htmlall':'UTF-8'}" method="post" enctype="multipart/form-data" >
     <fieldset id="fieldset_0">
         <legend>{l s='Check configuration' mod='lengow'}</legend>
-        <label>{l s='Checklist' mod='lengow'}</label>							
+        <label>{l s='Checklist' mod='lengow'}</label>                           
         <div class="margin-form">
             {$checklist}
         </div>
@@ -20,19 +20,24 @@
     <br />
     <fieldset id="fieldset_1">
         <legend>{l s='Account' mod='lengow'}</legend>
-        <label>{l s='Customer ID' mod='lengow'}</label>							
+        <label>{l s='Customer ID' mod='lengow'}</label>                         
         <div class="margin-form">
             <input type="text" name="lengow_customer_id" id="lengow_customer_id" value="{$lengow_customer_id}" class="" size="20" /> <sup>*</sup>
-        </div>
+        </div> 
         <div class="clear"></div>
-        <label>{l s='Group ID' mod='lengow'}</label>							
+        <label>{l s='Group ID' mod='lengow'}</label>                            
         <div class="margin-form">
             <input type="text" name="lengow_group_id" id="lengow_group_id" value="{$lengow_group_id}" class="" size="20" /> <sup>*</sup> 
         </div>
         <div class="clear"></div>
-        <label>{l s='Token API' mod='lengow'}</label>							
+        <label>{l s='Token API' mod='lengow'}</label>                           
         <div class="margin-form">
             <input type="text" name="lengow_token" id="lengow_token" value="{$lengow_token}" class="" size="32" /> <sup>*</sup>
+        </div>
+        <div class="clear"></div>
+        <label>{l s='Help' mod='lengow'}</label>                           
+        <div class="margin-form">
+        {$help_credentials}
         </div>
         <div class="clear"></div>
         <div class="small"><sup>*</sup> {l s='Required field' mod='lengow'}</div>
@@ -66,79 +71,79 @@
         <legend>{l s='Export parameters' mod='lengow'}</legend>
         <label>{l s='Export all products' mod='lengow'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_export_all" id="active_on" value="1" {if $lengow_export_all == 1} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_all" id="active_on" value="1" {if $lengow_export_all == 1} checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_export_all" id="active_off" value="0" {if $lengow_export_all == 0} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_all" id="active_off" value="0" {if $lengow_export_all == 0} checked="checked"{/if} />
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
-            <p class="preference_description">{l s='If don\'t want to export all your available products, click "no" and go onto Tab Prestashop to select yours products' mod='lengow'}</p>		
+            <p class="preference_description">{l s='If don\'t want to export all your available products, click "no" and go onto Tab Prestashop to select yours products' mod='lengow'}</p>     
         </div>
         <label>{l s='Export disabled products' mod='lengow'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_export_disabled" id="active_on" value="1" {if $lengow_export_disabled == 1} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_disabled" id="active_on" value="1" {if $lengow_export_disabled == 1} checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_export_disabled" id="active_off" value="0" {if $lengow_export_disabled == 0} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_disabled" id="active_off" value="0" {if $lengow_export_disabled == 0} checked="checked"{/if} />
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
-            <p class="preference_description">{l s='If you want to export disabled products, click "yes".' mod='lengow'}</p>		
+            <p class="preference_description">{l s='If you want to export disabled products, click "yes".' mod='lengow'}</p>        
         </div>
         <div class="clear"></div>
         <label>{l s='Auto export of new product(s)' mod='lengow'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_export_new" id="active_on" value="1" {if $lengow_export_new == 1} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_new" id="active_on" value="1" {if $lengow_export_new == 1} checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_export_new" id="active_off" value="0" {if $lengow_export_new == 0} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_new" id="active_off" value="0" {if $lengow_export_new == 0} checked="checked"{/if} />
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
-            <p class="preference_description">{l s='If you click "yes" your new product(s) will be automatically exported on the next feed'}</p>		
+            <p class="preference_description">{l s='If you click "yes" your new product(s) will be automatically exported on the next feed'}</p>        
         </div>
         <div class="clear"></div>
         <label>{l s='Export product variations' mod='lengow'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_export_all_attributes" id="active_on" value="1" {if $lengow_export_all_attributes == 1} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_all_attributes" id="active_on" value="1" {if $lengow_export_all_attributes == 1} checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_export_all_attributes" id="active_off" value="0" {if $lengow_export_all_attributes == 0} checked="checked"{/if}/>
+            <input type="radio" name="lengow_export_all_attributes" id="active_off" value="0" {if $lengow_export_all_attributes == 0} checked="checked"{/if}/>
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
-            <p class="preference_description">{l s='If don\'t want to export all your products\' variations, click "no"'}</p>		
+            <p class="preference_description">{l s='If don\'t want to export all your products\' variations, click "no"'}</p>       
         </div>
         <div class="clear"></div>
         <label>{l s='Export product features' mod='lengow'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_export_features" id="active_on" value="1" {if $lengow_export_features == 1} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_features" id="active_on" value="1" {if $lengow_export_features == 1} checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_export_features" id="active_off" value="0" {if $lengow_export_features == 0} checked="checked"{/if}/>
+            <input type="radio" name="lengow_export_features" id="active_off" value="0" {if $lengow_export_features == 0} checked="checked"{/if}/>
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
-            <p class="preference_description">{l s='If you click "yes", your product(s) will be exported with features.'}</p>		
+            <p class="preference_description">{l s='If you click "yes", your product(s) will be exported with features.'}</p>       
         </div>
         <div class="clear"></div>
         <label>{l s='Title + attributes + features' mod='lengow'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_export_fullname" id="active_on" value="1" {if $lengow_export_fullname == 1} checked="checked"{/if} />
+            <input type="radio" name="lengow_export_fullname" id="active_on" value="1" {if $lengow_export_fullname == 1} checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_export_fullname" id="active_off" value="0" {if $lengow_export_fullname == 0} checked="checked"{/if}/>
+            <input type="radio" name="lengow_export_fullname" id="active_off" value="0" {if $lengow_export_fullname == 0} checked="checked"{/if}/>
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label>
-            <p class="preference_description">{l s='Select this option if you want a variation product title as title + attributes + feature. By default the title will be the product name'}</p>		
+            <p class="preference_description">{l s='Select this option if you want a variation product title as title + attributes + feature. By default the title will be the product name'}</p>       
         </div>
         <div class="clear"></div>
         <label>{l s='Number of images to export' mod='lengow'}</label>
@@ -168,30 +173,17 @@
             </select>
         </div>
         <div class="clear"></div>
-        <label>{l s='Export out of stock product' mod='lengow'}</label>
-        <div class="margin-form">
-            <input type="radio" name="lengow_export_out_stock"id="active_on" value="1" {if $lengow_export_out_stock}checked="checked"{/if} />
-            <label class="t" for="active_on">
-                <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
-            </label>
-            <input type="radio" name="lengow_export_out_stock"id="active_off" value="0" {if $lengow_export_out_stock == 0}checked="checked"{/if}  />
-            <label class="t" for="active_off">
-                <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
-            </label> 
-            <p class="preference_description">{l s='Select this option if you want to export out of stock product.' mod='lengow'}{$link_file_export}</p>      
-        </div>
-        <div class="clear"></div>
         <label>{l s='Export in a file' mod='lengow'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_export_file"id="active_on" value="1" {if $lengow_export_file}checked="checked"{/if} />
+            <input type="radio" name="lengow_export_file"id="active_on" value="1" {if $lengow_export_file}checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_export_file"id="active_off" value="0" {if $lengow_export_file == 0}checked="checked"{/if}  />
+            <input type="radio" name="lengow_export_file"id="active_off" value="0" {if $lengow_export_file == 0}checked="checked"{/if}  />
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label> 
-            <p class="preference_description">{l s='You should use this option if you have more than 10,000 products' mod='lengow'}{$link_file_export}</p>		
+            <p class="preference_description">{l s='You should use this option if you have more than 10,000 products' mod='lengow'}{$link_file_export}</p>      
         </div>
         <div class="clear"></div>
         <label>{l s='Fields to export' mod='lengow'}</label>
@@ -216,8 +208,8 @@
     <fieldset id="fieldset_5"> <legend>{l s='Feeds' mod='lengow'}</legend>
         {$lengow_flow}
         <p class="preference_description">{l s='If you use the backoffice of the Lengow module, migrate your feed when you are sure to be ready' mod='lengow'}<br />
-            {l s='If you want to use the file export, don\'t use this fonctionality. Please contact Lengow Support Team' mod='lengow'}	
-        </p>	
+            {l s='If you want to use the file export, don\'t use this fonctionality. Please contact Lengow Support Team' mod='lengow'}  
+        </p>    
         <div class="clear"></div>
     </fieldset>
     <br />
@@ -265,8 +257,8 @@
                 {foreach from=$options.carriers item=option}
                     <option value="{$option.id_carrier}"{if $option.id_carrier == $lengow_carrier_default} selected="selected"{/if}>{$option.name}</option>
                 {/foreach}
-            </select>							
-            <p class="preference_description">{l s='Your default carrier' mod='lengow'}</p>		
+            </select>                           
+            <p class="preference_description">{l s='Your default carrier' mod='lengow'}</p>     
         </div>
         <div class="clear"></div>
         <label>{l s='Import from x days' mod='lengow'}</label>
@@ -275,15 +267,15 @@
         <div class="clear"></div>
         <label>{l s='Forced price'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_force_price"id="active_on" value="1" {if $lengow_force_price}checked="checked"{/if} />
+            <input type="radio" name="lengow_force_price"id="active_on" value="1" {if $lengow_force_price}checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_force_price"id="active_off" value="0" {if $lengow_force_price == 0}checked="checked"{/if} />
+            <input type="radio" name="lengow_force_price"id="active_off" value="0" {if $lengow_force_price == 0}checked="checked"{/if} />
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label> 
-            <p class="preference_description">{l s='This option allows to force the product prices of the marketplace orders during the import' mod='lengow'}</p>		
+            <p class="preference_description">{l s='This option allows to force the product prices of the marketplace orders during the import' mod='lengow'}</p>       
         </div>
         <div class="clear"></div>
         <label>{l s='Force Products'}</label>
@@ -320,11 +312,11 @@
     <fieldset id="fieldset_7"> <legend>{l s='Developer' mod='lengow'}</legend>
         <label>{l s='Debug mode' mod='lengow'}</label>
         <div class="margin-form">
-            <input type="radio"	name="lengow_debug"id="active_on" value="1" {if $lengow_debug}checked="checked"{/if} />
+            <input type="radio" name="lengow_debug"id="active_on" value="1" {if $lengow_debug}checked="checked"{/if} />
             <label class="t" for="active_on">
                 <img src="../img/admin/enabled.gif" alt="{l s='Enable'}" title="{l s='Enable'}" />
             </label>
-            <input type="radio"	name="lengow_debug"id="active_off" value="0" {if $lengow_debug == 0}checked="checked"{/if} />
+            <input type="radio" name="lengow_debug"id="active_off" value="0" {if $lengow_debug == 0}checked="checked"{/if} />
             <label class="t" for="active_off">
                 <img src="../img/admin/disabled.gif" alt="{l s='Disable'}" title="{l s='Disable'}" />
             </label> 
