@@ -343,6 +343,9 @@ class LengowCheck {
      * @return string Html Content
      */
     public static function getHtmlLogs($days = 10, $show_extra = false) {
+        if(Tools::getValue('delete') != '')
+            LengowCore::deleteProcessOrder(Tools::getValue('delete'));
+
         $db = Db::getInstance();
 
         $sql_logs = 'SELECT * FROM ' . _DB_PREFIX_ . 'lengow_logs_import '

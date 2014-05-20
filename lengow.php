@@ -436,6 +436,11 @@ class Lengow extends Module {
                         'size' => 32,
                         'required' => true,
                     ),
+                    array(
+                        'type' => 'free',
+                        'label' => $this->l('Help'),
+                        'name' => 'lengow_help_id',
+                    ),
                 ),
             );
             $index += 1;
@@ -987,6 +992,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_logs'] = $this->_getLogFiles();
             $helper->fields_value['lengow_flow'] = $this->_getFormFeeds();
             $helper->fields_value['lengow_cron'] = $this->_getFormCron();
+            $helper->fields_value['lengow_help_id'] = $this->_getHelpSolutionIds();
             return $helper->generateForm($fields_form);
         } else {
             return $this->displayForm14();
@@ -2065,6 +2071,16 @@ class Lengow extends Module {
         }
         
         return true;
+    }
+
+    private function _getHelpSolutionIds() {
+        $out = '';
+        $out .= '<p>';
+        $out .= sprintf($this->l('You can find credentials on <a href="%s" target="_blank">your Lengow Dashboard</a>.'), 'https://solution.lengow.com/api/');
+        $out .= '<br /><br />';
+        $out .= sprintf($this->l('Make sure your website IP (%s) address is filled in your Lengow Dashboard.', 'lengow.check.class'), LengowCheck::getWebsiteAddress());
+        $out .= '</p>';
+        return $out;
     }
 
 }
