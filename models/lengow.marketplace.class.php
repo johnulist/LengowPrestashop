@@ -168,49 +168,54 @@ class LengowMarketplaceAbstract {
                     foreach($action_array['params'] as $type => $param) {
                         switch($type) {
                             case 'tracking' :
-                                $gets[$param['name']] = array(
+                                $gets[$type] = array(
                                             'value' => $order->shipping_number,
+                                            'name' => $param['name'],
                                             'require' => (array_key_exists('require', $param) ? explode(' ', $param['require']) : array())
                                           );
                                 break;
                             case 'carrier' :
                                 $carrier = new Carrier($order->id_carrier);
-                                $gets[$param['name']] = array(
+                                $gets[$type] = array(
                                             'value' => $this->_matchCarrier($param, $carrier->name),
+                                            'name' => $param['name'],
                                             'require' => (array_key_exists('require', $param) ? explode(' ', $param['require']) : array())
                                           );
                                 break;
                             case 'tracking_url' :
                                 break;
                             case 'shipping_price' :
-                                $gets[$param['name']] = array(
+                                $gets[$type] = array(
                                             'value' => $order->total_shipping,
+                                            'name' => $param['name'],
                                             'require' => (array_key_exists('require', $param) ? explode(' ', $param['require']) : array())
                                           );
                                 break;
                         }
                     }
-                    // Check dependencies in parameters
+
                     if(count($gets) > 0) {
-                      foreach($gets as $key => $get) {
-                        if(array_key_exists('require', $get) && !empty($get['require'])) {
-                          foreach($get['require'] as $require) {
-                            if($gets[$require]['value'] == '') {
-                              unset($gets[$require]);
-                              unset($gets[$key]);
+                        // Check dependencies in parameters
+                        foreach($gets as $param_name => $param_attr) {
+                            if(!empty($param_attr['require'])) {
+                                // Check if value of require is not null
+                                foreach($param_attr['require'] as $required) {
+                                    if($gets[$required]['value'] == '') {
+                                      unset($gets[$param_name]);
+                                      unset($gets[$required]);
+                                    }
+                                }
                             }
-                          }
                         }
-                      }
                     }
                     // Build URL
                     $url = array();
                     foreach($gets as $key => $value) {
-                      $url[] = $key . '=' . urlencode($value['value']);
+                      $url[] = $$value['name'] . '=' . urlencode($value['value']);
                     }
                     $call_url .= '?' . implode('&', $url);
                 }
-                break; 
+                break;
             case 'refuse' :
                 $call_url = $this->api_url;
                 $call_url = str_replace('#ID_FLUX#', $id_flux, $call_url);
