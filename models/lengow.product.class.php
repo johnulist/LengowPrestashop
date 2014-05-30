@@ -226,6 +226,12 @@ class LengowProductAbstract extends Product {
                     return LengowCore::formatNumber($this->combinations[$id_product_attribute]['ecotax']);
                 return isset($this->ecotaxinfos) && $this->ecotaxinfos > 0 ? LengowCore::formatNumber($this->ecotaxinfos) : LengowCore::formatNumber($this->ecotax);
             case 'available' :
+                if ($id_product_attribute)
+                    $quantity = self::getRealQuantity($this->id, $id_product_attribute);
+                else
+                    $quantity = self::getRealQuantity($this->id);
+                if($quantity <= 0)
+                    return $this->available_later;
                 return $this->available_now;
             case 'url' :
                 return LengowCore::getContext()->link->getProductLink($this);
@@ -286,6 +292,15 @@ class LengowProductAbstract extends Product {
             case 'id_parent' :
                 return $this->id;
             case 'delivery_time' :
+                $carrier_list = Carrier::getAvailableCarrierList($this, null);
+                $carrier_speed = array();
+                if(!empty($carrier_list)) {
+                    foreach($carrier_list as $carrier) {
+                        $c = new Carrier($carrier);
+                        $carrier_speed[$c->grade] = $c->delay[Context::getContext()->language->id];
+                    }
+                    return array_shift($carrier_speed);
+                }
                 return '';
             case 'image_2' :
                 if ($id_product_attribute) {
