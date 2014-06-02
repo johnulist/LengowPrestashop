@@ -421,7 +421,7 @@ class LengowExportAbstract {
     }
 
     public function setExportOutOfStock($out_stock) {
-        if($out_stock !== null)
+        if($out_stock != null)
             $this->export_out_stock = $out_stock;
         else
             $this->export_out_stock = LengowCore::exportOutOfStockProduct();

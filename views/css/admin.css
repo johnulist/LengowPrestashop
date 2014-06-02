@@ -57,3 +57,26 @@
 .lengow-yes { color: green; }
 
 .lengow-select { min-width: 300px; }
+
+label.cat-tree-lengow {
+    display: block;
+    clear: both;
+    text-align: left;
+    margin-bottom: 3px;
+}
+label.cat-tree-lengow input {
+	margin-right: 5px;
+}
+.depth-0 {margin-left: 0px;}
+.depth-1 {margin-left: 15px;}
+.depth-2 {margin-left: 30px;}
+.depth-3 {margin-left: 45px;}
+.depth-4 {margin-left: 60px;}
+.depth-5 {margin-left: 75px;}
+.depth-6 {margin-left: 90px;}
+.depth-7 {margin-left: 105px;}
+.depth-8 {margin-left: 120px;}
+.depth-9 {margin-left: 135px;}
+.depth-10 {margin-left: 150px;}
+.depth-11 {margin-left: 165px;}
+.depth-12 {margin-left: 180px;}

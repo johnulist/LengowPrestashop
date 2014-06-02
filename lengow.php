@@ -708,11 +708,11 @@ class Lengow extends Module {
                         'label' => $this->l('Your export script'),
                         'name' => 'url_feed_export',
                         'size' => 100,
-                    ),
+                    )
                 ),
                 'submit' => array(
                     'title' => $this->l('Save'),
-                    'class' => 'button btn btn-default pull-right'
+                    'class' => 'button btn btn-default pull-right',
                 ),
             );
             $index += 1;
@@ -993,6 +993,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_flow'] = $this->_getFormFeeds();
             $helper->fields_value['lengow_cron'] = $this->_getFormCron();
             $helper->fields_value['lengow_help_id'] = $this->_getHelpSolutionIds();
+            $helper->fields_value['lengow_category_tree'] = $this->_getCategoryTree();
             return $helper->generateForm($fields_form);
         } else {
             return $this->displayForm14();
@@ -2077,8 +2078,10 @@ class Lengow extends Module {
     private function _getHelpSolutionIds() {
         $out = '';
         $out .= '<p>';
-        $out .= sprintf($this->l('You can find credentials on <a href="%s" target="_blank">your Lengow Dashboard</a>.'), 'https://solution.lengow.com/api/');
-        $out .= '<br /><br />';
+        $out .= sprintf($this->l('You can find credentials on %s.'), '<a href="https://solution.lengow.com/api/" target="_blank">' . $this->l('your Lengow Dashboard') . '</a>');
+        $out .= '<br />';
+        $out .= $this->l('You can add more than 1 group, must be separated by <b>,</b>');
+        $out .= '<br />';
         $out .= sprintf($this->l('Make sure your website IP (%s) address is filled in your Lengow Dashboard.', 'lengow.check.class'), LengowCheck::getWebsiteAddress());
         $out .= '</p>';
         return $out;
