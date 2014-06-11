@@ -211,7 +211,7 @@ class LengowMarketplaceAbstract {
                     // Build URL
                     $url = array();
                     foreach($gets as $key => $value) {
-                      $url[] = $$value['name'] . '=' . urlencode($value['value']);
+                      $url[] = $value['name'] . '=' . urlencode($value['value']);
                     }
                     $call_url .= '?' . implode('&', $url);
                 }
