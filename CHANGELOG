@@ -6,6 +6,7 @@ Version 2.0.5.3
     - Add option to ignore processing fee
     - Fix bug with tagcapulse
     - Tagcapsule - Take the first group
+    - Add webservice to migrate products selection from module v1
 
 =============================================================
 Version 2.0.5.1
