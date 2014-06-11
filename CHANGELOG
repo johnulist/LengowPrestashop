@@ -1,4 +1,13 @@
 =============================================================
+Version 2.0.5.3
+=============================================================
+    - Fix tracking amazon
+    - Improve webservice (Show module version, prestashop version, get last logs)
+    - Add option to ignore processing fee
+    - Fix bug with tagcapulse
+    - Tagcapsule - Take the first group
+
+=============================================================
 Version 2.0.5.1
 =============================================================
     - Fix bug with 1.4 installation
