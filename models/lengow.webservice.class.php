@@ -34,6 +34,7 @@ class LengowWebservice {
         'logs' => 'Show import logs',
         'check' => 'Show checklist configuration',
         'migrate' => 'Migrate selection of products from v1 module to v2',
+        'log' => 'Show last log file'
     );
 
     /**
@@ -53,14 +54,16 @@ class LengowWebservice {
      * @return void
      */
     public static function showAvailableAction() {
-        $out = '';
-        $out .= '# Lengow Webservice<br /><br />';
-        $i = 0;
+        $lengow = new Lengow();
+        $out = '<div style="font-size: 12px; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px;">';
+        $out .= '<p>Lengow Webservice - Module v' . $lengow->version . ' - Prestashop v' . _PS_VERSION_ . '</p>';
+        $out .= '</div>';
+        $out .= '<div><ul>';
         foreach(self::$AVAILABLE_ACTION as $action => $description) {
-            $i++;
-            $out .= $i . ' - <a href="' . self::_getUrlWebservice($action) . '">' . $description . '</a>';
-            $out .= '<br />';
+            $out .= '<li><a style="color: #222; font-size: 12px; text-decoration: none;" href="' . self::_getUrlWebservice($action) . '">' . $description . '</a>';
+            $out .= '</li>';
         }
+        $out .= '</ul></div>';
         echo $out;
     }
 
@@ -122,6 +125,10 @@ class LengowWebservice {
                 if(Tools::getValue('show_extra') == 1)
                     $show_extra = true;
                 echo LengowCheck::getHtmlLogs($days, $show_extra);
+                break;
+            case 'log':
+                $log_url = _PS_BASE_URL_ . __PS_BASE_URI__ . 'modules' . DS . 'lengow' . DS . 'logs' . DS . 'logs-' . date('Y-m-d') . '.txt';
+                header('Location: ' . $log_url);
                 break;
             case 'tax':
                 $id_order = Tools::getValue('id_order');
