@@ -155,7 +155,7 @@ class LengowImportAbstract {
             if(!LengowCore::getImportProcessingFee()) {
                 $data->order_amount = new SimpleXMLElement('<order_amount><![CDATA[' . ((float) $data->order_amount - (float) $data->order_processing_fee) . ']]></order_amount>');
                 $data->order_processing_fee = new SimpleXMLElement('<order_processing_fee><![CDATA[ ]]></order_processing_fee>');
-                LengowCore::log('Order ' . $lengow_order_id . ' : rewrite amount without processing fee');
+                LengowCore::log('Order ' . $data->order_id . ' : rewrite amount without processing fee');
             }
             $lengow_order    = $data;
             $lengow_order_id = $this->_buildLengowOrderId($lengow_order);

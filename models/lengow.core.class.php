@@ -298,8 +298,13 @@ class LengowCoreAbstract {
      *
      * @return integer
      */
-    public static function getGroupCustomer() {
-        return Configuration::get('LENGOW_ID_GROUP');
+    public static function getGroupCustomer($all = true) {
+        if($all)
+            return Configuration::get('LENGOW_ID_GROUP');
+
+        $group = Configuration::get('LENGOW_ID_GROUP');
+        $array_group = explode(',', $group);
+        return $array_group[0];
     }
 
     /**

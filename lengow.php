@@ -1376,7 +1376,7 @@ class Lengow extends Module {
         }
 
         // Cart
-        if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
+        /*if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
             $ids_product = array();
             $cart = $this->context->cart;
             $cart_products = $cart->getProducts();
@@ -1405,14 +1405,16 @@ class Lengow extends Module {
                 }
                 self::$_IDS_PRODUCTS_CART = implode('&', $products_cart);
             }
-        }
+        }*/
 
         // Product IDS
         if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_LIST || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
             $array_products = array();
+            $products_cart = array();
             $products = (isset(Context::getContext()->smarty->tpl_vars['products']) ? Context::getContext()->smarty->tpl_vars['products']->value : array() );
 
             if(!empty($products)) {
+                $i = 1;
                 foreach($products as $p) {
                     if(is_object($p)) {
                         switch (Configuration::get('LENGOW_TRACKING_ID')) {
@@ -1433,6 +1435,7 @@ class Lengow extends Module {
                                 }
                                 break;
                         }
+                         $products_cart[] = 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p->price_wt . '&q' . $i . '=' . $p->quantity;
                     } else {
                         switch (Configuration::get('LENGOW_TRACKING_ID')) {
                             case 'upc':
@@ -1452,7 +1455,9 @@ class Lengow extends Module {
                                 }
                                 break;
                         }
+                        $products_cart[] = 'i' . $i . '=' . $id_product . '&p' . $i . '=' . $p['price_wt'] . '&q' . $i . '=' . $p['quantity'];
                     }
+                    $i++;
                     $array_products[] = $id_product;
                 }
              } else {
@@ -1478,6 +1483,7 @@ class Lengow extends Module {
                     $array_products[] = $id_product;
                 }
             }
+            self::$_IDS_PRODUCTS_CART = implode('&', $products_cart);
             self::$_IDS_PRODUCTS = implode($array_products,'|');
         }
 
@@ -1492,7 +1498,7 @@ class Lengow extends Module {
                             'ids_products' => self::$_IDS_PRODUCTS_CART,
                             'mode_payment' => self::$_ID_ORDER,
                             'id_customer' => LengowCore::getIdCustomer(),
-                            'id_group' => LengowCore::getGroupCustomer(),
+                            'id_group' => LengowCore::getGroupCustomer(false),
                         )
                 );
                 return $this->display(__FILE__, 'views/templates/tagpage.tpl');
@@ -1508,7 +1514,7 @@ class Lengow extends Module {
                         'use_ssl' => self::$_USE_SSL ? 'true' : 'false',
                         'id_category' => self::$_ID_CATEGORY,
                         'id_customer' => LengowCore::getIdCustomer(),
-                        'id_group' => LengowCore::getGroupCustomer(),
+                        'id_group' => LengowCore::getGroupCustomer(false),
                     )
             );
             return $this->display(__FILE__, 'views/templates/tagcapsule.tpl');
