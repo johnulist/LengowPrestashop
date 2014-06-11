@@ -368,6 +368,7 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_FEED_MANAGEMENT', Tools::getValue('lengow_feed_management'));
             Configuration::updateValue('LENGOW_EXPORT_DISABLED', Tools::getValue('lengow_export_disabled'));
             Configuration::updateValue('LENGOW_EXPORT_OUT_STOCK', Tools::getValue('lengow_export_out_stock'));
+            Configuration::updateValue('LENGOW_IMPORT_PROCESSING_FEE', Tools::getValue('lengow_import_processing_fee'));
             // Send to Lengow versions
             if (LengowCore::getTokenCustomer() && LengowCore::getIdCustomer() && LengowCore::getGroupCustomer()) {
                 $lengow_connector = new LengowConnector((integer) LengowCore::getIdCustomer(), LengowCore::getTokenCustomer());
@@ -840,6 +841,26 @@ class Lengow extends Module {
                         ),
                     ),
                     array(
+                        'type' => 'radio',
+                        'label' => $this->l('Import processing fee'),
+                        'desc' => $this->l('Yes if you want have marketplace processing fee inside order'),
+                        'name' => 'lengow_import_processing_fee',
+                        'is_bool' => true,
+                        'class' => 't',
+                        'values' => array(
+                            array(
+                                'id' => 'active_on',
+                                'value' => 1,
+                                'label' => $this->l('Enabled'),
+                            ),
+                            array(
+                                'id' => 'active_off',
+                                'value' => 0,
+                                'label' => $this->l('Disabled'),
+                            ),
+                        ),
+                    ),
+                    array(
                         'type' => 'free',
                         'label' => $this->l('Import state'),
                         'name' => 'lengow_is_import',
@@ -985,6 +1006,7 @@ class Lengow extends Module {
             $helper->fields_value['lengow_is_import'] = $this->_getFormIsImport();
             $helper->fields_value['lengow_feed_management'] = Configuration::get('LENGOW_FEED_MANAGEMENT');
             $helper->fields_value['lengow_export_out_stock'] = Configuration::get('LENGOW_EXPORT_OUT_STOCK');
+            $helper->fields_value['lengow_import_processing_fee'] = Configuration::get('LENGOW_IMPORT_PROCESSING_FEE');
             $links = $this->_getWebservicesLinks();
             $helper->fields_value['url_feed_export'] = $links['link_feed_export'];
             $helper->fields_value['url_feed_import'] = $links['link_feed_import'];
@@ -993,7 +1015,6 @@ class Lengow extends Module {
             $helper->fields_value['lengow_flow'] = $this->_getFormFeeds();
             $helper->fields_value['lengow_cron'] = $this->_getFormCron();
             $helper->fields_value['lengow_help_id'] = $this->_getHelpSolutionIds();
-            $helper->fields_value['lengow_category_tree'] = $this->_getCategoryTree();
             return $helper->generateForm($fields_form);
         } else {
             return $this->displayForm14();
@@ -1061,6 +1082,7 @@ class Lengow extends Module {
                     'lengow_feed_management' => Configuration::get('LENGOW_FEED_MANAGEMENT'),
                     'lengow_parent_image' => Configuration::get('LENGOW_PARENT_IMAGE'),
                     'lengow_export_out_stock' => Configuration::get('LENGOW_EXPORT_OUT_STOCK'),
+                    'lengow_import_processing_fee' => Configuration::get('LENGOW_IMPORT_PROCESSING_FEE'),
                     'url_feed_export' => $links['link_feed_export'],
                     'url_feed_import' => $links['link_feed_import'],
                     'lengow_flow' => $this->_getFormFeeds(),
@@ -1348,7 +1370,7 @@ class Lengow extends Module {
         }
 
         // Cart
-        /*if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
+        if(self::$_CURRENT_PAGE_TYPE != self::LENGOW_TRACK_PAGE_CONFIRMATION) {
             $ids_product = array();
             $cart = $this->context->cart;
             $cart_products = $cart->getProducts();
@@ -1377,7 +1399,7 @@ class Lengow extends Module {
                 }
                 self::$_IDS_PRODUCTS_CART = implode('&', $products_cart);
             }
-        }*/
+        }
 
         // Product IDS
         if(self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_LIST || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE || self::$_CURRENT_PAGE_TYPE == self::LENGOW_TRACK_PAGE_CART) {
