@@ -53,6 +53,7 @@ class LengowImportAbstract {
     public static $import_start = false;
     public static $debug = false;
     public $single_order = false;
+    public $processing_fee = true;
 
     /**
      * Construct the import manager
@@ -67,6 +68,7 @@ class LengowImportAbstract {
         if (empty($id_shop))
             $this->id_shop = $this->context->shop->id;
         $this->id_shop_group = $this->context->shop->id_shop_group;
+        $this->processing_fee = LengowCore::getImportProcessingFee();
     }
 
     /**
@@ -150,6 +152,11 @@ class LengowImportAbstract {
             return false;
         }
         foreach ($orders->orders->order as $key => $data) {
+            if(!LengowCore::getImportProcessingFee()) {
+                $data->order_amount = new SimpleXMLElement('<order_amount><![CDATA[' . ((float) $data->order_amount - (float) $data->order_processing_fee) . ']]></order_amount>');
+                $data->order_processing_fee = new SimpleXMLElement('<order_processing_fee><![CDATA[ ]]></order_processing_fee>');
+                LengowCore::log('Order ' . $lengow_order_id . ' : rewrite amount without processing fee');
+            }
             $lengow_order    = $data;
             $lengow_order_id = $this->_buildLengowOrderId($lengow_order);
             LengowCore::disableMail();

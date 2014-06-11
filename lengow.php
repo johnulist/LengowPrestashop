@@ -264,6 +264,12 @@ class Lengow extends Module {
             Configuration::updateValue('LENGOW_EXPORT_OUT_STOCK', true);
             Configuration::updateValue('LENGOW_VERSION', '2.0.4.5');
         }
+        // Update version 2.0.5.3
+        if(Configuration::get('LENGOW_VERSION') < '2.0.5.3') {
+            Configuration::updateValue('LENGOW_EXPORT_OUT_STOCK', true);
+            Configuration::updateValue('LENGOW_IMPORT_PROCESSING_FEE', true);
+            Configuration::updateValue('LENGOW_VERSION', '2.0.5.3');
+        }
     }
 
     /**

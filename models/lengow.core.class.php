@@ -356,6 +356,10 @@ class LengowCoreAbstract {
         return Configuration::get('LENGOW_EXPORT_DISABLED') ? true : false;
     }
 
+    public static function getImportProcessingFee() {
+        return Configuration::get('LENGOW_IMPORT_PROCESSING_FEE') ? true : false;
+    }
+
     /**
      * Get the Id of new status order.
      *
