@@ -7,6 +7,8 @@ Version 2.0.5.3
     - Fix bug with tagcapulse
     - Tagcapsule - Take the first group
     - Add webservice to migrate products selection from module v1
+    - Write un temp file during export
+    - Fix stream param for export
 
 =============================================================
 Version 2.0.5.1
