@@ -744,7 +744,7 @@ class LengowExportAbstract {
     public static function getDefaultFields() {
         $array_fields = array();
         foreach (self::$DEFAULT_FIELDS as $fields => $value) {
-            $array_fields[] = new LengowOption($fields, $value);
+            $array_fields[] = new LengowOption($fields, $value . ' - (' . $fields . ')');
         }
         return $array_fields;
     }
