@@ -386,7 +386,7 @@ class LengowExportAbstract {
      * @return boolean.
      */
     public function setStream($stream) {
-        if ($stream !== null)
+        if(is_bool($stream))
             $this->stream = $stream;
         else
             $this->stream = LengowCore::exportInFile() ? false : true;

@@ -1301,7 +1301,7 @@ class Lengow extends Module {
      * @return array The links
      */
     public function getFileLink($format = null) {
-        if (LengowCore::exportInFile()) {
+        if (LengowCore::exportInFile() || Tools::getValue('stream') === '0') {
             $is_https = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] ? 's' : '';
             $sep = DIRECTORY_SEPARATOR;
             $context = LengowCore::getContext();
@@ -1312,7 +1312,7 @@ class Lengow extends Module {
                 $file_export_url = (defined('_PS_SHOP_DOMAIN_') ? 'http' . $is_https . '://' . _PS_SHOP_DOMAIN_ : _PS_BASE_URL_) . __PS_BASE_URI__ . '/modules/lengow/export/flux-' . $id_shop . '.' . $format;
             } else {
                 $shop_url = new ShopUrl($this->context->shop->id);
-                $file_export_url = 'http' . $is_https . '://' . $shop_url->domain . '/modules/lengow/export/flux-' . $id_shop . '.' . $format;
+                $file_export_url = 'http' . $is_https . '://' . $shop_url->domain . $shop_url->physical_uri . '/modules/lengow/export/flux-' . $id_shop . '.' . $format;
             }
             if ($file_exist) {
                 return '<br />' . $this->l('Your export file is available here') . ' : <a href="' . $file_export_url . '" target="_blank">' . $file_export_url . '</a>';

@@ -46,7 +46,7 @@ if (LengowCore::checkIP()) {
     $stream = null;
     if (Tools::getValue('stream') == '1')
         $stream = true;
-    elseif(Tools::getValue('stream') == '0')
+    elseif(Tools::getValue('stream') === '0')
         $stream = false;
 
     // > All products

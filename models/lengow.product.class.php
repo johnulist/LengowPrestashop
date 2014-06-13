@@ -292,16 +292,22 @@ class LengowProductAbstract extends Product {
             case 'id_parent' :
                 return $this->id;
             case 'delivery_time' :
-                $carrier_list = Carrier::getAvailableCarrierList($this, null);
-                $carrier_speed = array();
-                if(!empty($carrier_list)) {
-                    foreach($carrier_list as $carrier) {
-                        $c = new Carrier($carrier);
-                        $carrier_speed[$c->grade] = $c->delay[Context::getContext()->language->id];
+                if(_PS_VERSION_ >= '1.5') {
+                    $carrier_list = Carrier::getAvailableCarrierList($this, null);
+                    $carrier_speed = array();
+                    if(!empty($carrier_list)) {
+                        foreach($carrier_list as $carrier) {
+                            $c = new Carrier($carrier);
+                            $carrier_speed[$c->grade] = $c->delay[Context::getContext()->language->id];
+                        }
+                        return array_shift($carrier_speed);
                     }
-                    return array_shift($carrier_speed);
+                } else {
+                    // Prestashop 1.4 Version
+                    // Get default carrier
+                    $carrier = new Carrier(LengowCore::getDefaultCarrier());
+                    return $carrier->delay[Context::getContext()->language->id];
                 }
-                return '';
             case 'image_2' :
                 if ($id_product_attribute) {
                     $images = $this->getCombinationImages($this->id_lang);
