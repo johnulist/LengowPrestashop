@@ -267,7 +267,7 @@ class LengowExportAbstract {
             }
         }
         // Allow to add extra fields 
-        $this->setAdditionalFields();
+        $fields = $this->setAdditionalFields($this->fields);
     }
 
     /**
@@ -752,12 +752,13 @@ class LengowExportAbstract {
     /**
      * Override this function in override/lengow.export.class.php to add header
      */
-    public function setAdditionalFields() {
+    public function setAdditionalFields($fields) {
         /**
          * Write here your process
          *
          * ex : $this->fields[] = 'my_header_value';
          */
+        return $fields;
     }
 
     /**

@@ -788,13 +788,13 @@ class LengowCoreAbstract {
      * @param string $phone Phone to clean
      */
     public static function cleanPhone($phone) {
+        $replace = array('.', ' ', '-');
         if(!$phone)
             return null;
         if(Validate::isPhoneNumber($phone)) {
-            $replace = array('.', ' ', '-');
             return str_replace($replace, '', $phone);
         } else {
-            return preg_replace('/[^0-9]*/', '', $phone);
+            return str_replace($replace, '', preg_replace('/[^0-9]*/', '', $phone));
         }
     }
     
