@@ -144,6 +144,10 @@ class LengowImportAbstract {
             $find_count_orders = count($orders->orders->order);
             LengowCore::log('Find ' . $find_count_orders . ' order' . ($find_count_orders > 1 ? 's' : ''), $this->force_log_output);
         }
+        if(isset($orders->error) && (string) $orders->error == 'No Way') {
+            $error = $this->_helper->__('API\'s connection refused with IP %s', (string) $orders->ip);
+            LengowCore::log('Unauthaurized Access for ip ' . (string) $orders->ip, $this->force_log_output);
+        }
 
         $count_orders = (integer) $orders->orders_count->count_total;
         if ($count_orders == 0) {
