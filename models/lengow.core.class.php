@@ -376,6 +376,7 @@ class LengowCoreAbstract {
     public static function getOrderState($state) {
         switch ($state) {
             case 'process' :
+            case 'processing' :
                 return Configuration::get('LENGOW_ORDER_ID_PROCESS');
             case 'shipped' :
                 return Configuration::get('LENGOW_ORDER_ID_SHIPPED');

@@ -168,8 +168,17 @@ class LengowMarketplaceAbstract {
                     foreach($action_array['params'] as $type => $param) {
                         switch($type) {
                             case 'tracking' :
+                                if(_PS_VERSION >= '1.5') {
+                                    $id_order_carrier = $order->getIdOrderCarrier();
+                                    $order_carrier = new OrderCarrier($id_order_carrier);
+                                    $tracking_number = $order_carrier->tracking_number;
+                                    if($tracking_number == '')
+                                        $tracking_number = $order->shipping_number;
+                                } else {
+                                    $tracking_number = $order->shipping_number;
+                                }
                                 $gets[$type] = array(
-                                            'value' => $order->shipping_number,
+                                            'value' => $tracking_number,
                                             'name' => $param['name'],
                                             'require' => (array_key_exists('require', $param) ? explode(' ', $param['require']) : array())
                                           );
