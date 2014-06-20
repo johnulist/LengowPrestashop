@@ -62,7 +62,7 @@ class Lengow extends Module {
     static private $_LENGOW_ORDER_STATE = array();
     static private $_TABS = array(
         'Lengow' => array('AdminLengow', 'AdminLengow14'),
-        'Lengow logs' => array('AdminLengowLog', 'AdminLengowLog14'),
+        'Logs import Lengow' => array('AdminLengowLog', 'AdminLengowLog14'),
     );
 
     protected $context;
@@ -127,35 +127,8 @@ class Lengow extends Module {
         $this->_createTab();
         $this->_addStatus();
         return parent::install() &&
-                Configuration::updateValue('LENGOW_AUTHORIZED_IP', $_SERVER['REMOTE_ADDR']) &&
-                Configuration::updateValue('LENGOW_TRACKING', '') &&
-                Configuration::updateValue('LENGOW_ID_CUSTOMER', '') &&
-                Configuration::updateValue('LENGOW_ID_GROUP', '') &&
-                Configuration::updateValue('LENGOW_TOKEN', '') &&
-                Configuration::updateValue('LENGOW_EXPORT_ALL', true) &&
-                Configuration::updateValue('LENGOW_EXPORT_DISABLED', false) &&
-                Configuration::updateValue('LENGOW_EXPORT_NEW', false) &&
-                Configuration::updateValue('LENGOW_EXPORT_ALL_ATTRIBUTES', true) &&
-                Configuration::updateValue('LENGOW_EXPORT_FULLNAME', true) &&
-                Configuration::updateValue('LENGOW_EXPORT_FEATURES', false) &&
-                Configuration::updateValue('LENGOW_EXPORT_FORMAT', 'csv') &&
-                Configuration::updateValue('LENGOW_EXPORT_FIELDS', json_encode(LengowCore::$DEFAULT_FIELDS)) &&
-                Configuration::updateValue('LENGOW_IMAGE_TYPE', 3) &&
-                Configuration::updateValue('LENGOW_IMAGES_COUNT', 3) &&
-                Configuration::updateValue('LENGOW_ORDER_ID_PROCESS', 2) &&
-                Configuration::updateValue('LENGOW_ORDER_ID_SHIPPED', 4) &&
-                Configuration::updateValue('LENGOW_ORDER_ID_CANCEL', 6) &&
-                Configuration::updateValue('LENGOW_IMPORT_METHOD_NAME', false) &&
-                Configuration::updateValue('LENGOW_IMPORT_FORCE_PRODUCT', false) &&
-                Configuration::updateValue('LENGOW_IMPORT_DAYS', 3) &&
-                Configuration::updateValue('LENGOW_FORCE_PRICE', true) &&
-                Configuration::updateValue('LENGOW_CARRIER_DEFAULT', Configuration::get('PS_CARRIER_DEFAULT')) &&
-                Configuration::updateValue('LENGOW_FLOW_DATA', '') &&
-                Configuration::updateValue('LENGOW_MIGRATE', false) &&
-                Configuration::updateValue('LENGOW_MP_CONF', false) &&
-                Configuration::updateValue('LENGOW_CRON', false) &&
-                Configuration::updateValue('LENGOW_FEED_MANAGEMENT', false) &&
-                Configuration::updateValue('LENGOW_DEBUG', false) &&
+               $this->_setDefaultValues() &&
+               $this->_registerHooks() &&
                 // Orders lengow table
                 Db::getInstance()->execute('
                 CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'lengow_orders` (
@@ -191,24 +164,73 @@ class Lengow extends Module {
                 INDEX (`id_shop`) ,
                 INDEX (`id_shop_group`) ,
                 INDEX (`id_lang`)
-                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;') &&
-                // Products exports
-                //$this->registerHook('leftColumn') &&
-                // TODO add hook add product
-                $this->registerHook('footer') && // displayFooter
-                $this->registerHook('postUpdateOrderStatus') && // actionOrderStatusPostUpdate
-                $this->registerHook('paymentTop') && // displayPaymentTop
-                $this->registerHook('addproduct') && // actionProductAdd
-                $this->registerHook('adminOrder') && // displayAdminOrder
-                $this->registerHook('home') && // hookHome
-                $this->registerHook('backOfficeHeader') && // Backofficeheader
-                $this->registerHook('newOrder') && // actionValidateOrder
-                $this->registerHook('updateOrderStatus') && // actionOrderStatusUpdate
-                $this->registerHook('actionObjectUpdateAfter') && 
-                (LengowCore::compareVersion('1.6') === 0 ? $this->registerHook('dashboardZoneTwo') : true) &&
-                (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('displayAdminHomeStatistics') : true) &&
-                (LengowCore::compareVersion('1.5') === 0 ? $this->registerHook('actionAdminControllerSetMedia') : true) &&
-                $this->registerHook('orderConfirmation'); // displayOrderConfirmation
+                ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;');
+    }
+
+    private function _registerHooks() {
+        $error = false;
+        $lengow_hook = array(
+            // Common version
+            'footer' => '1.4',
+            'postUpdateOrderStatus' => '1.4',
+            'paymentTop' => '1.4',
+            'addproduct' => '1.4',
+            'adminOrder' => '1.4',
+            'home' => '1.4',
+            'backOfficeHeader' => '1.4',
+            'newOrder' => '1.4',
+            'updateOrderStatus' => '1.4',
+            'orderConfirmation' => '1.4',
+            // Version 1.5
+            'displayAdminHomeStatistics' => '1.4',
+            'actionAdminControllerSetMedia' => '1.4',
+            'actionObjectUpdateAfter' => '1.4',
+            // Version 1.6
+            'dashboardZoneTwo' => '1.4',
+        );
+        foreach($lengow_hook as $hook => $version) {
+            if($version <= substr(_PS_VERSION_, 0, 3)) {
+                LengowCore::log('Register hook ' . $hook_name, -1);
+                if(!$this->registerHook($hook_name)) {
+                    LengowCore::log('Error register hook ' . $hook_name, -1);
+                    $error = true;
+                }
+            }
+        }
+        return ($error ? false : true);
+    }
+
+    private function _setDefaultValues() {
+        return 
+            Configuration::updateValue('LENGOW_AUTHORIZED_IP', $_SERVER['REMOTE_ADDR']) &&
+            Configuration::updateValue('LENGOW_TRACKING', '') &&
+            Configuration::updateValue('LENGOW_ID_CUSTOMER', '') &&
+            Configuration::updateValue('LENGOW_ID_GROUP', '') &&
+            Configuration::updateValue('LENGOW_TOKEN', '') &&
+            Configuration::updateValue('LENGOW_EXPORT_ALL', true) &&
+            Configuration::updateValue('LENGOW_EXPORT_DISABLED', false) &&
+            Configuration::updateValue('LENGOW_EXPORT_NEW', false) &&
+            Configuration::updateValue('LENGOW_EXPORT_ALL_ATTRIBUTES', true) &&
+            Configuration::updateValue('LENGOW_EXPORT_FULLNAME', true) &&
+            Configuration::updateValue('LENGOW_EXPORT_FEATURES', false) &&
+            Configuration::updateValue('LENGOW_EXPORT_FORMAT', 'csv') &&
+            Configuration::updateValue('LENGOW_EXPORT_FIELDS', json_encode(LengowCore::$DEFAULT_FIELDS)) &&
+            Configuration::updateValue('LENGOW_IMAGE_TYPE', 3) &&
+            Configuration::updateValue('LENGOW_IMAGES_COUNT', 3) &&
+            Configuration::updateValue('LENGOW_ORDER_ID_PROCESS', 2) &&
+            Configuration::updateValue('LENGOW_ORDER_ID_SHIPPED', 4) &&
+            Configuration::updateValue('LENGOW_ORDER_ID_CANCEL', 6) &&
+            Configuration::updateValue('LENGOW_IMPORT_METHOD_NAME', false) &&
+            Configuration::updateValue('LENGOW_IMPORT_FORCE_PRODUCT', false) &&
+            Configuration::updateValue('LENGOW_IMPORT_DAYS', 3) &&
+            Configuration::updateValue('LENGOW_FORCE_PRICE', true) &&
+            Configuration::updateValue('LENGOW_CARRIER_DEFAULT', Configuration::get('PS_CARRIER_DEFAULT')) &&
+            Configuration::updateValue('LENGOW_FLOW_DATA', '') &&
+            Configuration::updateValue('LENGOW_MIGRATE', false) &&
+            Configuration::updateValue('LENGOW_MP_CONF', false) &&
+            Configuration::updateValue('LENGOW_CRON', false) &&
+            Configuration::updateValue('LENGOW_FEED_MANAGEMENT', false) &&
+            Configuration::updateValue('LENGOW_DEBUG', false);
     }
 
     /**
@@ -1178,7 +1200,7 @@ class Lengow extends Module {
                 'mode' => 1,
                 'all' => 1,
                 'currency' => $currencies[0]['iso_code'],
-                'shop' => $shops[1]['id_shop'],
+                'shop' => (array_key_exists(1, $shops) ? $shops[1]['id_shop'] : 1),
                 'language' => $languages[0]['iso_code'],
             );
             Configuration::updateValue('LENGOW_FLOW_DATA', Tools::jsonEncode($data_flows));

@@ -398,7 +398,8 @@ class LengowCoreAbstract {
     public static function disableMail() {
         if(_PS_VERSION_ < '1.5.4.0') {
             Configuration::set('PS_MAIL_METHOD', 2);
-            Configuration::set('PS_MAIL_SERVER', '');
+            // Set fictive stmp server to disable mail
+            Configuration::set('PS_MAIL_SERVER', 'smtp.lengow.com');
         } else {
             Configuration::set('PS_MAIL_METHOD', 3);
         }

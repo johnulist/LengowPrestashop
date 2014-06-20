@@ -1,7 +1,7 @@
 =============================================================
 Version 2.0.5.3
 =============================================================
-    - Fix tracking amazon
+    - Fix tracking amazon and cdiscount
     - Improve webservice (Show module version, prestashop version, get last logs)
     - Add option to ignore processing fee
     - Fix bug with tagcapulse
@@ -9,6 +9,7 @@ Version 2.0.5.3
     - Add webservice to migrate products selection from module v1
     - Write un temp file during export
     - Fix stream param for export
+    - Fix warning with 1.4 version
 
 =============================================================
 Version 2.0.5.1
