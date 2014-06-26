@@ -190,9 +190,9 @@ class Lengow extends Module {
         );
         foreach($lengow_hook as $hook => $version) {
             if($version <= substr(_PS_VERSION_, 0, 3)) {
-                LengowCore::log('Register hook ' . $hook_name, -1);
-                if(!$this->registerHook($hook_name)) {
-                    LengowCore::log('Error register hook ' . $hook_name, -1);
+                LengowCore::log('Register hook ' . $hook, -1);
+                if(!$this->registerHook($hook)) {
+                    LengowCore::log('Error register hook ' . $hook, -1);
                     $error = true;
                 }
             }

@@ -324,30 +324,6 @@ class LengowImportAbstract {
                         LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'No address');
                         continue;
                     }
-                    /*$address_cp = (string) $lengow_order->billing_address->billing_zipcode;
-                    if (empty($address_cp)) {
-                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no zipcode');
-                        $address_cp = ' ';
-                    } elseif(!LengowCore::isZipCodeFormat($address_cp)) {
-                        if((string) $lengow_order->billing_address->billing_country_iso != '') {
-                            try {
-                                $id_country = Country::getByIso((string) $lengow_order->billing_address->billing_country_iso);
-                                $billing_country = new Country($id_country);
-                                if(!$billing_country->checkZipCode($address_cp)) {
-
-                                }
-                            } catch (Exception $e) {
-                                
-                            }
-                        }
-
-                        $address_cp = preg_replace('/[^0-9-]+/', '', $address_cp);
-                        if(!LengowCore::isZipCodeFormat($address_cp)) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : ZipCode is not valid', $this->force_log_output);
-                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'ZipCode is not valid -> ' . (string) $lengow_order->billing_address->billing_zipcode);
-                            continue;
-                        }
-                    }*/
                     $billing_zipcode     = (string) $lengow_order->billing_address->billing_zipcode;
                     $billing_country_iso = (string) $lengow_order->billing_address->billing_country_iso;
                     try {
@@ -399,13 +375,15 @@ class LengowImportAbstract {
                         $billing_address->postcode = $billing_zipcode;
                         if(empty($billing_address->postcode))
                             $billing_address->postcode = ' ';
+
                         // Phone
                         $billing_address->phone = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_home);
                         if($billing_address->phone == '')
                             $billing_address->phone  = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_home);
-                        if ((string) $lengow_order->billing_address->billing_phone_office != '')
+
+                        if((string) $lengow_order->billing_address->billing_phone_office != '')
                             $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_office);
-                        else if ((string) $lengow_order->billing_address->billing_phone_mobile != '')
+                        if((string) $lengow_order->billing_address->billing_phone_mobile != '')
                             $billing_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->billing_address->billing_phone_mobile);
 
                         if($billing_address->phone_mobile == '') {
@@ -440,18 +418,6 @@ class LengowImportAbstract {
                         $shipping_address_firstname = '--';
                     if (empty($shipping_address_lastname))
                         $shipping_address_lastname = '--';
-                    /*$shipping_zipcode = (string) $lengow_order->delivery_address->delivery_zipcode;
-                    if (empty($shipping_zipcode)) {
-                        LengowCore::log('Order ' . $lengow_order_id . ' : (Warning) no shipping zipcode');
-                        $shipping_zipcode = ' ';
-                    } elseif(!LengowCore::isZipCodeFormat($shipping_zipcode)) {
-                        $shipping_zipcode = preg_replace('/[^0-9-]+/', '', $shipping_zipcode);
-                        if(!LengowCore::isZipCodeFormat($shipping_zipcode)) {
-                            LengowCore::log('Order ' . $lengow_order_id . ' : Shipping ZipCode is not valid', $this->force_log_output);
-                            LengowCore::endProcessOrder($lengow_order_id, 1, 0, 'Shipping ZipCode is not valid -> ' . (string) $lengow_order->shipping_address->shipping_zipcode);
-                            continue;
-                        }
-                    }*/
                     $shipping_zipcode     = (string) $lengow_order->delivery_address->delivery_zipcode;
                     $shipping_country_iso = (string) $lengow_order->delivery_address->delivery_country_iso;
                     try {
@@ -506,10 +472,12 @@ class LengowImportAbstract {
                             if(empty($shipping_address->postcode))
                                 $shipping_address->postcode = ' ';
                             $shipping_address->phone = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_home);
-                            if ((string) $lengow_order->delivery_address->delivery_phone_home != '')
+                            if((string) $lengow_order->delivery_address->delivery_phone_home != '')
                                 $shipping_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_home);
-                            else if ((string) $lengow_order->delivery_address->delivery_phone_office != '')
+                            if((string) $lengow_order->delivery_address->delivery_phone_office != '')
                                 $shipping_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_office);
+                            elseif((string) $lengow_order->delivery_address->delivery_phone_mobile != '')
+                                $shipping_address->phone_mobile = LengowCore::cleanPhone((string) $lengow_order->delivery_address->delivery_phone_mobile);
                             $shipping_address->alias = LengowAddress::hash((string) $shipping_address->firstname . (string) $shipping_address->lastname . (string) $lengow_order->delivery_address->delivery_full_address);
                             try {
                                 if(!$error = $shipping_address->validateFields(false, true))

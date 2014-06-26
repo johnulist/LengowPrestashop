@@ -83,7 +83,7 @@ if (LengowCore::checkIP()) {
         $all_product = true;
     // Export out of stock product
     $out_stock = null;
-    if(Tools::getValue('out_stock') == "0")
+    if(Tools::getValue('out_stock') === "0")
         $out_stock = false;
     elseif(Tools::getValue('out_stock') == "1")
         $out_stock = true;
